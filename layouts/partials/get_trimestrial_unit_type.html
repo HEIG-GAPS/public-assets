@@ -1,0 +1,15 @@
+{{ $unit := .unit }}
+{{ $type := .type }}
+{{ $trimester_periods := dict
+    "type" $type
+    "periods" nil
+    }}
+{{ range $unit.decoupages }}
+    {{ if eq $type .temporalite }}
+        {{ $trimester_periods = dict
+            "type" $type
+            "periodes" .nombre_periodes_encadrees
+            }}
+    {{ end }}
+{{ end }}
+{{ return $trimester_periods }}

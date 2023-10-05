@@ -1,0 +1,9 @@
+{{ $original_dict := .original_dict }}  
+{{ $excluded_keys := .excluded_keys }}
+{{ $output_dict := dict }}
+{{ range $key, $value := $original_dict }}
+    {{ if not (in $excluded_keys $key) }}
+        {{ $output_dict = merge $output_dict (dict $key $value) }}
+    {{ end }}
+{{ end }}
+{{ return $output_dict }}

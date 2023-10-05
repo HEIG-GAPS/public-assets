@@ -1,0 +1,26 @@
+<table class="table">
+    <thead>
+        <tr class="contenu-en-tete">
+            <td class="contenu-type align-middle">
+                {{ .type_enseignement_nom }}
+            </td>
+            <td class="text-center align-middle">
+                {{ .contenu_nombre_periodes }}
+            </td>
+        </tr>
+    </thead>
+    <tbody>
+        {{ range .elements }}
+            <tr>
+                <td class="contenu-type contenu-sous-texte align-middle">
+                    <div class="p-2">
+                        {{ .element_contenu_et_formes_texte }}
+                    </div>
+                </td>
+                <td class="contenu-sous-texte text-center align-middle">
+                    {{ .element_contenu_et_formes_nombre_periodes }}
+                </td>
+            </tr>
+        {{ end }}
+    </tbody>
+</table>

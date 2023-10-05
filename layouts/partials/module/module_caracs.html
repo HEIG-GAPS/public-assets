@@ -1,0 +1,13 @@
+<div class="flex-fill">
+    <b> {{ i18n "caracteristic" }} </b>
+    <br>
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="flexCheckDisabled-caracs-{{.module_code}}" {{ if .module_obligatoire }} checked
+            {{ end }}disabled>
+        <label class="form-check-label" for="flexCheckDisabled-caracs-{{.module_code}}">
+            {{ i18n "mandatory_module" }}
+        </label>
+    </div>
+    <br>
+    <p> {{ i18n "mandatory_module_failure" }} </p>
+</div>

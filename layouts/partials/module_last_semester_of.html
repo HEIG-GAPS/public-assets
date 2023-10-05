@@ -1,0 +1,9 @@
+{{ $unit := .unite }}
+{{ $type := .type }}
+{{ $last_type := "" }}
+{{ range $unit.decoupages }}
+    {{ if or (hasPrefix .temporalite "S") (hasPrefix .temporalite "E")}}
+        {{ $last_type = .temporalite }}
+    {{ end }}
+{{ end }}
+{{ return (eq $type $last_type) }}

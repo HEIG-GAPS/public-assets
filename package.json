@@ -1,0 +1,23 @@
+{
+  "name": "gaps-public-assets",
+  "version": "1.0.0",
+  "description": "GAPS Public Assets",
+  "main": "index.html",
+  "scripts": {
+    "hugo-prebuild": "cd ./prebuild && hugo",
+    "hugo-build": "hugo",
+    "generate-pdf": "node generate_pdf.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.4.2",
+    "bootstrap": "^5.3.0",
+    "dompurify": "^3.0.5",
+    "html2canvas": "^1.4.1",
+    "jquery": "^3.7.0",
+    "jspdf": "^2.5.1",
+    "puppeteer": "^21.3.6"
+  }
+}

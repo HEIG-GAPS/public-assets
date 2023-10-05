@@ -1,0 +1,153 @@
+{{/*{{ with $pdf := resources.Get "templates/descriptif_module.pdf" }}
+{{ ($pdf | resources.ExecuteAsTemplate "test.pdf" "Ceci est un test").Publish }}
+{{ end }}*/}}
+{{ $contentTemplate := "templates/content.md" }}
+{{ $data := .Site.Data.bachelor.domaines }}
+{{ with $r := resources.Get $contentTemplate }}
+    {{ range $i, $d := $data }}
+        {{ $filter_ctx := dict
+            "original_dict" .
+            "excluded_keys" (slice "entites_academiques")
+            }}
+        {{ $json_content := partial "copy_dict_excluding_keys" $filter_ctx }}
+        {{/* Map data fields to content and front matter. */}}
+        {{ $dom_format := (partial "remove_special_chars.html" .domaine_nom) }}
+        {{ $contentSectionDomaine := printf "bachelor/%s" ($dom_format | urlize)}}
+        {{ $frontMatter := dict
+        "title" .domaine_nom
+        "type" "domaine"
+        "weight" (add $i 1)
+        "json_content" $json_content
+        }}
+        {{/* Publish a page. */}}
+        {{ $ctx := dict "frontMatter" $frontMatter }}
+        {{ $path := printf "%s/_index.md" $contentSectionDomaine }}
+        {{ $path_en := printf "%s/_index.en.md" $contentSectionDomaine }}
+        {{ ($r | resources.ExecuteAsTemplate $path $ctx).Publish }}
+        {{ ($r | resources.ExecuteAsTemplate $path_en $ctx).Publish }}
+        {{ range $j, $ea := .entites_academiques }}
+            {{ $filter_ctx := dict
+                "original_dict" .
+                "excluded_keys" (slice "filieres")
+                }}
+            {{ $json_content := partial "copy_dict_excluding_keys" $filter_ctx }}
+            {{/* Map data fields to content and front matter. */}}
+            {{ $ea_format := (partial "remove_special_chars" .entite_academique_abreviation) }}
+            {{ $contentSectionEntiteAcademique := printf "%s/%s" $contentSectionDomaine ($ea_format | urlize) }}
+            {{ $frontMatter := dict
+            "title" .entite_academique_nom
+            "type" "entite_academique"
+            "weight" (add $j 1)
+            "json_content" $json_content
+            }}
+            {{/* Publish a page. */}}
+            {{ $ctx := dict "frontMatter" $frontMatter }}
+            {{ $path := printf "%s/_index.md" $contentSectionEntiteAcademique }}
+            {{ $path_en := printf "%s/_index.en.md" $contentSectionEntiteAcademique }}
+            {{ ($r | resources.ExecuteAsTemplate $path $ctx).Publish }}
+            {{ ($r | resources.ExecuteAsTemplate $path_en $ctx).Publish }}
+            {{ range $k, $fil := .filieres }}
+                {{ $filter_ctx := dict
+                    "original_dict" .
+                    "excluded_keys" (slice "formations")
+                    }}
+                {{ $json_content := partial "copy_dict_excluding_keys" $filter_ctx }}
+                {{ $fil_format := (partial "remove_special_chars" .filiere_abreviation) }}
+                {{ $contentSectionFiliere := printf "%s/%s" $contentSectionEntiteAcademique ($fil_format | urlize) }}
+                {{/* Map data fields to content and front matter. */}}
+                {{ $frontMatter := dict
+                "title" .filiere_nom
+                "type" "filiere"
+                "weight" (add $k 1)
+                "json_content" $json_content
+                }}
+                {{/* Publish a page. */}}
+                {{ $ctx := dict "frontMatter" $frontMatter }}
+                {{ $path := printf "%s/_index.md" $contentSectionFiliere }}
+                {{ $path_en := printf "%s/_index.en.md" $contentSectionFiliere }}
+                {{ ($r | resources.ExecuteAsTemplate $path $ctx).Publish }}
+                {{ ($r | resources.ExecuteAsTemplate $path_en $ctx).Publish }}
+                {{ range $k, $form := .formations }}
+                    {{ $filter_ctx := dict
+                        "original_dict" .
+                        "excluded_keys" (slice "modes_formation")
+                        }}
+                    {{ $json_content := partial "copy_dict_excluding_keys" $filter_ctx }}
+                    {{ $form_format := (partial "remove_special_chars" .formation_abreviation) }}
+                    {{ $contentSectionFormation := printf "%s/%s" $contentSectionFiliere ($form_format | urlize) }}
+                    {{ $frontMatter := dict
+                    "title" .formation_nom
+                    "type" "formation"
+                    "weight" (add $k 1)
+                    "json_content" $json_content
+                    }}
+                    {{/* Publish a page. */}}
+                    {{ $ctx := dict "frontMatter" $frontMatter }}
+                    {{ $path := printf "%s/_index.md" $contentSectionFormation }}
+                    {{ $path_en := printf "%s/_index.en.md" $contentSectionFormation }}
+                    {{ ($r | resources.ExecuteAsTemplate $path $ctx).Publish }}
+                    {{ ($r | resources.ExecuteAsTemplate $path_en $ctx).Publish }}
+                    {{ range .modes_formation }}
+                        {{ $filter_ctx := dict
+                            "original_dict" .
+                            "excluded_keys" (slice "modules")
+                            }}
+                        {{ $json_content := partial "copy_dict_excluding_keys" $filter_ctx }}
+                        {{ $contentSectionMode := printf "%s/%s" $contentSectionFormation ( (replace .mode_formation_abreviation "/" "-") | urlize) }}
+                        {{ $frontMatter := dict
+                        "title" .mode_formation_nom
+                        "type" "mode_formation"
+                        "json_content" $json_content
+                        }}
+                        {{/* Publish a page. */}}
+                        {{ $ctx := dict "frontMatter" $frontMatter }}
+                        {{ $path := printf "%s/_index.md" $contentSectionMode }}
+                        {{ $path_en := printf "%s/_index.en.md" $contentSectionMode }}
+                        {{ ($r | resources.ExecuteAsTemplate $path $ctx).Publish }}
+                        {{ ($r | resources.ExecuteAsTemplate $path_en $ctx).Publish }}
+                        {{ range $l, $mod := .modules }}
+                            {{ $filter_ctx := dict
+                                "original_dict" .
+                                "excluded_keys" (slice "unites")
+                                }}
+                            {{ $json_content := partial "copy_dict_excluding_keys" $filter_ctx }}
+                            {{ $mod_format := (partial "remove_special_chars" .module_code)}}
+                            {{ $contentSectionModule := printf "%s/%s" $contentSectionMode ($mod_format | urlize) }}
+                            {{ $frontMatter := dict
+                            "title" .module_nom
+                            "type" "module"
+                            "weight" (add $l 1)
+                            "json_content" $json_content
+                            }}
+                            {{/* "outputs" (slice "html" "markdown") -> générer le pdf avant deployement ? */}}
+                            {{/* Publish a page. */}}
+                            {{ $ctx := dict "frontMatter" $frontMatter }}
+                            {{ $path := printf "%s/_index.md" $contentSectionModule }}
+                            {{ $path_en := printf "%s/_index.en.md" $contentSectionModule }}
+                            {{ ($r | resources.ExecuteAsTemplate $path $ctx).Publish }}
+                            {{ ($r | resources.ExecuteAsTemplate $path_en $ctx).Publish }}
+                            {{ range $m, $unit := .unites }}
+                                {{ if not (eq .unite_abreviation nil) }}
+                                    {{ $unite_format := partial "remove_special_chars" .unite_abreviation }}
+                                    {{ $contentSectionUnite := printf "%s/%s" $contentSectionModule ($unite_format | urlize) }}
+                                    {{ $frontMatter := dict
+                                    "json_content" .
+                                    "title" .unite_nom
+                                    "weight" (add $m 1)
+                                    "type" "unite"
+                                    }}
+                                    {{/* Publish a page. */}}
+                                    {{ $ctx := dict "frontMatter" $frontMatter }}
+                                    {{ $path := printf "%s/index.md" $contentSectionUnite }}
+                                    {{ $path_en := printf "%s/index.en.md" $contentSectionUnite }}
+                                    {{ ($r | resources.ExecuteAsTemplate $path $ctx).Publish }}
+                                    {{ ($r | resources.ExecuteAsTemplate $path_en $ctx).Publish }}
+                                {{ end }}
+                            {{ end }}
+                        {{ end }}
+                    {{ end }}
+                {{ end }}
+            {{ end }}
+        {{ end }}
+    {{ end }}
+{{ end }}

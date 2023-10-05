@@ -1,0 +1,10 @@
+{{ $list := . }}
+{{ $list_str := "" }}
+{{ range $i, $elem := $list }}
+    {{ if eq $i 0 }}
+        {{ $list_str = $elem }}
+    {{ else }}
+        {{ $list_str = printf "%s, %s" $list_str $elem }}
+    {{ end }}
+{{ end }}
+{{ return $list_str }}

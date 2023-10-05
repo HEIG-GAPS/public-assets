@@ -1,0 +1,54 @@
+{{ $ctx := . }}
+{{ $page := .module }}
+{{ $module := $page.Params.json_content }}
+{{ $semesters := .semestres }}
+{{ $trimesters := .trimestres }}
+<thead class="table-primary">
+    <tr>
+        <th scope="col" class="module-cell">
+            <div>
+                <a href="{{ $page.Permalink }}" class="pdf-link module-header">{{$module.module_nom}} ({{ $module.module_code }})</a>
+            </div>
+        </th>
+        <th scope="col" class="top-alternative group-alternative-cell table-primary"></th>
+        <th scope="col" class="align-middle text-center coef-cell" rowspan="2"> {{ i18n "coefficient" }} </th>
+        {{ range $semesters }}
+                <th scope="col"
+                    {{ if (hasPrefix . "E") }} 
+                        rowspan="2" colspan="1" 
+                    {{ else }}
+                        rowspan="1" colspan="2"
+                    {{ end }}
+                class="align-middle text-center semester-cell {{ if (hasPrefix . "E") }} under-semester-cell{{ end }}"> {{ . }} </th>
+        {{ end }}
+    </tr>
+    <tr>
+        <th scope="col" class="module-info-cell">
+            <span>
+                {{$module.module_credits}} ECTS | {{ i18n "compensation_threshold_table" }} 
+                {{ $module.module_seuil_compensation }} | {{ i18n "repetition_threshold_table" }} 
+                {{ $module.module_seuil_repetition }}  
+            </span>
+        </th>
+        <th scope="col" class="group-alternative-cell table-primary"></th>
+        {{ range $trimesters }}
+            <th scope="col" class="align-middle text-center trimester-cell under-semester-cell">
+                {{ . }}
+            </th>
+        {{ end }}
+    </tr>
+</thead>
+<tbody>
+    {{ if eq (len $page.Pages) 0 }}
+        <tr class="selectable-units">
+            <th scope="col" class="table-primary unit-cell"> <b> {{ i18n "selectable_units" }} </b> </th>
+            <th scope="col" class="group-alternative-cell table-primary"></th>
+            <th scope="col" class="table-primary coef-value-cell text-center align-middle"> ... </th>
+            {{ range $col := $trimesters }}
+            <td class="period-cell" {{ if or (hasPrefix $col "S") }}colspan="2"{{ end }}></td>
+            {{ end }}
+        </tr>
+    {{ else }}
+        {{ partial "module/hybrid_module_units_planning" $ctx }}
+    {{ end }}
+</tbody>

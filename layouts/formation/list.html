@@ -1,0 +1,26 @@
+{{ define "main" }}
+<nav class="container-sm">
+    <div class="display-4"> {{ .Content }} </div>
+    <br>
+    <div class="container row">
+          {{ range .Pages }}
+          {{ $mode := .Params.json_content }}
+          <div class="container col text-center">
+            {{ if eq $mode.mode_formation_abreviation "PT" }}
+                <a href="{{ .Permalink }}"> 
+                    {{ .Title }}
+                    <br>
+                    <i class="fa-solid fa-school"></i>
+                </a>
+            {{ else }}
+                <a href="{{ .Permalink }}">
+                    {{ .Title }}
+                    <br>
+                    <i class="fa-solid fa-briefcase"></i>
+                </a>
+            {{ end }}
+          </div>
+          {{ end }}
+    </div>
+</nav>
+{{ end }}

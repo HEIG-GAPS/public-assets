@@ -1,0 +1,56 @@
+{{ $mod := . }}
+{{ $prerequisites := partial "module/get_module_prerequisites" $mod }}
+<div class="p-2">
+    <div class="form-check">
+        {{ $empty_reussis := lt (len $prerequisites.reussis) 1 }}
+        <input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled-module-{{ $mod.module_code }}-valide-1" {{ if (not $empty_reussis)
+            }} checked {{ end }} >
+        <label class="form-check-label" for="flexCheckCheckedDisabled-module-{{ $mod.module_code }}-valide-1">
+            <div class="dflex">
+                {{ i18n "validated_modules" }} :
+                {{ if $empty_reussis }}
+                    {{ i18n "void" }}
+                {{ else }}
+                    {{ range $i, $mod := $prerequisites.reussis}}
+                        {{ if eq $i 0 }}
+                            {{$mod.module_prerequis_code}}
+                        {{ else }}
+                            , {{$mod.module_prerequis_code}}
+                        {{ end }}
+                    {{ end }}
+                {{ end }}
+            </div>
+        </label>
+    </div>
+    <div class="form-check">
+        {{ $empty_paralleles := lt (len $prerequisites.paralleles) 1 }}
+        <input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled-module-{{ $mod.module_code }}-valide-2" {{ if (not $empty_paralleles)
+            }} checked {{ end }} >
+        <label class="form-check-label" for="flexCheckCheckedDisabled-module-{{ $mod.module_code }}-valide-2">
+            <div class="dflex">
+                {{ i18n "parallel_modules" }} :
+                {{ if $empty_paralleles }}
+                {{ i18n "void" }}
+                {{ else }}
+                    {{ range $i, $mod := $prerequisites.paralleles }}
+                        {{ if eq $i 0 }}
+                            {{$mod.module_prerequis_code}}
+                        {{ else }}
+                            , {{$mod.module_prerequis_code}}
+                        {{ end }}
+                    {{ end }}
+                {{ end }}
+            </div>
+        </label>
+    </div>
+    <div class="form-check">
+        {{ $empty_paralleles := lt (len $prerequisites.paralleles) 1 }}
+        <input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled-module-{{ $mod.module_code }}-valide-3" {{ if and $empty_reussis $empty_paralleles
+            }} checked {{ end }} >
+        <label class="form-check-label" for="flexCheckCheckedDisabled-module-{{ $mod.module_code }}-valide-3">
+            <div class="dflex">
+                {{ i18n "no_prerequisites" }}
+            </div>
+        </label>
+    </div>
+</div>

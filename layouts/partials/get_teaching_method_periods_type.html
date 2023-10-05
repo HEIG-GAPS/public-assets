@@ -1,0 +1,11 @@
+{{ $type := .type }}
+{{ $decoupage := dict }}
+{{ range .decoupages }}
+    {{ if eq .type_enseignement_nom $type }}
+        {{ $decoupage = dict
+            "type" .temporalite
+            "periodes" .nombre_periodes_encadrees
+            }}
+        {{ return $decoupage }}
+    {{ end }}
+{{ end }}

@@ -6,7 +6,39 @@
 # Note that environment variables can be set in several places
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 stages:
+- data
+- build
 - test
+
+update_academic_tree:
+  stage: data
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  tags:
+    - hugo
+  script :
+    - mkdir -p ./data/bachelor
+    - PGPASSWORD=$GAPS_DB_PASSWORD psql -q -t -A -h $GAPS_DB_HOST -U $GAPS_DB_USERNAME -d $GAPS_DB_NAME -f $BACHELOR_DATA_SQL > ./prebuild/data/bachelor.json
+    #- PGPASSWORD=$GAPS_DB_PASSWORD psql -q -t -A -h $GAPS_DB_HOST -U $GAPS_DB_USERNAME -d $GAPS_DB_NAME -f $MASTER_DATA_SQL > ./prebuild/data/master.json
+    - git config user.email "$GAPS_USER_EMAIL"
+    - git config user.name "$GAPS_USER_NAME"
+    - echo ${CI_PROJECT_PATH}
+    - echo ${CI_SERVER_URL}
+    - git remote rm origin && git remote add origin "https://oauth2:$PAT@$GAPS_CI_LOCATION/${CI_PROJECT_PATH}.git"
+    - git add ./data/bachelor/bachelor.json
+    - git commit -m "New data set from scheduled pipeline"
+    - git push origin HEAD:main -o ci.skip
+
+build:
+  stage: build
+  rules:
+    - if: $CI_PIPELINE_SOURCE != "schedule"
+  tags:
+    - hugo
+  script:
+    - npm install
+    - hugo
+
 sast:
   stage: test
 include:

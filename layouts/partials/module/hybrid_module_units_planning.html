@@ -1,0 +1,48 @@
+{{ $ctx := . }}
+{{ $page := .module }}
+{{ $module := $page.Params.json_content }}
+{{ $n_semaines_semestre := .n_semaines_semestre }}
+{{ $n_semaines_hes_ete := .n_semaines_hes_ete }}
+{{ $n_semaines_trimestre := .n_semaines_trimestre }}
+{{ $current_group := "None"}}
+{{ $alternatives_cell := false }}
+{{ range $i, $unite := $page.Pages }}
+        {{ $unite = $unite.Params.json_content }}
+        {{ $groupe_alternative := "None" }}
+        {{ range $module.groupes_alternatives }}
+            {{ if eq .groupe_alternatives_id $unite.unite_id_groupe_alternatives }}
+                {{ $groupe_alternative = . }}
+                {{ if not (eq $current_group .groupe_alternative_lettre) }}
+                    {{ $current_group = .groupe_alternative_lettre }}
+                    {{ $alternatives_cell = true }}
+                {{ end }}
+            {{ end }}
+        {{ end }}
+        <tr>
+            <th scope="row" class="unit-cell">
+                <a href="{{ .Permalink }}" class="pdf-link">{{ $unite.unite_nom }} ({{ $unite.unite_abreviation }})</a>
+            </th>
+            {{ if not (eq $groupe_alternative "None")}}
+                {{ if $alternatives_cell }}
+                    {{ $ctx_alternative := dict
+                        "groupe_id" $unite.unite_id_groupe_alternatives
+                        "unites" $page.Pages
+                        }}
+                    <td
+                    scope="col"
+                    rowspan="{{ partial "get_number_of_units_alternative" $ctx_alternative }}"
+                    class="
+                    group-alternative-cell
+                    text-center
+                    align-middle
+                    group-alternative-{{ $groupe_alternative.groupe_alternative_lettre }}">
+                        {{ $groupe_alternative.groupe_alternative_lettre }} ({{ $groupe_alternative.groupe_alternatives_volume_minimal }})
+                    </td>
+                        {{ $alternatives_cell = false }}
+                {{ end }}
+            {{ else }}
+                <td scope="col" class="group-alternative-cell"></td>
+            {{ end }}
+            {{ partial "module/hybrid_module_units_planning_periods" (merge $ctx (dict "unite" $unite)) }}
+        </tr>
+{{ end }}

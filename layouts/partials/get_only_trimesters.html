@@ -1,0 +1,6 @@
+{{ $formation_duree_semestre := . }}
+{{ $trimesters := slice }}
+{{ range (seq 1 (mul $formation_duree_semestre 2)) }}
+    {{ $trimesters = $trimesters | append (printf "T%d" .) }}
+{{ end }}
+{{ return $trimesters }}

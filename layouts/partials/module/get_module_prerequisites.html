@@ -1,0 +1,11 @@
+{{ $reussis := slice }}
+{{ $paralleles := slice }}
+{{ $mod := . }}
+{{ range .prerequis }}
+    {{ if .prerequis_reussite }}
+        {{ $reussis = ($reussis | append .) }}
+    {{ else }}
+        {{ $paralleles = ($paralleles | append .) }}
+    {{ end }}
+{{ end }}
+{{ return (dict "reussis" $reussis "paralleles" $paralleles) }}

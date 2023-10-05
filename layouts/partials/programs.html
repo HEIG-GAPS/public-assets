@@ -1,0 +1,40 @@
+<table class="table table-hover justify-content-center">
+  <thead>
+    <tr>
+      <th scope="col" class="formation-cell align-middle">{{ .Params.json_content.filiere_nom }}</th>
+      <th scope="col" class="text-center align-middle"> {{ i18n "full_time" }} ({{ i18n "full_time_abbreviation" }}) </th>
+      <th scope="col" class="text-center align-middle"> {{ i18n "part_time" }} <br> {{ i18n "in_employment" }} ({{ i18n "part_time_abbreviation" }}/{{ i18n "in_employment_abbreviation" }}) </th>
+    </tr>
+  </thead>
+  <tbody>
+    {{ range .Pages }}
+      {{ $formation_ctx := . }}
+      {{ $formation := .Params.json_content }}
+      <tr>
+        <td>{{$formation.formation_nom}} ({{ $formation.formation_abreviation }})
+        </td>
+        {{ $modes_formation := $formation.modes_formation }}
+        <!-- Â changer selon la génération du fichier pour chaque langue -->
+        {{ range slice "PT" "TP/EE" }}
+          {{ $col := . }}
+          {{ $unfilled := true }}
+          {{ range $formation_ctx.Pages }}
+            {{ $mode := .Params.json_content }}
+            {{ if eq $mode.mode_formation_abreviation $col }}
+              <td class="text-center">
+                <!-- Â changer selon la génération du fichier pour chaque langue -->
+                {{ $icon := "fa-solid fa-briefcase" }}
+                {{ if eq $mode.mode_formation_abreviation "PT" }}
+                  {{ $icon = "fa-solid fa-school" }}
+                {{ end }}
+                <a href="{{ .Permalink }}"> <i class="{{ $icon }}"></i></a>
+              </td>
+              {{ $unfilled = false }}
+            {{ end }}
+          {{ end }}
+          {{ if $unfilled }} <td></td> {{ end }}
+        {{ end }}
+      </tr>
+    {{ end }}
+  </tbody>
+</table>

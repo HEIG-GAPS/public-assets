@@ -1,0 +1,8 @@
+{{ $groupe := "nil" }}
+{{ $groupe_id := .groupe_id }}
+{{ range .groupes }}
+    {{ if eq .groupe_alternatives_id $groupe_id }}
+        {{ $groupe = . }}
+    {{ end }}
+{{ end }}
+{{ return $groupe }}

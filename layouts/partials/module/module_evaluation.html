@@ -1,0 +1,49 @@
+{{ $poids_tot_module := 0 }}
+{{ $numerateur_module := "" }}
+{{ $evaluations := partial "module/get_module_evaluation" . }}
+{{ range $evaluations.unites }}
+    {{ $poids_tot_unite := 0 }}
+    {{ $unite := .unite.Params.json_content }}
+    <div class="p-2 d-flex flex-column">
+        <b> {{ $unite.unite_nom }}
+            (<a href="{{ .unite.Permalink }}" class="pdf-link"> {{ $unite.unite_abreviation }} </a>) 
+            [{{ i18n "weight" }}: {{ $unite.unite_coefficient }}]
+        </b>
+        <div class="d-flex flex-row">
+            <div class="flex-fill w-50">
+                <b> {{ i18n "final_grade" }} </b> = 
+            </div>
+            <div class="flex-fill w-50 justify-content-center">
+                <div class="w-75">
+                    <div class="fraction-numerator text-center">
+                        {{ .num }}
+                        </div>
+                        <div class="fraction-denominator text-center">
+                            {{ .denom }}
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{{ end }}
+<div class="p-2">
+    <b> {{ i18n "final_module_grade" }} </b>
+</div>
+<div class="d-flex flex-column">
+    <div class="p-2 d-flex flex-row">
+        <div class="flex-fill w-50">
+            <b> {{ i18n "final_grade" }} </b> =
+        </div>
+        <div class="flex-fill w-50 justify-content-center">
+            <div class="w-75">
+                <div class="fraction-numerator text-center">
+                {{ $evaluations.num }}
+                </div>
+                <div class="fraction-denominator text-center">
+                    {{ $evaluations.denom }}
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>

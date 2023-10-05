@@ -1,0 +1,13 @@
+{{- $strOriginal := . -}}
+{{- $sanitizedStr := .}}
+{{- $chars_regex_mapping := dict
+    "[À-Åà-å]" "a" 
+    "[È-Ëè-ë]" "e" 
+    "[Ì-Ïì-ï]" "i" 
+    "[Ò-Øò-ø]" "o"
+    "[Ù-Üù-ü]" "u"
+    -}}
+{{- range $key, $value := $chars_regex_mapping -}}
+    {{ $sanitizedStr = replaceRE $key $value $sanitizedStr }}
+{{- end -}}
+{{- return $sanitizedStr -}}

@@ -1,0 +1,28 @@
+{{ $mod := .Params.json_content }}
+{{ $mod_page := . }}
+{{ $groups_dict := dict }}
+{{ range $mod.groupes_alternatives }}
+    {{ $group := . }}
+    {{ $units := slice }}
+    {{ range $mod_page.Pages }}
+        {{ $unit := .Params.json_content }}
+        {{ if eq  $unit.unite_id_groupe_alternatives $group.groupe_alternatives_id }}
+            {{ $units = $units | append . }}
+        {{ end }}
+    {{ end }}
+    {{ $group_dict := dict
+        "groupe_alternatives_id" .groupe_alternatives_id
+        "groupe_alternatives_volume_minimal" .groupe_alternatives_volume_minimal
+        "unites" $units
+        }}
+    {{ $groups_dict = merge $groups_dict (dict .groupe_alternative_lettre $group_dict) }}
+{{ end }}
+{{ $units_not_part := slice }}
+{{ range .Pages }}
+        {{ $unit := .Params.json_content }}
+        {{ if eq $unit.unite_id_groupe_alternatives nil }}
+            {{ $units_not_part = $units_not_part | append . }}
+        {{ end }}
+{{ end }}
+{{ $groups_dict = merge $groups_dict (dict "No_group" (dict "unites" $units_not_part)) }}
+{{ return $groups_dict }}

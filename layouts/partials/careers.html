@@ -1,0 +1,11 @@
+
+  {{ range .Pages }}
+      <div class="card formation-card">
+          <div class="p-2 card-header">
+                  {{ .Title }} ({{ .Params.json_content.filiere_abreviation }})
+          </div>
+          <div class="card-body">
+            {{ partial "programs.html" .}}
+          </div>
+      </div>
+  {{ end }}

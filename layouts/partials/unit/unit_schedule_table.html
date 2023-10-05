@@ -1,0 +1,29 @@
+{{ $cols := .cols }}
+{{ $unit := .unite }}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Type</th>
+            {{ range .cols }}
+            <th class="text-center" scope="col">{{ . }}</th>
+            {{ end }}
+        </tr>
+    </thead>
+    <tbody>
+        {{ range .types }}
+            {{ $decoupage := partial "get_teaching_method_periods_type" (dict 
+            "type" .type_enseignement_nom
+            "decoupages" $unit.decoupages
+            )}}
+        <tr>
+            <th scope="row"> {{ .type_enseignement_nom }} </th>
+            {{ range $cols }}
+            <td class="text-center" >
+                {{ if eq . $decoupage.type }}
+                    {{ $decoupage.periodes }} 
+                {{ end }}
+            </td>
+            {{ end }}
+        </tr>
+        {{ end }}
+</table>

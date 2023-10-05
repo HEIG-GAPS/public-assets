@@ -1,0 +1,8 @@
+{{ define "main" }}
+<nav class="container-sm">
+    <div class="display-4"> {{ .Content }} </div>
+    <div class="d-flex flex-column">
+        {{ template "modules_planning.html" . }}
+    </div>
+</nav>
+{{ end }}
