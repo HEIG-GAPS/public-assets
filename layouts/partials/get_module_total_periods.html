@@ -1,0 +1,77 @@
+{{ $n_semaines_semestre := .n_semaines_semestre }}
+{{ $n_semaines_trimestre := .n_semaines_trimestre }}
+{{ $n_semaines_hes_ete := .n_semaines_hes_ete }}
+{{ $modules := .page }}
+{{ $cols := slice }}
+{{ $semesters_mapping := dict
+    "S1" (slice "T1" "T2")
+    "S2" (slice "T3" "T4")
+    "S3" (slice "T5" "T6")
+    "S4" (slice "T7" "T8")
+    "S5" (slice "T9" "T10")
+    "S6" (slice "T11" "T12")
+    "S7" (slice "T13" "T14")
+    "S8" (slice "T15" "T16")
+    }}
+{{ $planning_trimestriel := partial "planning_trimestriel" .page }}
+{{ if $planning_trimestriel }}
+    {{ $cols = partial "get_trimesters" (int .page.Params.json_content.formation_duree_semestres) }}
+{{ else }}
+    {{ $cols = partial "get_semesters" .page.Params.json_content.formation_duree_semestres }}
+{{ end }}
+{{ $decoupage := newScratch }}
+{{ range $col := $cols }}
+    {{ $decoupage.Set $col 0 }}
+    {{ range $modules.Pages }}
+        {{ $current_group := -1}}
+        {{ $module := .Params.json_content }}
+        {{ $groupe_alternatives_count := 0 }}
+        {{ $groupe_alternatives_coeff_tot := 1 }}
+        {{ $n_units := len .Pages }}
+        {{ range $i, $unit := .Pages }}
+            {{ $unit := .Params.json_content }}
+            {{ if $unit.unite_obligatoire }}
+                {{ $unit_schedule := partial "get_unit_periods_type" (dict "unite" $unit "type" $col) }}
+                {{ $periods := div $unit_schedule.periodes $n_semaines_semestre }}
+                {{ if and (not $unit.unite_trimestrielle) $planning_trimestriel }}
+                    {{ range $sem, $trims := $semesters_mapping }}
+                        {{ if in $trims $col }}
+                            {{ $unit_schedule := partial "get_unit_periods_type" (dict "unite" $unit "type" $sem) }}
+                            {{ $periods = div $unit_schedule.periodes $n_semaines_semestre }}
+                        {{ end }}
+                    {{ end }}   
+                {{ end }}
+                {{ if hasPrefix $col "E" }}
+                    {{ $periods = div $unit_schedule.periodes $n_semaines_hes_ete }}
+                {{ else }}
+                    {{ if $unit.unite_trimestrielle }}
+                        {{ $periods = div $unit_schedule.periodes $n_semaines_trimestre }}
+                    {{ end }}
+                {{ end }}
+                {{ if eq $unit.unite_id_groupe_alternatives nil }}
+                    {{ $decoupage.Set $col (add ($decoupage.Get $col) (int (div $groupe_alternatives_count $groupe_alternatives_coeff_tot))) }}
+                    {{ $groupe_alternatives_count = 0 }}
+                    {{ $groupe_alternatives_coeff_tot = 1 }}
+                    {{ $decoupage.Set $col (add ($decoupage.Get $col) $periods) }}
+                {{ else }}
+                    {{ if ne (int $current_group) (int $unit.unite_id_groupe_alternatives) }}
+                        {{ $current_group = $unit.unite_id_groupe_alternatives }}
+                        {{ $decoupage.Set $col (add ($decoupage.Get $col) (int (div $groupe_alternatives_count $groupe_alternatives_coeff_tot))) }}
+                        {{ $groupe_alternatives_count = 0 }}
+                        {{ $groupe_alternatives_coeff_tot = 0 }}                    
+                    {{ end }}
+                    {{ $groupe_alternatives_count = add $groupe_alternatives_count (mul $periods $unit.unite_charge) }}
+                    {{ $groupe_alternatives_coeff_tot = add $groupe_alternatives_coeff_tot $unit.unite_charge }}
+                    {{ if eq (add $i 1) $n_units }}
+                        {{ $decoupage.Set $col (add ($decoupage.Get $col) (int (div $groupe_alternatives_count $groupe_alternatives_coeff_tot)))}}
+                    {{ end }}
+                {{ end }}
+            {{ else }}
+                {{ $decoupage.Set $col (add ($decoupage.Get $col) (int (div $groupe_alternatives_count $groupe_alternatives_coeff_tot))) }}
+                {{ $groupe_alternatives_count = 0 }}
+                {{ $groupe_alternatives_coeff_tot = 1 }}
+            {{ end }}
+        {{ end }}
+    {{ end }}
+{{ end }}
+{{ return $decoupage }}

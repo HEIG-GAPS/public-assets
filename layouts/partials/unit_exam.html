@@ -1,0 +1,8 @@
+{{ $unite := . }}
+{{ $examen := false }}
+{{ range .ponderations }}
+    {{ if eq .type_enseignement_id nil }}
+        {{ $examen = true }}
+    {{ end }}
+{{ end }}
+{{ return $examen }}

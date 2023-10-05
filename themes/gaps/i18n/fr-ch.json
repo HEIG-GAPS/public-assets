@@ -1,0 +1,256 @@
+{
+    "full_time": {
+        "other": "Plein temps"
+    },
+    "full_time_abbreviation": {
+        "other": "PT"
+    },
+    "part_time": {
+        "other": "Temps partiel"
+    },
+    "part_time_abbreviation": {
+        "other": "TP"
+    },
+    "in_employment": {
+        "other": "En emploi"
+    },
+    "in_employment_abbreviation": {
+        "other": "EE"
+    },
+    "back_to_list": {
+        "other": "Retour à la liste"
+    },
+    "module_description": {
+        "other": "Descriptif de module"
+    },
+    "programs": {
+        "other": "Programmes"
+    },
+    "domains": {
+        "other": "Domaines"
+    },
+    "branch": {
+        "other": "Filière"
+    },
+    "orientation": {
+        "other": "Orientation"
+    },
+    "mode": {
+        "other": "Mode"
+    },
+    "module_title": {
+        "other": "Intitulé du module"
+    },
+    "name": {
+        "other": "Nom"
+    },
+    "code": {
+        "other": "Code"
+    },
+    "academic_years": {
+        "other": "Années académiques"
+    },
+    "formation_type": {
+        "other": "Type de formation"
+    },
+    "time_organization": {
+        "other": "Organisation temporelle"
+    },
+    "time_organization_table_description": {
+        "other": "Les tables contiennent le nombre de périodes par unité et par type d'enseignement. Les valeurs pour le volume de travail correspondent au nombre d'heures totales à fournir par l'étudiant."
+    },
+    "organization": {
+        "other": "Organisation"
+    },
+    "ects_credits": {
+        "other": "Crédits ECTS"
+    },
+    "instruction_main_languages": {
+        "other": "Langue(s) principale(s) d'enseignement"
+    },
+    "prerequisites": {
+        "other": "Prérequis"
+    },
+    "learning_objectives": {
+        "other": "Compétences visées / Objectifs généraux d'apprentissage"
+    },
+    "content_teaching_methods": {
+        "other": "Contenu et formes d'enseignement"
+    },
+    "teaching_methods": {
+        "other": "Forme(s) d'enseignement"
+    },
+    "evaluation": {
+        "other": "Modalités d'évaluation et de validation"
+    },
+    "compensation_threshold": {
+        "other": "Seuil de compensation entre unités du module"
+    },
+    "compensation_threshold_table": {
+        "other": "Seuil de compensation"
+    },
+    "repetition_threshold": {
+        "other": "Seuil de répétition du module"
+    },
+    "repetition_threshold_table": {
+        "other": "Seuil de répétition"
+    },
+    "remediation": {
+        "other": "Modalité de remédiation"
+    },
+    "remarks": {
+        "other": "Remarques"
+    },
+    "bibliography": {
+        "other": "Bibliographie"
+    },
+    "teachers": {
+        "other": "Enseignants"
+    },
+    "unit": {
+        "other": "Unité"
+    },
+    "responsible_teacher": {
+        "other": "Responsable"
+    },
+    "module_responsible_teacher": {
+        "other": "Responsable du module"
+    },
+    "module_description_validated": {
+        "other": "Descriptif validé le"
+    },
+    "by": {
+        "other": "par"
+    },
+    "unvalidated_module_header": {
+        "other": "Impossible d'afficher le descriptif de module"
+    },
+    "unvalidated_module_body": {
+        "other": "Les informations contenues dans les descriptif de module n'ont pas encore été validées. Il n'est pas possible d'afficher ce descriptif pour le moment."
+    },
+    "caracteristic": {
+        "other": "Caractéristique"
+    },
+    "mandatory_module": {
+        "other": "Module obligatoire"
+    },
+    "mandatory_module_failure": {
+        "other": "En cas d'échec définitif à un module défini comme obligatoire pour acquérir le profil de formation correspondant, l'étudiant est exclu de la filière, voire du domaine si le règlement de filière le précise conformément à l'article 25 du règlement sur la formation de base (bachelor et master) en HES-SO."
+    },
+    "level": {
+        "other": "Niveau"
+    },
+    "type": {
+        "other": "Type"
+    },
+    "generated": {
+        "other": "Généré le"
+    },
+    "developped": {
+        "other": "Développé dans le cadre du projet {{ .Developped }}"
+    },
+    "validated_modules": {
+        "other": "Avoir validé les modules"
+    },
+    "void": {
+        "other": "Néant"
+    },
+    "parallel_modules": {
+        "other": "Avoir suivi ou suivre en parallèle les modules"
+    },
+    "no_prerequisites": {
+        "other": "Pas de prérequis"
+    },
+    "final_module_grade": {
+        "other": "Note finale du module"
+    },
+    "final_grade": {
+        "other": "Note finale"
+    },
+    "weight": {
+        "other": "poids"
+    },
+    "alternative_groups_units": {
+        "other": "Unités alternatives du groupe"
+    },
+    "min_work_volume": {
+        "other": "Volume minimal de travail minimal à suivre "
+    },
+    "abbreviation": {
+        "other": "Abréviation"
+    },
+    "volume": {
+        "other": "Volume"
+    },
+    "semester": {
+        "other": "Semestre"
+    },
+    "mandatory_unit": {
+        "one": "Unité obligatoire",
+        "other": "Unités obligatoires"
+    },
+    "alternative_unit": {
+        "one": "Unité alternative",
+        "other": "Unités alternatives"
+    },
+    "belongs_to_module": {
+        "other": "Appartient au module"
+    },
+    "formation_mode": {
+        "other": "Mode de formation"
+    },
+    "workload": {
+        "other": "Charge de travail"
+    },
+    "hours": {
+        "other": "heures"
+    },
+    "study_hours": {
+        "other": "heures d'études"
+    },
+    "supervised_periods": {
+        "other": "périodes encadrées"
+    },
+    "corresponding_to": {
+        "other": "correspondant à"
+    },
+    "periods": {
+        "other": "périodes"
+    },
+    "position_of": {
+        "other": "position des"
+    },
+    "recommended_prior_knowledge": {
+        "other": "connaissances préalables recommandées"
+    },
+    "knowledge_control": {
+        "other": "contrôle de connaissances"
+    },
+    "per_week_periods": {
+        "other": "Périodes par semaine"
+    },
+    "caption": {
+        "other": "Légende"
+    },
+    "coefficient": {
+        "other": "Coef."
+    },
+    "no_remark": {
+        "other": "Aucune remarque"
+    },
+    "optional_abbreviation": {
+        "other": "fac."
+    },
+    "informative_periods_repartition": {
+        "other": "Répartition des périodes indiquée à titre informatif"
+    },
+    "module_planning_caption": {
+        "other": "<ul><li>HES d'&eacute;t&eacute; E1, E2, E3 : 3 semaines</li><li>Trimestre T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12 : 8 semaines</li><li>Semestre S1, S2, S3, S4, S5, S6 : 16 semaines</li><li>fac. : module ou unit&eacute; facultatif</li><li>() : un coefficient entre parenth&egrave;ses indique une unit&eacute; alternative</li><li>Seuil de compensation : Toute note d'une unit&eacute; inf&eacute;rieure au seuil entraine l'&eacute;chec du module</li><li>Bords gras : Les cellules dont le bord droit est affich&eacute; en gras indiquent un examen</li></ul>"
+    },
+    "selectable_units": {
+        "other": "Unités à choix"
+    },
+    "objectives": {
+        "other": "Objectifs"
+    }
+}

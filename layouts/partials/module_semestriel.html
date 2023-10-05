@@ -1,0 +1,6 @@
+{{ $module_semestriel := true }}
+{{ range .Pages }}
+    {{ $unit := .Params.json_content }}
+    {{ $module_semestriel = and $module_semestriel (not $unit.unite_trimestrielle) }}
+{{ end }}
+{{ return $module_semestriel }}

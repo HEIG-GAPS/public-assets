@@ -1,0 +1,12 @@
+{{ $types_remediation := site.Data.bachelor.types_remediation }}
+{{ $type_remediation := .module_type_remediation_id }}
+{{ $mod := . }}
+{{ range $i, $type_rem := $types_remediation }}
+<div class="form-check">
+    <input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled-module-{{ $mod.module_code }}-remediation{{$i}}" {{ if eq $type_remediation
+        $type_rem.id }} checked {{ end }} disabled>
+    <label class="form-check-label" for="flexCheckCheckedDisabled-module-{{ $mod.module_code }}-remediation{{$i}}">
+        <b> {{ $type_rem.texte }} </b>
+    </label>
+</div>
+{{ end }}

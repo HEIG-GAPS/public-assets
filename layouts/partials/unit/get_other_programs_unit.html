@@ -1,0 +1,26 @@
+{{ $unit := .Params.json_content }}
+{{ $unit_mode_full := false }}
+{{ $programme_id := (index .Ancestors 0).Params.json_content.programme_id }}
+{{ $eacademique := index .Ancestors 3 }}
+{{ $autres_programmes := slice }}
+{{ range $eacademique.Pages }}
+    {{ $formation := .Params.json_content }}
+    {{ range .Pages }}
+        {{ $mode := .Params.json_content }}
+        {{ range .Pages }}
+            {{ $p_id := .Params.json_content.programme_id }}
+            {{ range .Pages }}
+                {{ $un := .Params.json_content }}
+                {{ if and (eq $un.unite_id $unit.unite_id) (not (eq $p_id $programme_id)) }}
+                    {{ $data := dict
+                        "page" .
+                        "formation" $formation.formation_abreviation
+                        "mode" $mode.mode_formation_abreviation
+                        }}
+                    {{ $autres_programmes = $autres_programmes | append $data }}
+                {{ end }}
+            {{ end }}
+        {{ end }}
+    {{ end }}
+{{ end }}
+{{ return $autres_programmes }}

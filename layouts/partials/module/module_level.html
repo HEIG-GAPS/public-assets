@@ -1,0 +1,15 @@
+{{ $niveaux := site.Data.bachelor.niveaux_formation }}
+{{ $niveau := .module_niveau_formation_id }}
+{{ $mod := . }}
+<div class="flex-fill">
+    <b> {{ i18n "level" }} </b>
+    {{ range $i, $niv := $niveaux }}
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="module-{{ $mod.module_code }}-flexCheckCheckedDisabled-level{{$i}}" {{ if eq $niveau
+            $niv.id }} checked {{ end }} disabled>
+        <label class="form-check-label" for="module-{{ $mod.module_code }}-flexCheckCheckedDisabled-level{{$i}}">
+            {{ $niv.nom }}
+        </label>
+    </div>
+    {{ end }}
+</div>

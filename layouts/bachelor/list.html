@@ -1,0 +1,13 @@
+{{ define "main" }}
+<nav class="d-flex flex-column">
+    <div class="text-center"> {{ .Content }} </div>
+    <br>
+    <div class="d-flex">
+          {{ range .Pages }}
+          <div class="container text-center">
+              <a href="{{ .Permalink }}">{{ .Title }}</a>
+          </div>
+          {{ end }}
+    </div>
+</nav>
+{{ end }}

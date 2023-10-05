@@ -1,0 +1,41 @@
+{{ $cols := slice }}
+{{ $n_semaines_semestre := int .n_semaines_semestre }}
+{{ $n_semaines_trimestre := int .n_semaines_trimestre }}
+{{ $n_semaines_hes_ete := int .n_semaines_hes_ete }}
+{{ $n_semaines := 0 }}
+{{ $unit := .unite }}
+{{ if $unit.unite_trimestrielle }}
+    {{ $n_semaines = $n_semaines_trimestre }}
+    {{ $cols = partial "get_trimesters" .formation_duree }}
+{{ else }}
+    {{ $n_semaines = $n_semaines_semestre }}
+    {{ $cols = .semestres }}
+{{ end }}
+<td scope="row" class="align-middle text-center coef-value-cell">
+    {{ if lt $unit.unite_coefficient 1 }} {{ i18n "optional_abbreviation" }} {{ else }} {{ $unit.unite_coefficient }} {{ end }}
+</td>
+{{ range $col := $cols }}
+    {{ $unit_ctx := dict
+        "unite" $unit
+        "type" $col
+        }}
+    {{ $examen := partial "unit_exam" $unit }}
+    {{ $last := partial "module_last_semester_of" (dict "unite" $unit "type" $col)}}
+    {{ $decoupage := partial "get_unit_periods_type" $unit_ctx }}
+    {{ $periodes := div $decoupage.periodes $n_semaines }}
+    {{ if hasPrefix $col "E" }}
+        {{ $periodes = div $decoupage.periodes $n_semaines_hes_ete }}
+    {{ end }}
+    <td
+    {{ if hasPrefix $col "S" }}
+    colspan="2"
+    {{ end }}
+    class="
+    align-middle
+    text-center
+    period-cell
+    {{ if and $examen (not (lt $decoupage.periodes 1)) $last }} examen{{ end }}"
+    >{{ if not (lt $decoupage.periodes 1) }}
+            {{ $periodes }}
+        {{ end }}</td>
+{{ end }}

@@ -1,0 +1,205 @@
+$border-custom-color: grey;
+$border-custom-line: 1px solid $border-custom-color;
+
+$link-custom-color: rgb(63, 98, 214);
+$link-hover-custom-color: darken($link-custom-color, 10%);
+$link-visited-custom-color: rgb(108, 46, 252);
+
+a {
+    text-decoration: none!important;
+}
+
+a:link {
+    color: $link-custom-color;
+}
+
+a:hover {
+    color: $link-hover-custom-color;
+}
+
+a:visited {
+    color: $link-visited-custom-color;
+}
+
+.fraction-numerator {
+    border-bottom: solid 1px black;
+}
+
+.fraction-denominator {
+    margin: 0px 0px 0px 0px;
+}
+
+.module-cell {
+    border-top: $border-custom-line;
+    border-left: $border-custom-line;
+    border-bottom: 0;
+    width: 60%!important;
+}
+
+.module-info-cell {
+    border-left: $border-custom-line;
+    border-bottom: 0;
+    width: 60%!important;
+}
+
+.coef-cell {
+    border-top: $border-custom-line;
+    border-right: 1px dotted $border-custom-color;
+    border-bottom: 0;
+    width: 5%;
+}
+
+.under-coef-cell {
+    border-right: 1px dotted $border-custom-color;
+    border-bottom: 0;
+    width: 5%;
+}
+
+.group-alternative-cell {
+    border-top: 0;
+    border-bottom: 0;
+    width: 5%;
+}
+
+.top-alternative {
+    border-top: $border-custom-line!important;
+    border-bottom: 0;
+}
+
+.group-alternative-A {
+    border-right: 2px solid red!important;
+}
+
+.group-alternative-B {
+    border-right: 2px solid green!important;
+}
+
+.semester-cell {
+    border-top: $border-custom-line;
+    border-bottom: 0;
+}
+
+.only-semester-cell {
+    border-top: $border-custom-line;
+    border-bottom: $border-custom-line!important;
+    border-right: 0!important;
+    border-left: 0!important;
+}
+
+.only-semester-cell:last-child {
+    border-right: $border-custom-line!important;
+}
+
+.only-trimester-cell {
+    border-top: $border-custom-line;
+    border-bottom: $border-custom-line!important;
+}
+
+.only-trimester-cell:last-child {
+    border-right: $border-custom-line;
+}
+
+.semester-trimester-cell {
+    border-top: $border-custom-line;
+    border-bottom: $border-custom-line!important;
+}
+
+.under-semester-cell {
+    border-bottom: $border-custom-line;
+}
+
+.under-semester-cell:last-child {
+    border-right: $border-custom-line;
+}
+
+.semester-cell:last-child {
+    border-right: $border-custom-line;
+}
+
+.coef-value-cell {
+    border-right: $border-custom-line!important;
+    border-bottom: 0;
+}
+
+.unit-cell {
+    border-bottom: 0;
+    border-left: $border-custom-line!important;
+    width: 60%!important;
+}
+
+.period-cell {
+    border-left: $border-custom-line;
+    border-right: $border-custom-line;
+    border-bottom: $border-custom-line;
+}
+
+.formation-cell {
+    width: 50%!important;
+}
+
+.formation-card {
+    border-left: 0!important;
+    border-bottom: 0!important;
+    border-right: 0!important;
+}
+
+.card  .card {
+    border-right: 0!important;
+    border-left: 0!important;
+    border-bottom: 0!important;
+}
+
+.examen {
+    border-right: 4px solid grey;
+}
+
+.contenu-en-tete {
+    border-bottom: 2px solid grey;
+}
+
+.contenu-type {
+    width: 90%;
+}
+
+.contenu-sous-texte {
+    font-size: smaller;
+}
+
+.module-planning {
+    font-size: 7;
+    width: 1200px;
+}
+
+.module-planning tbody {
+    border-bottom: $border-custom-line;
+}
+
+.week-cell {
+    border-bottom: $border-custom-line!important;
+}
+
+.week-cell:first-child {
+    border-left: $border-custom-line!important;
+}
+
+.selectable-units td:last-of-type {
+    background-color: grey;
+}
+
+$content-width : 90rem;
+
+.pdf-content {
+    width: $content-width;
+    min-width: $content-width;
+    max-width: $content-width;
+}
+
+.modules-planning {
+    min-width: $content-width;
+    max-width: $content-width;
+    width: $content-width;
+}
+
+body {
+    resize: none;
+}

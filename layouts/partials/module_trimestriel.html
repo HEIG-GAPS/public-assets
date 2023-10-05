@@ -1,0 +1,6 @@
+{{ $trimestrielle := true }}
+{{ range .Pages }}
+    {{ $unite := .Params.json_content }}
+    {{ $trimestrielle = and $trimestrielle $unite.unite_trimestrielle }}
+{{ end }}
+{{ return $trimestrielle }}

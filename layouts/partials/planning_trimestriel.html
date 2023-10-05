@@ -1,0 +1,9 @@
+{{ $module := . }}
+{{ $unite_trimestrielle := false }}
+{{ range .Pages }}
+    {{ range .Pages }}
+        {{ $unit := .Params.json_content }}
+        {{ $unite_trimestrielle = or $unite_trimestrielle $unit.unite_trimestrielle }}
+    {{ end }}
+{{ end }}
+{{ return $unite_trimestrielle }}

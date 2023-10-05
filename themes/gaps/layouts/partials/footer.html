@@ -1,0 +1,40 @@
+<footer class="footer fixed-bottom bg-dark">
+
+    <div class="row footer-text">
+        <div class="col-12 col-md text-center text-md-left nav-link text-white">
+            {{ i18n "generated" }} {{ .Site.Data.bachelor.generation | time.Format ":date_short" }}
+            Copyright © HEIG-VD 2004-2023 / {{ i18n "developped" (dict "Developped" "GAPS") }}
+        </div>
+    </div>
+
+    <!-- JavaScript and dependencies -->
+
+    {{ $bootstrap := resources.Get "js/bootstrap.bundle.min.js" }}
+    {{ $bootstrap_js := slice $bootstrap | resources.Concat "js/bootsrap_bundle.js" | resources.Minify }}
+
+    {{ $fontawesome := resources.Get "js/fontawesome.min.js" }}
+    {{ $fontawesome_js := slice $fontawesome | resources.Concat "js/fontawesome_bundle.js" | resources.Minify }}
+
+    {{ $jquery := resources.Get "js/jquery.min.js" }}
+    {{ $jquery_js := slice $jquery | resources.Concat "js/jquery_bundle.js" | resources.Minify }}
+
+    {{ $jspdf := resources.Get "js/jspdf.umd.min.js" }}
+    {{ $jspdf_js := slice $jspdf | resources.Concat "js/jspdf_bundle.js" | resources.Minify }}
+
+    {{ $html2canvas := resources.Get "js/html2canvas.min.js" }}
+    {{ $html2canvas_js := slice $html2canvas | resources.Concat "js/html2canvas_bundle.js" | resources.Minify }}
+
+    {{ $dompurify := resources.Get "js/purify.min.js" }}
+    {{ $dompurify_js := slice $dompurify | resources.Concat "js/purify_bundle.js" | resources.Minify }}
+    
+    <script src="{{$bootstrap_js.RelPermalink}}" defer></script>
+    <script src="{{$fontawesome_js.RelPermalink}}" defer></script>
+    <script src="{{$jquery_js.RelPermalink}}"></script>
+    <script src="{{$jspdf_js.RelPermalink}}"></script>
+    <script src="{{$html2canvas_js.RelPermalink}}" defer></script>
+    <script src="{{$dompurify_js.RelPermalink}}" defer></script>
+
+    <!-- Auto collapsing breadcrumb -->
+    <script src="/js/collapsing_breadcrumb.js"></script>
+    
+</footer>

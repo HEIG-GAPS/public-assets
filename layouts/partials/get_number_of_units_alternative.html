@@ -1,0 +1,9 @@
+{{ $groupe_id := .groupe_id }}
+{{ $n := 0 }}
+{{ range .unites }}
+    {{ $unit := .Params.json_content }}
+    {{ if eq (int $unit.unite_id_groupe_alternatives) (int $groupe_id) }}
+        {{ $n = add $n 1 }}
+    {{ end }}
+{{ end }}
+{{ return $n }}

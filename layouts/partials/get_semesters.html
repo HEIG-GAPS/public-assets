@@ -1,0 +1,9 @@
+{{ $formation_duree_semestre := . }}
+{{ $semestres := slice }}
+{{ range (seq 1 $formation_duree_semestre) }}
+    {{ if eq 1 (mod . 2) }}
+    {{ $semestres = $semestres | append (printf "E%d" (add 1 (div . 2))) }}
+    {{ end }}
+    {{ $semestres = $semestres | append (printf "S%d" .) }}
+{{ end }}
+{{ return $semestres }}

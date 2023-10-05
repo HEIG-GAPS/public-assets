@@ -1,0 +1,10 @@
+{{ range .Pages }}
+  <div class="card mb-3">
+      <div class="card-header p-2 border-bottom-0 text-center">
+        <b> {{ .Title }} ({{ .Params.json_content.entite_academique_abreviation }}) </b>
+      </div>
+      <div class="card-body">
+        {{ partial "careers.html" .}}
+      </div>
+  </div>
+{{ end }}

@@ -1,0 +1,51 @@
+{{ $ctx := . }}
+{{ $cols := .cols }}
+{{ $page := .module }}
+{{ $module := $page.Params.json_content }}
+<thead class="table-primary">
+    <tr class="header-row">
+        <th scope="col" class="module-cell">
+            <a href="{{ $page.Permalink }}" class="pdf-link module-header">{{$module.module_nom}} ({{ $module.module_code }})</a>
+        </th>
+        <th scope="col" class="top-alternative group-alternative-cell"></th>
+        <th 
+        scope="col"
+        rowspan="2"
+        class="align-middle text-center coef-cell"> 
+        {{ i18n "coefficient" }}
+        </th>
+        {{ range $col := $cols }}
+            <th 
+            scope="col"
+            class="align-middle text-center only-semester-cell period-cell"
+            rowspan="2"
+            {{ if or (hasPrefix $col "S") }}colspan="2"{{ end }}> 
+            {{ . }} 
+            </th>
+        {{ end }}
+    </tr>
+    <tr>
+        <th scope="col" class="module-info-cell">
+            <span>
+                {{$module.module_credits}} ECTS | {{ i18n "compensation_threshold_table" }} 
+                {{ $module.module_seuil_compensation }} | {{ i18n "repetition_threshold_table" }} 
+                {{ $module.module_seuil_repetition }}  
+            </span>
+        </th>
+        <th scope="col" class="group-alternative-cell"></th>
+    </tr>
+</thead>
+<tbody>
+    {{ if eq (len $page.Pages) 0 }}
+        <tr class="selectable-units">
+            <th scope="col" class="table-primary unit-cell"> <b> {{ i18n "selectable_units" }} </b> </th>
+            <th scope="col" class="group-alternative-cell table-primary"></th>
+            <th scope="col" class="table-primary coef-value-cell text-center align-middle"> ... </th>
+            {{ range $col := $cols }}
+            <td class="period-cell" {{ if or (hasPrefix $col "S") }}colspan="2"{{ end }}></td>
+            {{ end }}
+        </tr>
+    {{ else }}
+        {{ partial "module/module_units_planning" $ctx }}
+    {{ end }}
+</tbody>

@@ -1,0 +1,11 @@
+{{ $formation_duree_semestre := . }}
+{{ $trimesters := slice }}
+{{ range (seq 1 (mul $formation_duree_semestre 2)) }}
+    {{ if eq (mod (sub . 1) 4) 0 }}
+    <th scope="col" class="align-middle text-center only-trimester-cell">
+        {{ $trimesters = $trimesters | append (printf "E%d" (add (div . 4) 1)) }}
+    </th>
+    {{ end }}
+    {{ $trimesters = $trimesters | append (printf "T%d" .) }}
+{{ end }}
+{{ return $trimesters }}

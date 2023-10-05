@@ -1,0 +1,8 @@
+{{ $unit := . }}
+{{ $types := slice }}
+{{ range $unit.ponderations }}
+    {{ if not (eq .type_enseignement_id nil) }}
+        {{ $types = $types | append . }}
+    {{ end }}
+{{ end }}
+{{ return $types }}

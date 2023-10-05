@@ -1,0 +1,5 @@
+{{ $total_periods := 0 }}
+{{ range .decoupages }}
+    {{ $total_periods = add $total_periods (int .nombre_periodes_encadrees) }}
+{{ end }}
+{{ return $total_periods }}

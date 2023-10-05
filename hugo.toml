@@ -1,0 +1,83 @@
+theme = "gaps"
+relativeURLS = false
+defaultContentLanguage = 'fr-ch'
+
+[languages]
+    [languages.fr-ch]
+        languageName = 'Français'
+        [languages.fr-ch.params]
+            baseURL = '/'
+            weight = 1
+            title = 'GAPS Public'
+    [languages.en]
+        languageName = 'English'
+        [languages.en.params]
+            baseURL = '/'
+            weight = 2
+            title = 'Public GAPS'
+
+[[headers]]
+  for = "/*"
+    [headers.values]
+    Access-Control-Allow-Origin = "*"
+
+[js_module]
+    [[module.mounts]]
+        source = "static/js"
+        target = "assets/js"
+    [[module.mounts]]
+        source = "node_modules/bootstrap/dist/js/bootstrap.bundle.js"
+        target = "assets/js/bootstrap.bundle.min.js"
+    [[module.mounts]]
+        source = "node_modules/@fortawesome/fontawesome-free/js/all.min.js"
+        target = "assets/js/fontawesome.min.js"
+    [[module.mounts]]
+        source = "node_modules/jquery/dist/jquery.min.js"
+        target = "assets/js/jquery.min.js"
+    [[module.mounts]]
+        source = "node_modules/jspdf/dist/jspdf.umd.min.js"
+        target = "assets/js/jspdf.umd.min.js"
+    [[module.mounts]]
+        source = "node_modules/html2canvas/dist/html2canvas.min.js"
+        target = "assets/js/html2canvas.min.js"
+    [[module.mounts]]
+        source = "node_modules/dompurify/dist/purify.min.js"
+        target = "assets/js/purify.min.js"
+    [[module.mounts]]
+        source = "node_modules/html-to-image/dist/html-to-image.js"
+        target = "assets/js/html-to-image.js"
+    [[module.mounts]]
+        source = "node_modules/jspdf-autotable/dist/jspdf.plugin.autotable.min.js"
+        target = "assets/js/jspdf.plugin.autotable.min.js"
+    [[module.mounts]]
+        source = "node_modules/html-to-text/lib/html-to-text.js"
+        target = "assets/js/html-to-text.js"
+
+[prebuild_module]
+    [[module.mounts]]
+        source = "prebuild/public/bachelor"
+        target = "content/bachelor"
+    [[module.mounts]]
+        source = "prebuild/data"
+        target = "data"
+
+[content_module]
+    [[module.mounts]]
+        source = "content"
+        target = "content"
+    [[module.mounts]]
+        source = "static/images"
+        target = "assets/images"
+
+[packages_module]
+    [[module.mounts]]
+        source = "static"
+        target = "static"
+    
+[outputs]
+  home = ['html']
+  page = ['html']
+  rss = ['rss']
+  section = ['html', 'rss']
+  taxonomy = ['html', 'rss']
+  term = ['html', 'rss']

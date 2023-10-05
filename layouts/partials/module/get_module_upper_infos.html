@@ -1,0 +1,8 @@
+{{ $mod := .Params.json_content }}
+{{ $upper_infos := dict 
+    "domaine" (index .Ancestors 4).Params.json_content.domaine_nom
+    "filiere" (index .Ancestors 2).Params.json_content.filiere_nom
+    "orientation" (index .Ancestors 1).Params.json_content.formation_nom
+    "mode" (index .Ancestors 0).Params.json_content.mode_formation_nom
+    }}
+{{- return $upper_infos -}}
