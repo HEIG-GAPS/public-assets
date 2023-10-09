@@ -1,5 +1,6 @@
 node_modules
 public
+pdf
 .idea
 .hugo_build.lock
 */_gen
