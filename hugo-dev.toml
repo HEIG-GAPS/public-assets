@@ -1,7 +1,7 @@
 theme = "gaps"
 relativeURLS = false
 defaultContentLanguage = 'fr-ch'
-baseURL = ""
+baseURL = "/"
 
 [languages]
     [languages.fr-ch]
@@ -69,9 +69,6 @@ baseURL = ""
     [[module.mounts]]
         source = "static/images"
         target = "assets/images"
-    [[module.mounts]]
-        source = "pdf"
-        target = "static/pdf"
 
 [packages_module]
     [[module.mounts]]
