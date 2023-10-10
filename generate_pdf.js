@@ -462,7 +462,7 @@ async function generatePDF(browser, pagePath, type) {
                 const captionHeight = caption.clientHeight * scale
                 currentHeight = splitTableDiv.lastChild.clientHeight * scale
                 if (currentHeight + captionHeight >= pageContentHeight - pageEpsilon) {
-                    var newDiv = document.createElement("div")
+                    newDiv = document.createElement("div")
                     splitTableDiv.appendChild(newDiv)
                 }
                 splitTableDiv.lastChild.appendChild(caption)
