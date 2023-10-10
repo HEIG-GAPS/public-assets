@@ -4,7 +4,8 @@
 {{ $upper_infos := partial "module/get_module_upper_infos" .}}
 {{ $module_mode_full := false }}
 {{ $eacademique := index .Ancestors 2 }}
-{{ $autres_programmes := partial "module/get_other_programs_module" .}}
+{{ $autres_programmes := partial "module/get_other_programs_module" . }}
+{{ $pdf_link := printf "%spdf%s%s.pdf" .Site.BaseURL .RelPermalink ($mod.module_code | urlize) }}
 <div class="card pdf-content">
     <div class="card-header border-bottom-0 d-flex flex-row align-center" data-html2canvas-ignore="true">
         <div class="flex-fill d-flex align-content-center">
@@ -39,7 +40,7 @@
                             </li>
                             {{ end }}
                         </ul>
-                        <button type="button" class="btn btn-custom pdf-button" onclick="console.log('TODO : add links')">
+                        <button type="button" class="btn btn-custom pdf-button"  onclick="openAndDownloadPDF('{{ $pdf_link }}')">
                             PDF
                         </button>
                     </div>

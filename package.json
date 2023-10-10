@@ -5,7 +5,7 @@
   "main": "index.html",
   "scripts": {
     "hugo-prebuild": "cd ./prebuild && hugo",
-    "pregenerate-pdf": "hugo server&",
+    "pregenerate-pdf": "hugo server --config hugo-dev.toml&",
     "generate-pdf": "node generate_pdf.js",
     "postgenerate-pdf": "pkill hugo",
     "test": "echo \"Error: no test specified\" && exit 1"
