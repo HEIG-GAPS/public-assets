@@ -72,7 +72,6 @@ async function generatePDF(browser, pagePath, type) {
             const heigImgPath = "/images/HEIG-VD_logotype-baseline_rouge-rvb.png"
 
             /* Footer */
-            const footerXSpacing = 90
             const infos = "T +41 (0)24 557 63 30\ninfo@heig-vd.ch"
             const footerFontSize = 7
 
@@ -635,9 +634,11 @@ async function generatePDF(browser, pagePath, type) {
                 default:
             }
         }, [pagePath, type, host])
-    } finally {
+    }  catch(err) {
+        console.error(err)
         return context
     }
+    return context
 }
 
 const modes = []
@@ -674,12 +675,12 @@ function listFolders(folderPaths) {
         const results = fs.readdirSync(folderPath)
         const folders = results.filter(res => fs.lstatSync(path.resolve(folderPath, res)).isDirectory())
         const innerFolderPaths = folders.map(folder => path.resolve(folderPath, folder))
+        if (innerFolderPaths.length === 0) return
         if (!(folderPath.endsWith("/pt") || folderPath.endsWith("/tp-ee"))) listFolders(innerFolderPaths)
         else {
             modes.push(path.relative(topFolder, folderPath))
             listModulesUnits(innerFolderPaths, 1)
         }
-        if (innerFolderPaths.length === 0) return
     })
 }
 
