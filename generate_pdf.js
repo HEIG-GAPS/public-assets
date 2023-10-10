@@ -397,14 +397,17 @@ async function generatePDF(browser, pagePath, type) {
              */
             function generateModulesPlanningPDF(doc) {
 
-                /* Getting all links */
-                const links = getLinksRelativeCoords(planning)
-                var moduleHeaders = []
-                var linksIndex = 0
+                
 
                 /* Extracting original planning */
                 const planning = document.querySelector(".modules-planning")
                 const modulesRows = planning.children
+
+                /* Getting all links */
+                const links = getLinksRelativeCoords(planning)
+                var moduleHeaders = []
+                var linksIndex = 0
+                
                 /* Adding each subtable of planning to offside div, allowing html2canvas to render it */
                 let splitTableDiv = document.createElement("div")
                 splitTableDiv.style = `visibility: hidden; position: fixed; right: -10000px; top: -10000px; border: 0px;`
@@ -428,9 +431,9 @@ async function generatePDF(browser, pagePath, type) {
                         const totalHeight = (header.clientHeight + body.clientHeight) * scale
                         currentHeight = splitTableDiv.lastChild.clientHeight * scale
                         if (currentHeight + totalHeight >= pageContentHeight - pageEpsilon) {
-                            var newDiv = document.createElement("div")
+                            newDiv = document.createElement("div")
                             splitTableDiv.appendChild(newDiv)
-                            var table = document.createElement("table")
+                            table = document.createElement("table")
                             table.className = "table modules-planning"
                             table.style.width = `${planning.clientWidth}px`
                             newDiv.appendChild(table)
@@ -444,9 +447,9 @@ async function generatePDF(browser, pagePath, type) {
                         const height = totalRow.clientHeight * scale
                         currentHeight = splitTableDiv.lastChild.clientHeight * scale
                         if (currentHeight + height >= pageContentHeight - pageEpsilon) {
-                            var newDiv = document.createElement("div")
+                            newDiv = document.createElement("div")
                             splitTableDiv.appendChild(newDiv)
-                            var table = document.createElement("table")
+                            table = document.createElement("table")
                             table.className = "table modules-planning"
                             table.style.width = `${planning.clientWidth}px`
                             newDiv.appendChild(table)
