@@ -22,9 +22,7 @@
         {{/* Publish a page. */}}
         {{ $ctx := dict "frontMatter" $frontMatter }}
         {{ $path := printf "%s/_index.md" $contentSectionDomaine }}
-        {{ $path_en := printf "%s/_index.en.md" $contentSectionDomaine }}
         {{ ($r | resources.ExecuteAsTemplate $path $ctx).Publish }}
-        {{ ($r | resources.ExecuteAsTemplate $path_en $ctx).Publish }}
         {{ range $j, $ea := .entites_academiques }}
             {{ $filter_ctx := dict
                 "original_dict" .
@@ -43,9 +41,7 @@
             {{/* Publish a page. */}}
             {{ $ctx := dict "frontMatter" $frontMatter }}
             {{ $path := printf "%s/_index.md" $contentSectionEntiteAcademique }}
-            {{ $path_en := printf "%s/_index.en.md" $contentSectionEntiteAcademique }}
             {{ ($r | resources.ExecuteAsTemplate $path $ctx).Publish }}
-            {{ ($r | resources.ExecuteAsTemplate $path_en $ctx).Publish }}
             {{ range $k, $fil := .filieres }}
                 {{ $filter_ctx := dict
                     "original_dict" .
@@ -64,9 +60,7 @@
                 {{/* Publish a page. */}}
                 {{ $ctx := dict "frontMatter" $frontMatter }}
                 {{ $path := printf "%s/_index.md" $contentSectionFiliere }}
-                {{ $path_en := printf "%s/_index.en.md" $contentSectionFiliere }}
                 {{ ($r | resources.ExecuteAsTemplate $path $ctx).Publish }}
-                {{ ($r | resources.ExecuteAsTemplate $path_en $ctx).Publish }}
                 {{ range $k, $form := .formations }}
                     {{ $filter_ctx := dict
                         "original_dict" .
@@ -84,9 +78,7 @@
                     {{/* Publish a page. */}}
                     {{ $ctx := dict "frontMatter" $frontMatter }}
                     {{ $path := printf "%s/_index.md" $contentSectionFormation }}
-                    {{ $path_en := printf "%s/_index.en.md" $contentSectionFormation }}
                     {{ ($r | resources.ExecuteAsTemplate $path $ctx).Publish }}
-                    {{ ($r | resources.ExecuteAsTemplate $path_en $ctx).Publish }}
                     {{ range .modes_formation }}
                         {{ $filter_ctx := dict
                             "original_dict" .
@@ -102,9 +94,7 @@
                         {{/* Publish a page. */}}
                         {{ $ctx := dict "frontMatter" $frontMatter }}
                         {{ $path := printf "%s/_index.md" $contentSectionMode }}
-                        {{ $path_en := printf "%s/_index.en.md" $contentSectionMode }}
                         {{ ($r | resources.ExecuteAsTemplate $path $ctx).Publish }}
-                        {{ ($r | resources.ExecuteAsTemplate $path_en $ctx).Publish }}
                         {{ range $l, $mod := .modules }}
                             {{ $filter_ctx := dict
                                 "original_dict" .
@@ -119,7 +109,6 @@
                             "weight" (add $l 1)
                             "json_content" $json_content
                             }}
-                            {{/* "outputs" (slice "html" "markdown") -> générer le pdf avant deployement ? */}}
                             {{/* Publish a page. */}}
                             {{ $ctx := dict "frontMatter" $frontMatter }}
                             {{ $path := printf "%s/_index.md" $contentSectionModule }}
@@ -139,9 +128,7 @@
                                     {{/* Publish a page. */}}
                                     {{ $ctx := dict "frontMatter" $frontMatter }}
                                     {{ $path := printf "%s/index.md" $contentSectionUnite }}
-                                    {{ $path_en := printf "%s/index.en.md" $contentSectionUnite }}
                                     {{ ($r | resources.ExecuteAsTemplate $path $ctx).Publish }}
-                                    {{ ($r | resources.ExecuteAsTemplate $path_en $ctx).Publish }}
                                 {{ end }}
                             {{ end }}
                         {{ end }}

@@ -63,19 +63,8 @@ baseURL = 'https://gaps-programmes-formation/'
     [[module.mounts]]
         source = "static/images"
         target = "assets/images"
-    [[module.mounts]]
-        source = "pdf"
-        target = "static/pdf"
 
 [packages_module]
     [[module.mounts]]
         source = "static"
         target = "static"
-    
-[outputs]
-  home = ['html']
-  page = ['html']
-  rss = ['rss']
-  section = ['html', 'rss']
-  taxonomy = ['html', 'rss']
-  term = ['html', 'rss']

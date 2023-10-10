@@ -5,8 +5,9 @@
   "main": "index.html",
   "scripts": {
     "hugo-prebuild": "cd ./prebuild && hugo",
-    "hugo-build": "hugo",
+    "pregenerate-pdf": "hugo server --config hugo-dev.toml&",
     "generate-pdf": "node generate_pdf.js",
+    "postgenerate-pdf": "pkill hugo",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -18,6 +19,8 @@
     "html2canvas": "^1.4.1",
     "jquery": "^3.7.0",
     "jspdf": "^2.5.1",
-    "puppeteer": "^21.3.6"
+    "puppeteer": "^21.3.6",
+    "queue-promise": "^2.2.1",
+    "toml": "^3.0.0"
   }
 }
