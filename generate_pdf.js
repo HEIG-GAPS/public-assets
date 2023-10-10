@@ -6,8 +6,8 @@ const toml = require("toml")
 
 const localhost = "http://localhost:1313/"
 const config = toml.parse(fs.readFileSync("./hugo.toml", 'utf-8'))
-const host = localhost
-// const host = config.baseURL
+// const host = localhost
+const host = config.baseURL
 
 async function generatePDF(browser, pagePath, type) {
     /* Setting up page and destination folder */

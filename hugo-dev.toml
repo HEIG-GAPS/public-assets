@@ -1,19 +1,19 @@
-theme = "gaps"
+theme = 'gaps'
 relativeURLS = false
 defaultContentLanguage = 'fr-ch'
-baseURL = "/"
+baseURL = 'https://gaps-programmes-formation/'
 
 [languages]
     [languages.fr-ch]
         languageName = 'Français'
         [languages.fr-ch.params]
-            baseURL = '/'
+            baseURL = ''
             weight = 1
             title = 'GAPS Public'
     [languages.en]
         languageName = 'English'
         [languages.en.params]
-            baseURL = '/'
+            baseURL = ''
             weight = 2
             title = 'Public GAPS'
 
@@ -74,11 +74,3 @@ baseURL = "/"
     [[module.mounts]]
         source = "static"
         target = "static"
-    
-[outputs]
-  home = ['html']
-  page = ['html']
-  rss = ['rss']
-  section = ['html', 'rss']
-  taxonomy = ['html', 'rss']
-  term = ['html', 'rss']
