@@ -10,12 +10,6 @@ baseURL = 'https://gaps-programmes-formation/'
             baseURL = ''
             weight = 1
             title = 'GAPS Public'
-    [languages.en]
-        languageName = 'English'
-        [languages.en.params]
-            baseURL = ''
-            weight = 2
-            title = 'Public GAPS'
 
 [[headers]]
   for = "/*"

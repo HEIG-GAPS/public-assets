@@ -6,19 +6,29 @@ const toml = require("toml")
 
 const localhost = "http://localhost:1313/"
 const config = toml.parse(fs.readFileSync("./hugo.toml", 'utf-8'))
-// const host = localhost
 const host = config.baseURL
 
+/**
+ * Generates a PDF using jsPDF through a Puppeteer headless browser
+ * @param {puppeteer.Browser} browser - Puppeteer Browser
+ * @param {string} pagePath - relative path of the page from which the script will generate the PDF
+ * @param {string} type - type of PDF to generate, one of ["mode", "module", "unite"]. If any other value is used, no PDF will be generated.
+ * @returns {puppeteer.BrowserContext} The context created and used to generate the PDF. Used to be closed later.
+ */
 async function generatePDF(browser, pagePath, type) {
-    /* Setting up page and destination folder */
+
+    /* Creating new BrowserContext and opening page */
     const context = await browser.createIncognitoBrowserContext()
     const page = await context.newPage()
     await page.setViewport({
         width: 640,
         height: 480
     })
-    //page.on('console', msg => console.log(`Page ${pagePath} log : `, msg.text()));
+
+    /* Navigate to page */
     await page.goto(localhost + pagePath, {waitUntil : 'domcontentloaded'})
+
+    /* Setting up destination folder */
     const client = await page.target().createCDPSession()
     const dest = 'pdf/' + pagePath
     if (!fs.existsSync(path.join(__dirname, dest))) fs.mkdirSync(dest, {recursive: true})
@@ -27,16 +37,21 @@ async function generatePDF(browser, pagePath, type) {
         downloadPath: dest,
     })
 
-    /* Loading page and generate PDF */
+    /* Loading page */
     const dom = await page.$eval('html', element => {
         return element.innerHTML
     })
     await page.setContent(dom)
-    try {    
+
+    /* Generate PDF */
+    try {
             await page.evaluate(async ([path, type, host]) => {
+            
             const { jsPDF } = window.jspdf
+
             /* PDF generation settings */
             const savingDelay = 100 // Time to wait before assuming document is saved
+
             /* PDF layout */
             const marginTop = 60
             const marginBot = 30
@@ -75,10 +90,18 @@ async function generatePDF(browser, pagePath, type) {
             const linkShiftX = 0.5
             const pageAnchorShiftX = 2
 
+            /* Other settings */
             const interLine = 3
 
             /* ------------------------- Utils ------------------------- */
 
+            /**
+             * Generate a list of objectifs containing the relative position withint content,
+             * hyperlink and if the link is a module header of every links present in the content.
+             * This function is used to render hyperlinks and PDF anchors in the final documents.
+             * @param {Element} content - The Elements containing the contents wanted in the PDF
+             * @returns {Object[]} List of objects describing the links
+             */
             function getLinksRelativeCoords(content) {
                 const links = content.querySelectorAll(".pdf-link")
                 const contentBRect = content.getBoundingClientRect()
@@ -100,6 +123,10 @@ async function generatePDF(browser, pagePath, type) {
             }
 
             /* ------------------------- Header and footer ------------------------- */
+            /**
+             * Adds the page number to every page footer
+             * @param {jsPDF} doc - jsPDF document to write in
+             */
             function addPageNumberToDoc(doc) {
                 const nPages = doc.internal.getNumberOfPages()
                 for (let i = 1; i <= nPages; i++) {
@@ -108,6 +135,12 @@ async function generatePDF(browser, pagePath, type) {
                 }
             }
 
+            /**
+             * Adds footer the document specified page.
+             * @param {jsPDF} doc - jsPDF document to write in
+             * @param {Number} pageNumber - The number of the page where the footer should be added
+             * @param {any} additionalContent - Additionnal content to add to remaining space of footer. Not used yet.
+             */
             function pageFooter(doc, pageNumber, additionalContent) {
                 doc.setPage(pageNumber)
                 var footerY = doc.internal.pageSize.getHeight() - marginBot / 2
@@ -122,7 +155,13 @@ async function generatePDF(browser, pagePath, type) {
                 doc.addImage(hesImg, 'png', footerX, footerY - imgHeight / 2, imgWidth, imgHeight, undefined, 'FAST')
             }
 
-            function pageHeader(doc, pageNumber, additionalContent) {
+            /**
+             * Adds header the document specified page.
+             * @param {jsPDF} doc - jsPDF document to write in
+             * @param {Number} pageNumber - The number of the page where the header should be added
+             * @param {string} headerTitle - The title of the header
+             */
+            function pageHeader(doc, pageNumber, headerTitle) {
                 doc.setPage(pageNumber)
                 var headerY = imgYmargin
                 var headerX = marginLeft
@@ -131,22 +170,47 @@ async function generatePDF(browser, pagePath, type) {
                 var heigImg = new Image()
                 heigImg.src = heigImgPath
                 doc.addImage(heigImg, 'png', headerX, headerY, imgWidth, imgHeight)
-                headerX += doc.internal.pageSize.getWidth() - marginLeft - 2 * marginRight - doc.getTextWidth(additionalContent)
-                doc.setFont(undefined, "bold").text(additionalContent, headerX, headerY, { baseline: "top" })
+                headerX += doc.internal.pageSize.getWidth() - marginLeft - 2 * marginRight - doc.getTextWidth(headerTitle)
+                doc.setFont(undefined, "bold").text(headerTitle, headerX, headerY, { baseline: "top" })
             }
 
-            function pageHeaderFooter(doc, pageNumber, footerContent, HeaderContent) {
+            /**
+             * Adds header and footer the document specified page.
+             * @param {jsPDF} doc - jsPDF document to write in
+             * @param {Number} pageNumber - The number of the page where the header and footer should be added
+             * @param {any} footerContent - Additionnal content to add to remaining space of footer. Not used yet.
+             * @param {string} headerTitle - The title of the header
+             */
+            function pageHeaderFooter(doc, pageNumber, footerContent, headerTitle) {
                 pageFooter(doc, pageNumber, footerContent)
-                pageHeader(doc, pageNumber, HeaderContent)
+                pageHeader(doc, pageNumber, headerTitle)
             }
 
-            function addHeaderFooterToDoc(doc, startPage, endPage, footerContent, HeaderContent) {
+            /**
+             * Adds header and footer the document specified range of pages.
+             * @param {jsPDF} doc - jsPDF document to write in
+             * @param {*} startPage - First page on which header and footer should be added
+             * @param {*} endPage - Last page on which header and footer should be added
+             * @param {*} footerContent - Additionnal content to add to remaining space of footer. Not used yet.
+             * @param {*} headerTitle - The title of the header
+             */
+            function addHeaderFooterToDoc(doc, startPage, endPage, footerContent, headerTitle) {
                 for (let i = startPage; i <= endPage; i++) {
-                    pageHeaderFooter(doc, i, footerContent, HeaderContent)
+                    pageHeaderFooter(doc, i, footerContent, headerTitle)
                 }
             }
 
             /* ------------------------- PDF sections population ------------------------- */
+            /**
+             * Adds all contents to PDF document on a specified page and position. Each piece of
+             * content shall not be split on multiple pages.
+             * One shall verifiy that each content can fit in one page.
+             * @param {Element[]} contents - All contents to be added to the PDF. 
+             * @param {jsPDF} doc - jsPDF document to write in
+             * @param {Number} pageY - The Y cords where to start the Rendering
+             * @param {Number} pageNumber - The page on which the content shall be placed
+             * @param {Promise<any>} resolve - A promise to resolve when all the contents is added to the PDF document.
+             */
             function addContentsToPDF(contents, doc, pageY, pageNumber, resolve) {
                 if (contents.length < 1) {
                     resolve("Added all sections to PDF")
@@ -199,6 +263,16 @@ async function generatePDF(browser, pagePath, type) {
                 })
             }
 
+            /**
+             * Add content to PDF. Content is first split down in sections using the selectors
+             * argument and then added to the PDF using the addContentsToPDF function.
+             * The selectors are used to prevent pieces of content to be split on multiples pages.
+             * @param {Element} content - The content to be added to PDF
+             * @param {string[]} selectors - Selectors to split down content in different sections.
+             * @param {jsPDF} doc - jsPDF document to write in
+             * @param {Number} pageNumber - The first page on which the content should be rendered
+             * @returns {Promise<any>} a promise resolved when all sections are added to PDF
+             */
             function generateSectionsPDF(content, selectors , doc, pageNumber) {
                 /* 
                 Getting content to be render by section (A section shall not 
@@ -216,6 +290,13 @@ async function generatePDF(browser, pagePath, type) {
 
             /* ------------------------- PDF generation ------------------------- */
 
+            /**
+             * Generates the PDF of a module in document starting at specified page
+             * @param {Element} content - The content to add to PDF
+             * @param {jsPDF} doc - jsPDF document to write in
+             * @param {Number} pageNumber - The first page on which module should be added
+             * @returns {Promise<any>} a promise resolved when module is added to PDF
+             */
             function generateModulePDF(content, doc, pageNumber) {
                 selectors = [
                     ".module-titre",
@@ -235,6 +316,11 @@ async function generatePDF(browser, pagePath, type) {
                 return generateSectionsPDF(content, selectors, doc, pageNumber)
             }
 
+            /**
+             * Creates and saves PDF file of module description
+             * @param {string} module - Name of the module 
+             * @returns {Promise<any>} A promise resolved when file is saved
+             */
             function modulePDF(module) {
                 const filename = `${module}.pdf`
                 const doc = new jsPDF(options)
@@ -256,6 +342,13 @@ async function generatePDF(browser, pagePath, type) {
                 })
             }
 
+            /**
+             * Generates the PDF of a unit in document starting at specified page
+             * @param {Element} content - The content to add to PDF
+             * @param {jsPDF} doc - jsPDF document to write in
+             * @param {Number} pageNumber - The first page on which unit should be added
+             * @returns {Promise<any>} a promise resolved when unit is added to PDF
+             */
             function generateUnitPDF(content, doc, pageNumber) { 
                 selectors = [
                     ".unit-title",
@@ -271,6 +364,11 @@ async function generatePDF(browser, pagePath, type) {
                 return generateSectionsPDF(content, selectors, doc, pageNumber)
             }
 
+            /**
+             * Creates and saves PDF file of unit sheet
+             * @param {string} unit - Name of the unit 
+             * @returns {Promise<any>} A promise resolved when file is saved
+             */
             function unitPDF(unit) {
                 const filename = `${unit}.pdf`
                 const doc = new jsPDF(options)
@@ -291,28 +389,40 @@ async function generatePDF(browser, pagePath, type) {
                 })
             }
 
+            /**
+             * Generates modules planning and adds it to PDF document.
+             * @param {jsPDF} doc - jsPDF document to write in
+             * @returns {Promise<Object[]>} A promise resolving with a list of
+             * every module link (filtered list of links) in the planning. Used 
+             * later to add page anchors to PDF and last page of PDF (unvalidated modules).
+             */
             function generateModulesPlanningPDF(doc) {
 
-                var moduleHeaders = []
-
-                const planning = document.querySelector(".modules-planning")
+                /* Getting all links */
                 const links = getLinksRelativeCoords(planning)
+                var moduleHeaders = []
                 var linksIndex = 0
-                const pageContentWidth = doc.internal.pageSize.getWidth() - (marginLeft + marginRight)
-                const pageContentHeight = doc.internal.pageSize.getHeight() - (marginTop + marginBot)
+
+                /* Extracting original planning */
+                const planning = document.querySelector(".modules-planning")
                 const modulesRows = planning.children
+                /* Adding each subtable of planning to offside div, allowing html2canvas to render it */
                 let splitTableDiv = document.createElement("div")
                 splitTableDiv.style = `visibility: hidden; position: fixed; right: -10000px; top: -10000px; border: 0px;`
                 document.body.appendChild(splitTableDiv)
-                const scale = pageContentWidth / planning.clientWidth
-
                 var newDiv = document.createElement("div")
                 splitTableDiv.appendChild(newDiv)
                 var table = document.createElement("table")
                 table.className = "table modules-planning"
                 newDiv.appendChild(table)
 
+                /* Doc constants */
+                const pageContentWidth = doc.internal.pageSize.getWidth() - (marginLeft + marginRight)
+                const pageContentHeight = doc.internal.pageSize.getHeight() - (marginTop + marginBot)
+                const scale = pageContentWidth / planning.clientWidth
+
                 for (let i = 0; i < modulesRows.length; i++) {
+                    /* Header and body of module table should not be split on 2 pages */
                     if (i < modulesRows.length - 1) {
                         const header = modulesRows[i]
                         const body = modulesRows[i + 1]
@@ -330,6 +440,7 @@ async function generatePDF(browser, pagePath, type) {
                         splitTableDiv.lastChild.firstChild.appendChild(body.cloneNode(true))
                         i++
                     } else {
+                        /* Last element is always total periods row */
                         const totalRow = modulesRows[i]
                         const height = totalRow.clientHeight * scale
                         currentHeight = splitTableDiv.lastChild.clientHeight * scale
@@ -344,6 +455,7 @@ async function generatePDF(browser, pagePath, type) {
                         splitTableDiv.lastChild.firstChild.appendChild(totalRow.cloneNode(true))
                     }
                 }
+                /* Rendering caption at last */
                 const caption = document.querySelector(".caption")
                 const captionHeight = caption.clientHeight * scale
                 currentHeight = splitTableDiv.lastChild.clientHeight * scale
@@ -353,6 +465,12 @@ async function generatePDF(browser, pagePath, type) {
                 }
                 splitTableDiv.lastChild.appendChild(caption)
                 
+                /**
+                 * 
+                 * @param {Element[]} pages - All the pages to add to PDF
+                 * @param {Number} pageNumber - First page on which pages should be added
+                 * @param {Promise<any>} resolve - A promise to be resolved when all pages are added
+                 */
                 function addPages(pages, pageNumber, resolve) {
                     if (pages.length < 1) {
                         resolve(moduleHeaders)
@@ -403,10 +521,15 @@ async function generatePDF(browser, pagePath, type) {
                 })
             }
 
+            /**
+             * Creates and saves formation booklet as PDF
+             * @param {string} formation - Name of the formation
+             */
             function generateFormationBooklet(formation) {
 
                 const filename = `${formation}.pdf`
                 const doc = new jsPDF(options)
+
                 var unvalidatedModules = []
                 var modulesPage = []
 
@@ -417,16 +540,28 @@ async function generatePDF(browser, pagePath, type) {
                 remoteContentDiv.style = "visibility: hidden; position: fixed; left: -10000px; top: -10000px; border: 0px;"
                 document.body.appendChild(remoteContentDiv)
                 return new Promise(resolvePDF => {
+                    /* Adding planning first */
                     generateModulesPlanningPDF(doc).then(modulesCoords => {
                         new Promise(resolveModules => {
+                            /**
+                             * 
+                             * @param {Element[]} modules - All modules contained in formation programm. 
+                             * Elements must have a href atrtibute from which module content shall be
+                             * retrieved using JQuery.
+                             * @param {Promise<any>} resolve - A promise to be resolved when all modules
+                             * content are added to PDF
+                             */
                             function addModulesToPDF(modules, resolve) {
                                 if (modules.length < 1) {
                                     resolve("Added modules to PDF")
                                     return
                                 }
+                                /* Getting module content from link */
                                 $.get(modules.at(0).href, function(data) {
+                                    /* Extracting content */
                                     const moduleName = modules.at(0).innerHTML
                                     content = $(data).find(".pdf-content")[0]
+                                    /* Validated module */
                                     if (content) {
                                         remoteContentDiv.appendChild(content)
                                         doc.addPage()
@@ -437,7 +572,7 @@ async function generatePDF(browser, pagePath, type) {
                                             remoteContentDiv.removeChild(content)
                                             addModulesToPDF(modules.slice(1), resolve)
                                         })
-                                    } else {
+                                    } else /* Module not yet validated or error occured */ {
                                         unvalidatedModules.push(modules.at(0).innerText)
                                         addModulesToPDF(modules.slice(1), resolve)
                                         modulesPage.push({name: moduleName, page: -1})
@@ -446,6 +581,7 @@ async function generatePDF(browser, pagePath, type) {
                             }
                             addModulesToPDF(modules, resolveModules)
                         }).then(_ => {
+                            /* Once all modules are added to PDF */
                             document.body.removeChild(remoteContentDiv)
                             if (unvalidatedModules.length > 0) {
                                 doc.addPage()
@@ -509,6 +645,13 @@ const modules = []
 const unites = []
 const topFolder = "public"
 
+/**
+ * Retrieves the list of modules and units from every specified paths.
+ * This script writes in the global variables modules and unites
+ * @param {string[]} folderPaths - Source Paths
+ * @param {Number} depth - The current depth from source paths. Assuming that 1
+ * indicates the function is at modules level and 2 units level.
+ */
 function listModulesUnits(folderPaths, depth) {
     folderPaths.forEach( folderPath => {
         const results = fs.readdirSync(folderPath)
@@ -521,6 +664,11 @@ function listModulesUnits(folderPaths, depth) {
     })
 }
 
+/**
+ * Retrieves the list of formation programms, modules and units from every specified paths
+ * This script writes in the global variables modes, modules and unites
+ * @param {string[]} folderPaths - Source Paths
+ */
 function listFolders(folderPaths) {
     folderPaths.forEach( folderPath => {
         const results = fs.readdirSync(folderPath)
@@ -535,10 +683,20 @@ function listFolders(folderPaths) {
     })
 }
 
+/**
+ * Pads a number to 2 digits
+ * @param {Number} num - Number to be pad
+ * @returns padded number
+ */
 function padTo2Digits(num) {
     return num.toString().padStart(2, '0');
 }
 
+/**
+ * Convert milliseconds in human friendly time range
+ * @param {Number} milliseconds - Number of millisecond to process
+ * @returns {string} formated time range string
+ */
 function msToHMS(milliseconds) {
     let seconds = Math.floor(milliseconds / 1000);
     let minutes = Math.floor(seconds / 60);
@@ -554,6 +712,7 @@ function msToHMS(milliseconds) {
     )}`;
 }
 
+/* PDF parallel Scrapping settings */
 const maxParallelBookletGeneration = 2
 const maxParallelDescriptionGeneration = 5
 const maxParallelSheetGeneration = 5
@@ -561,6 +720,9 @@ const maxParallelSheetGeneration = 5
 const browserClosingDelay = 1000
 const devServerDelay = 5000
 
+/**
+ * Generates all the PDF from the public folder (containing hugo site pages)
+ */
 function run() {
     listFolders([path.resolve(__dirname, topFolder)], 0)
     setTimeout(() => {
