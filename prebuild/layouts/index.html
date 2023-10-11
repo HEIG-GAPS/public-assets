@@ -112,9 +112,7 @@
                             {{/* Publish a page. */}}
                             {{ $ctx := dict "frontMatter" $frontMatter }}
                             {{ $path := printf "%s/_index.md" $contentSectionModule }}
-                            {{ $path_en := printf "%s/_index.en.md" $contentSectionModule }}
                             {{ ($r | resources.ExecuteAsTemplate $path $ctx).Publish }}
-                            {{ ($r | resources.ExecuteAsTemplate $path_en $ctx).Publish }}
                             {{ range $m, $unit := .unites }}
                                 {{ if not (eq .unite_abreviation nil) }}
                                     {{ $unite_format := partial "remove_special_chars" .unite_abreviation }}
