@@ -21,8 +21,8 @@ async function generatePDF(browser, pagePath, type) {
     const context = await browser.createIncognitoBrowserContext()
     const page = await context.newPage()
     await page.setViewport({
-        width: 640,
-        height: 480
+        width: 1280,
+        height: 960
     })
 
     /* Navigate to page */
@@ -638,7 +638,7 @@ async function generatePDF(browser, pagePath, type) {
             }
         }, [pagePath, type, host])
     }  catch(err) {
-        console.error(err)
+        console.info(err)
         return context
     }
     return context
@@ -739,9 +739,12 @@ function run() {
             queueBooklets.enqueue(modes.map(x => {
                 return async () => {
                     const context = await generatePDF(browser, x, "mode")
-                    context.close()
+                    await context.close()
                 }
             }))
+            queueBooklets.on("reject", (err) => {
+                console.info(err)
+            })
             queueBooklets.on("end", () => {
                 const moduleStart = performance.now()
                 console.info("Generated formation booklets in ", msToHMS(moduleStart - start))
@@ -752,9 +755,12 @@ function run() {
                 queueDescriptions.enqueue(modules.map(x => {
                     return async () => {
                         const context = await generatePDF(browser, x, "module")
-                        context.close()
+                        await context.close()
                     }
                 }))
+                queueDescriptions.on("reject", (err) => {
+                    console.info(err)
+                })
                 queueDescriptions.on("end", () => {
                     const unitStart = performance.now()
                     console.info("Generated module descriptions in ", msToHMS(unitStart - moduleStart))
@@ -765,16 +771,19 @@ function run() {
                     queueSheets.enqueue(unites.map(x => {
                         return async () => {
                             const context = await generatePDF(browser, x, "unite")
-                            context.close()
+                            await context.close()
                         }
                     }))
+                    queueSheets.on("reject", (err) => {
+                        console.info(err)
+                    })
                     queueSheets.on("end", () => {
                         const end = performance.now()
                         console.info("Generated unit sheets in ", msToHMS(end -unitStart))
                         setTimeout(() => {
                             console.info("Closing browser...")
                             console.info("Generated PDF files in ", msToHMS(end - start))
-                            browser.close()
+                            browser.close().then()
                         }, browserClosingDelay)
                     })
                     queueSheets.start()
