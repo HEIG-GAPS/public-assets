@@ -45,7 +45,7 @@ async function generatePDF(browser, pagePath, type) {
 
     /* Generate PDF */
     try {
-            await page.evaluate(async ([path, type, host]) => {
+            await page.evaluate(async ([path, type, host, localhost]) => {
             
             const { jsPDF } = window.jspdf
 
@@ -108,13 +108,14 @@ async function generatePDF(browser, pagePath, type) {
                 for (let i = 0; i < links.length; i++) {
                     const link = links[i]
                     const linkBRect = link.getBoundingClientRect()
+                    const url = link.href.replace(localhost, host)
                     linksCoords.push({x: linkBRect.left -  contentBRect.left,
                                     yTop: linkBRect.top - contentBRect.top, 
                                     yBot: linkBRect.bottom - contentBRect.top,
                                     w: linkBRect.right - linkBRect.left, 
                                     h: linkBRect.bottom - linkBRect.top, 
                                     text: link.innerHTML,
-                                    url: host + path,
+                                    url: url,
                                     moduleHeader: (link.className).includes("module-header")
                                     })
                 }
@@ -635,7 +636,7 @@ async function generatePDF(browser, pagePath, type) {
                     return
                 default:
             }
-        }, [pagePath, type, host])
+        }, [pagePath, type, host, localhost])
     }  catch(err) {
         console.info(err)
         return context
