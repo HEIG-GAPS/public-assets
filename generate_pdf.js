@@ -309,8 +309,7 @@ async function generatePDF(browser, pagePath, type) {
                     ".module-remediation",
                     ".module-remarques",
                     ".module-bibliographie",
-                    ".module-enseignants",
-                    ".card-footer"
+                    ".module-enseignants"
                 ]
                 return generateSectionsPDF(content, selectors, doc, pageNumber)
             }
