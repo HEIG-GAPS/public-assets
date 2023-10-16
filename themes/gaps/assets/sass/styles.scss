@@ -143,6 +143,17 @@ a:visited {
     border-right: 0!important;
 }
 
+.formation-type-card {
+    border: 0!important;
+}
+
+.img-title {
+    background: rgba(white, 0.5);
+    font-size: 2.2rem;
+    width: fit-content;
+    height: fit-content;
+}
+
 .card  .card {
     border-right: 0!important;
     border-left: 0!important;
@@ -200,6 +211,7 @@ $content-width : 90rem;
     width: $content-width;
 }
 
-body {
-    resize: none;
+
+.home-img {
+    height: 800px!important;
 }

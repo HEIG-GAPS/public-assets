@@ -158,7 +158,11 @@
                             </div>
                             <div class="p-2">
                                 <b> {{ i18n "instruction_main_languages" }} </b> :
-                                {{ partial "list_as_str" $mod.langues }}
+                                {{ if $mod.module_a_options }}
+                                    {{ i18n "options_module_depending" | strings.FirstUpper }}
+                                {{ else}}
+                                    {{ partial "list_as_str" $mod.langues }}
+                                {{ end }}
                             </div>
                         </div>
                     </div>
@@ -192,6 +196,16 @@
                         </div>
                     </div>
                     <div class="card-body d-flex flex-column">
+                        {{ if $mod.module_a_options }}
+                        <div class="p-2">
+                            <div>
+                                <b>{{ i18n "options_module" }}</b>
+                            </div>
+                            <div>
+                                {{ i18n "options_module_teaching_methods" }}
+                            </div>
+                        </div>
+                        {{ else }}
                         <div class="p-2">
                             {{ $formes_enseignement := slice }}
                             {{ range .Pages }}
@@ -222,6 +236,7 @@
                                 {{ partial "list_as_str" ($formes_enseignement | uniq) }}
                             </div>
                         </div>
+                        {{ end }}
                     </div>
                 </div>
                 <div class="card module-evaluation">
@@ -231,15 +246,32 @@
                         </div>
                     </div>
                     <div class="card-body d-flex flex-column">
-                        <div class="p-2">
                             <div class="p-2">
                                 {{ i18n "compensation_threshold" }} : {{ $mod.module_seuil_compensation }}
                             </div>
+                            {{ if $mod.module_a_options }}
+                                <div class="p-2">
+                                    {{ i18n "options_module_min_fundamental_credits" | strings.FirstUpper }} :
+                                    {{ $mod.module_credits_fondamentaux_min }}
+                                </div>
+                                <div class="p-2">
+                                    {{ i18n "options_module_final_grade_computation" | strings.FirstUpper }}
+                                </div>
+                                <div class="p-2">
+                                    <b>{{ i18n "final_module_grade" }}</b>
+                                </div>
                             <div class="p-2">
-                                {{ i18n "repetition_threshold" }} : {{ $mod.module_seuil_repetition }}
-                            {{ partial "module/module_evaluation.html" . }}
+                                {{ i18n "options_module_final_grade_description" | strings.FirstUpper }}.
+                                <div class="p-2">
+                                    {{ i18n "final_grade" }} = {{ i18n "options_module_depending" }}
+                                </div>
                             </div>
-                        </div>
+                            {{ else }}
+                                <div class="p-2">
+                                    {{ i18n "repetition_threshold" }} : {{ $mod.module_seuil_repetition }}
+                                {{ partial "module/module_evaluation.html" . }}
+                                </div>
+                            {{ end }}
                     </div>
                 </div>
                 <div class="card module-remediation">
@@ -263,7 +295,7 @@
                     <div class="card-body">
                         <div class="p-2">
                             {{ if eq $mod.remarques nil }}
-                            {{ i18n "no_remark" }}
+                            {{ i18n "no_remark" }}.
                             {{ else }}
                             {{ $mod.module_remarques | safeHTML }}
                             {{ end }}
@@ -278,15 +310,21 @@
                         </div>
                     </div>
                     <div class="card-body d-flex flex-column">
-                        {{ range .Pages }}
-                        {{ $unite := .Params.json_content }}
-                        <div class="p-2">
-                            <b> {{ $unite.unite_nom }} (<a href="{{ .Permalink }}" class="pdf-link"> {{ $unite.unite_abreviation }} </a>)
-                            </b>
-                            <div>
-                                {{ $unite.unite_bibliographie | safeHTML }}
+                        {{ if $mod.module_a_options }}
+                            <div class="p-2">
+                                {{ i18n "options_module_depending" | strings.FirstUpper }}.
                             </div>
-                        </div>
+                        {{ else }}
+                            {{ range .Pages }}
+                            {{ $unite := .Params.json_content }}
+                            <div class="p-2">
+                                <b> {{ $unite.unite_nom }} (<a href="{{ .Permalink }}" class="pdf-link"> {{ $unite.unite_abreviation }} </a>)
+                                </b>
+                                <div>
+                                    {{ $unite.unite_bibliographie | safeHTML }}
+                                </div>
+                            </div>
+                            {{ end }}
                         {{ end }}
                     </div>
                 </div>
@@ -297,7 +335,8 @@
                         </div>
                     </div>
                     <div class="card-body d-flex flex-column">
-                        <div class="container">
+                        {{ if not $mod.module_a_options }}
+                        <div class="p-2">
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -317,9 +356,15 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="container">
+                        {{ end }}
+                        <div class="p-2">
                             <b> {{ i18n "module_responsible_teacher" }} </b> : {{ $mod.module_responsable_nom }}
                         </div>
+                        {{ if $mod.module_a_options }}
+                            <div class="p-2">
+                                {{ i18n "options_module_depending" | strings.FirstUpper }}.
+                            </div>
+                        {{ end }}
                     </div>
                 </div>
             </div>

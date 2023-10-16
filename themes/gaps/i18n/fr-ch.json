@@ -252,5 +252,23 @@
     },
     "objectives": {
         "other": "Objectifs"
+    },
+    "options_module": {
+        "other": "Module à options"
+    },
+    "options_module_teaching_methods": {
+        "other": "Le contenu dépendra des unités choisies."
+    },
+    "options_module_depending": {
+        "other": "selon les unités choisies"
+    },
+    "options_module_min_fundamental_credits": {
+        "other": "minimum de crédits fondamentaux requis"
+    },
+    "options_module_final_grade_computation": {
+        "other": "le calcul de la note finale de chaque unité est détaillé ci-après. Pour chaque unité, sa pondération est indiquée entre crochets après son nom."
+    },
+    "options_module_final_grade_description": {
+        "other": "la note du module est calculée à partir des notes des différentes unités du module"
     }
 }

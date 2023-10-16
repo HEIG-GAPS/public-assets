@@ -1,7 +1,33 @@
-{{ $unites_obligatoires := slice }}
-{{ $unites_alternatives := slice }}
+
 {{ $mod := .Params.json_content }}
 {{ $cols := partial "get_semesters" (index .Ancestors 0).Params.json_content.formation_duree_semestres }}
+{{ if $mod.module_a_options }}
+{{ $mode := (index .Ancestors 0).Params.json_content.mode_formation_abreviation }}
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th scope="col"> {{ i18n "type" }} </th>
+        {{ range $cols }}
+        <th class="text-center" scope="col">{{ . }}</th>
+        {{ end }}
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th scope="row"> {{ $mode }} </th>
+        {{ range $i, $col :=  $cols }}
+        <td class="text-center">
+            {{ if eq $i (sub (len $cols) 1) }}
+            x
+            {{ end }}
+        </td>
+        {{ end }}
+    </tr>
+    </tbody>
+</table>
+{{ else }}
+{{ $unites_obligatoires := slice }}
+{{ $unites_alternatives := slice }}
 {{ range .Pages }}
 {{ $unite := .Params.json_content }}
     {{ if eq $unite.unite_id_groupe_alternatives nil }}
@@ -31,3 +57,4 @@
         {{ partial "module/units_schedule" $units_ctx}}
     {{ end }}
 </div>
+{{ end }}

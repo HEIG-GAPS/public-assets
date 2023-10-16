@@ -8,12 +8,18 @@
     {{ .Content }}
   </article>
   <div class="d-flex flex-column w-100 h-75">
-    <div class="d-flex w-100">
-      <div class="d-flex m-3 w-50 justify-content-center">
-        <a href="{{ $bachelor.Permalink }}"> {{ $bachelor.Params.Title }} </a>
+    <div class="d-flex w-100 mb-3">
+      <div class="card d-flex flex-column w-50 formation-type-card">
+        <img src="images/bachelor_heig.jpg" style="height: 800px;" class="img-fluid card-img">
+        <div class="card-img-overlay d-flex p-5 justify-content-center">
+          <a class="align-self-end p-2 img-title rounded" href="{{ $bachelor.Permalink }}"> {{ $bachelor.Params.Title }} </a>
+        </div>
       </div>
-      <div class="d-flex m-3 w-50 justify-content-center">
-        <a href="{{ $master.Permalink }}"> {{ $master.Params.Title }} </a>
+      <div class="card d-flex flex-column w-50 formation-type-card">
+        <img src="images/master_heig.jpg" style="height: 800px;" class="img-fluid card-img">
+        <div class="card-img-overlay d-flex p-5 justify-content-center">
+          <a class="align-self-end p-2 img-title rounded" href="{{ $master.Permalink }}"> {{ $master.Params.Title }} </a>
+        </div>
       </div>
     </div>
     <div class="d-flex w-100 justify-content-center align-self-bottom">
