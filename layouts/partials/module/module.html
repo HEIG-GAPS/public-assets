@@ -340,7 +340,7 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th scope="col"> <b></b> {{ i18n "unit" }} </b> </th>
+                                        <th scope="col"> <b> {{ i18n "unit" }} </b> </th>
                                         <th class="text-center" scope="col"> <b> {{ i18n "responsible_teacher" }} </b>
                                         </th>
                                     </tr>
@@ -350,7 +350,7 @@
                                     {{ $unite := .Params.json_content }}
                                     <tr>
                                         <th scope="row"> {{ $unite.unite_nom }} </th>
-                                        <td class="text-center" scope="row"> {{ $unite.unite_responsable_nom }} </td>
+                                        <td class="text-center"> {{ $unite.unite_responsable_nom }} </td>
                                     </tr>
                                     {{ end }}
                                 </tbody>
