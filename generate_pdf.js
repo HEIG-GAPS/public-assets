@@ -26,7 +26,7 @@ async function generatePDF(browser, pagePath, type) {
     })
 
     /* Navigate to page */
-    await page.goto(localhost + pagePath, {waitUntil : 'domcontentloaded'})
+    await page.goto(localhost + pagePath, {waitUntil: 'domcontentloaded'})
 
     /* Setting up destination folder */
     const client = await page.target().createCDPSession()
@@ -45,12 +45,12 @@ async function generatePDF(browser, pagePath, type) {
 
     /* Generate PDF */
     try {
-            await page.evaluate(async ([path, type, host, localhost]) => {
-            
-            const { jsPDF } = window.jspdf
+        await page.evaluate(async ([path, type, host, localhost]) => {
+
+            const {jsPDF} = window.jspdf
 
             /* PDF generation settings */
-            const savingDelay = 100 // Time to wait in ms before assuming document is saved
+            const savingDelay = 1000 // Time to wait in ms before assuming document is saved
 
             /* PDF layout */
             const marginTop = 60
@@ -77,6 +77,16 @@ async function generatePDF(browser, pagePath, type) {
 
             /* Header */
             const imgYmargin = 10
+            const hesImg = new Image()
+            hesImg.src = hesImgPath
+            const heigImg = new Image()
+            heigImg.src = heigImgPath
+            const hesImgLoaded = new Promise(resolve => {
+                hesImg.onload = () => resolve()
+            })
+            const heigImgLoaded = new Promise(resolve => {
+                heigImg.onload = () => resolve()
+            })
 
             /* Unvalidated modules page */
             const sectionBoxMargin = 2
@@ -104,20 +114,21 @@ async function generatePDF(browser, pagePath, type) {
             function getLinksRelativeCoords(content) {
                 const links = content.querySelectorAll(".pdf-link")
                 const contentBRect = content.getBoundingClientRect()
-                var linksCoords = []
+                let linksCoords = []
                 for (let i = 0; i < links.length; i++) {
                     const link = links[i]
                     const linkBRect = link.getBoundingClientRect()
                     const url = link.href.replace(localhost, host)
-                    linksCoords.push({x: linkBRect.left -  contentBRect.left,
-                                    yTop: linkBRect.top - contentBRect.top, 
-                                    yBot: linkBRect.bottom - contentBRect.top,
-                                    w: linkBRect.right - linkBRect.left, 
-                                    h: linkBRect.bottom - linkBRect.top, 
-                                    text: link.innerHTML,
-                                    url: url,
-                                    moduleHeader: (link.className).includes("module-header")
-                                    })
+                    linksCoords.push({
+                        x: linkBRect.left - contentBRect.left,
+                        yTop: linkBRect.top - contentBRect.top,
+                        yBot: linkBRect.bottom - contentBRect.top,
+                        w: linkBRect.right - linkBRect.left,
+                        h: linkBRect.bottom - linkBRect.top,
+                        text: link.innerHTML,
+                        url: url,
+                        moduleHeader: (link.className).includes("module-header")
+                    })
                 }
                 return linksCoords
             }
@@ -131,7 +142,7 @@ async function generatePDF(browser, pagePath, type) {
                 const nPages = doc.internal.getNumberOfPages()
                 for (let i = 1; i <= nPages; i++) {
                     doc.setPage(i)
-                    doc.setFont(undefined, "normal").text(`${i} / ${nPages}`, marginLeft, doc.internal.pageSize.getHeight() - marginBot / 2, { baseline: "bottom" })
+                    doc.setFont(undefined, "normal").text(`${i} / ${nPages}`, marginLeft, doc.internal.pageSize.getHeight() - marginBot / 2, {baseline: "bottom"})
                 }
             }
 
@@ -139,20 +150,20 @@ async function generatePDF(browser, pagePath, type) {
              * Adds footer the document specified page.
              * @param {jsPDF} doc - jsPDF document to write in
              * @param {Number} pageNumber - The number of the page where the footer should be added
-             * @param {any} additionalContent - Additionnal content to add to remaining space of footer. Not used yet.
              */
-            function pageFooter(doc, pageNumber, additionalContent) {
+            function pageFooter(doc, pageNumber) {
                 doc.setPage(pageNumber)
-                var footerY = doc.internal.pageSize.getHeight() - marginBot / 2
+                const footerY = doc.internal.pageSize.getHeight() - marginBot / 2
                 doc.setFontSize(footerFontSize)
-                var footerX = (doc.internal.pageSize.getWidth() - marginLeft - marginRight) / 2 - doc.getTextWidth(infos) / 2
-                doc.text(infos, footerX, footerY, { baseline: "bottom" })
-                const imgHeight = 50
-                const imgWidth = 90
-                footerX = doc.internal.pageSize.getWidth() - marginRight - imgWidth
-                var hesImg = new Image()
-                hesImg.src = hesImgPath
-                doc.addImage(hesImg, 'png', footerX, footerY - imgHeight / 2, imgWidth, imgHeight, undefined, 'FAST')
+                let footerX = (doc.internal.pageSize.getWidth() - marginLeft - marginRight) / 2 - doc.getTextWidth(infos) / 2
+                doc.text(infos, footerX, footerY, {baseline: "bottom"})
+                hesImgLoaded.then(_ => {
+                    doc.setPage(pageNumber)
+                    const imgHeight = marginBot
+                    const imgWidth = hesImg.width * imgHeight / hesImg.height
+                    footerX = doc.internal.pageSize.getWidth() - marginRight - imgWidth
+                    doc.addImage(hesImg, 'png', footerX, footerY - imgHeight / 2, imgWidth, imgHeight, undefined, 'FAST')
+                })
             }
 
             /**
@@ -163,26 +174,26 @@ async function generatePDF(browser, pagePath, type) {
              */
             function pageHeader(doc, pageNumber, headerTitle) {
                 doc.setPage(pageNumber)
-                var headerY = imgYmargin
-                var headerX = marginLeft
-                const imgHeight = marginTop - 2 * imgYmargin
-                const imgWidth = 100
-                var heigImg = new Image()
-                heigImg.src = heigImgPath
-                doc.addImage(heigImg, 'png', headerX, headerY, imgWidth, imgHeight)
-                headerX += doc.internal.pageSize.getWidth() - marginLeft - 2 * marginRight - doc.getTextWidth(headerTitle)
-                doc.setFont(undefined, "bold").text(headerTitle, headerX, headerY, { baseline: "top" })
+                const headerY = imgYmargin
+                let headerX = marginLeft
+                heigImgLoaded.then(_ => {
+                    doc.setPage(pageNumber)
+                    const imgHeight = marginTop - 2 * imgYmargin
+                    const imgWidth = heigImg.width * imgHeight / heigImg.height
+                    doc.addImage(heigImg, 'png', headerX, headerY, imgWidth, imgHeight)
+                    headerX += doc.internal.pageSize.getWidth() - marginLeft - 2 * marginRight - doc.getTextWidth(headerTitle)
+                    doc.setFont(undefined, "bold").text(headerTitle, headerX, headerY, {baseline: "top"})
+                })
             }
 
             /**
              * Adds header and footer the document specified page.
              * @param {jsPDF} doc - jsPDF document to write in
              * @param {Number} pageNumber - The number of the page where the header and footer should be added
-             * @param {any} footerContent - Additionnal content to add to remaining space of footer. Not used yet.
              * @param {string} headerTitle - The title of the header
              */
-            function pageHeaderFooter(doc, pageNumber, footerContent, headerTitle) {
-                pageFooter(doc, pageNumber, footerContent)
+            function pageHeaderFooter(doc, pageNumber, headerTitle) {
+                pageFooter(doc, pageNumber)
                 pageHeader(doc, pageNumber, headerTitle)
             }
 
@@ -191,12 +202,11 @@ async function generatePDF(browser, pagePath, type) {
              * @param {jsPDF} doc - jsPDF document to write in
              * @param {*} startPage - First page on which header and footer should be added
              * @param {*} endPage - Last page on which header and footer should be added
-             * @param {*} footerContent - Additionnal content to add to remaining space of footer. Not used yet.
              * @param {*} headerTitle - The title of the header
              */
-            function addHeaderFooterToDoc(doc, startPage, endPage, footerContent, headerTitle) {
+            function addHeaderFooterToDoc(doc, startPage, endPage, headerTitle) {
                 for (let i = startPage; i <= endPage; i++) {
-                    pageHeaderFooter(doc, i, footerContent, headerTitle)
+                    pageHeaderFooter(doc, i, headerTitle)
                 }
             }
 
@@ -205,7 +215,7 @@ async function generatePDF(browser, pagePath, type) {
              * Adds all contents to PDF document on a specified page and position. Each piece of
              * content shall not be split on multiple pages.
              * One shall verifiy that each content can fit in one page.
-             * @param {Element[]} contents - All contents to be added to the PDF. 
+             * @param {Element[]} contents - All contents to be added to the PDF.
              * @param {jsPDF} doc - jsPDF document to write in
              * @param {Number} pageY - The Y cords where to start the Rendering
              * @param {Number} pageNumber - The page on which the content shall be placed
@@ -221,7 +231,7 @@ async function generatePDF(browser, pagePath, type) {
                 const pageContentWidth = doc.internal.pageSize.getWidth() - (marginLeft + marginRight)
                 const pageContentHeight = doc.internal.pageSize.getHeight() - (marginTop + marginBot)
                 const scale = pageContentWidth / content.clientWidth
-                var nextY = pageY
+                let nextY = pageY
                 if (pageY + contentHeight * scale >= pageContentHeight - pageEpsilon) {
                     doc.addPage()
                     pageNumber++
@@ -242,7 +252,7 @@ async function generatePDF(browser, pagePath, type) {
                     },
                     y: (pageNumber - 1) * pageContentHeight + pageY,
                     margin: margins,
-                    callback: function(doc) {
+                    callback: function (doc) {
                         /* Adding hyperlinks */
                         const links = getLinksRelativeCoords(content)
                         for (let i = 0; i < links.length; i++) {
@@ -253,7 +263,7 @@ async function generatePDF(browser, pagePath, type) {
                         }
                         /* Clearing unwanted blankpages */
                         const nPages = doc.internal.getNumberOfPages()
-                        if (nPages > pageNumber){
+                        if (nPages > pageNumber) {
                             for (let i = nPages; i > pageNumber; i--) {
                                 doc.deletePage(i)
                             }
@@ -273,12 +283,12 @@ async function generatePDF(browser, pagePath, type) {
              * @param {Number} pageNumber - The first page on which the content should be rendered
              * @returns {Promise<any>} a promise resolved when all sections are added to PDF
              */
-            function generateSectionsPDF(content, selectors , doc, pageNumber) {
+            function generateSectionsPDF(content, selectors, doc, pageNumber) {
                 /* 
                 Getting content to be render by section (A section shall not 
                 be split on multiple page)
                 */
-                sections = []
+                let sections = []
                 for (let i = 0; i < selectors.length; i++) {
                     const targetContent = content.querySelector(selectors.at(i))
                     sections.push(targetContent)
@@ -298,7 +308,7 @@ async function generatePDF(browser, pagePath, type) {
              * @returns {Promise<any>} a promise resolved when module is added to PDF
              */
             function generateModulePDF(content, doc, pageNumber) {
-                selectors = [
+                let selectors = [
                     ".module-titre",
                     ".module-titre-infos",
                     ".module-intitule",
@@ -316,7 +326,7 @@ async function generatePDF(browser, pagePath, type) {
 
             /**
              * Creates and saves PDF file of module description
-             * @param {string} module - Name of the module 
+             * @param {string} module - Name of the module
              * @returns {Promise<any>} A promise resolved when file is saved
              */
             function modulePDF(module) {
@@ -325,18 +335,20 @@ async function generatePDF(browser, pagePath, type) {
                 return new Promise(resolve => {
                     const content = document.querySelector(".pdf-content")
                     if (content) {
-                        generateModulePDF(content, doc, 1).then( _ => {
-                            addHeaderFooterToDoc(doc, 1, doc.internal.getNumberOfPages(), null, "Descriptif de module")
+                        generateModulePDF(content, doc, 1).then(_ => {
+                            addHeaderFooterToDoc(doc, 1, doc.internal.getNumberOfPages(), "Descriptif de module")
                             addPageNumberToDoc(doc)
-                            doc.save(filename, {returnPromise: true}).then(_=> {
-                                setTimeout(_=> {resolve()}, savingDelay)
+                            doc.save(filename, {returnPromise: true}).then(_ => {
+                                setTimeout(_ => {
+                                    resolve()
+                                }, savingDelay)
                             })
                         })
                     } else {
                         console.warn(`Module ${module} is not validated yet`)
                         resolve()
                     }
-                    
+
                 })
             }
 
@@ -347,8 +359,8 @@ async function generatePDF(browser, pagePath, type) {
              * @param {Number} pageNumber - The first page on which unit should be added
              * @returns {Promise<any>} a promise resolved when unit is added to PDF
              */
-            function generateUnitPDF(content, doc, pageNumber) { 
-                selectors = [
+            function generateUnitPDF(content, doc, pageNumber) {
+                let selectors = [
                     ".unit-title",
                     ".unit-general-infos",
                     ".unit-periods",
@@ -364,7 +376,7 @@ async function generatePDF(browser, pagePath, type) {
 
             /**
              * Creates and saves PDF file of unit sheet
-             * @param {string} unit - Name of the unit 
+             * @param {string} unit - Name of the unit
              * @returns {Promise<any>} A promise resolved when file is saved
              */
             function unitPDF(unit) {
@@ -373,11 +385,13 @@ async function generatePDF(browser, pagePath, type) {
                 return new Promise(resolve => {
                     const content = document.querySelector(".pdf-content")
                     if (content) {
-                        generateUnitPDF(content, doc, 1).then( _ => {
-                            addHeaderFooterToDoc(doc, 1, doc.internal.getNumberOfPages(), null, "Fiche d'unité")
+                        generateUnitPDF(content, doc, 1).then(_ => {
+                            addHeaderFooterToDoc(doc, 1, doc.internal.getNumberOfPages(), "Fiche d'unité")
                             addPageNumberToDoc(doc)
-                            doc.save(filename, {returnPromise: true}).then(_=> {
-                                setTimeout(_=> {resolve()}, savingDelay)
+                            doc.save(filename, {returnPromise: true}).then(_ => {
+                                setTimeout(_ => {
+                                    resolve()
+                                }, savingDelay)
                             })
                         })
                     } else {
@@ -391,12 +405,11 @@ async function generatePDF(browser, pagePath, type) {
              * Generates modules planning and adds it to PDF document.
              * @param {jsPDF} doc - jsPDF document to write in
              * @returns {Promise<Object[]>} A promise resolving with a list of
-             * every module link (filtered list of links) in the planning. Used 
+             * every module link (filtered list of links) in the planning. Used
              * later to add page anchors to PDF and last page of PDF (unvalidated modules).
              */
             function generateModulesPlanningPDF(doc) {
 
-                
 
                 /* Extracting original planning */
                 const planning = document.querySelector(".modules-planning")
@@ -404,16 +417,16 @@ async function generatePDF(browser, pagePath, type) {
 
                 /* Getting all links */
                 const links = getLinksRelativeCoords(planning)
-                var moduleHeaders = []
-                var linksIndex = 0
-                
+                let moduleHeaders = []
+                let linksIndex = 0
+
                 /* Adding each subtable of planning to offside div, allowing html2canvas to render it */
                 let splitTableDiv = document.createElement("div")
                 splitTableDiv.style = `visibility: hidden; position: fixed; right: -10000px; top: -10000px; border: 0px;`
                 document.body.appendChild(splitTableDiv)
-                var newDiv = document.createElement("div")
+                let newDiv = document.createElement("div")
                 splitTableDiv.appendChild(newDiv)
-                var table = document.createElement("table")
+                let table = document.createElement("table")
                 table.className = "table modules-planning"
                 newDiv.appendChild(table)
 
@@ -422,20 +435,24 @@ async function generatePDF(browser, pagePath, type) {
                 const pageContentHeight = doc.internal.pageSize.getHeight() - (marginTop + marginBot)
                 const scale = pageContentWidth / planning.clientWidth
 
+                function newDivTable() {
+                    newDiv = document.createElement("div")
+                    splitTableDiv.appendChild(newDiv)
+                    table = document.createElement("table")
+                    table.className = "table modules-planning"
+                    table.style.width = `${planning.clientWidth}px`
+                    newDiv.appendChild(table)
+                }
+
                 for (let i = 0; i < modulesRows.length; i++) {
                     /* Header and body of module table should not be split on 2 pages */
                     if (i < modulesRows.length - 1) {
                         const header = modulesRows[i]
                         const body = modulesRows[i + 1]
                         const totalHeight = (header.clientHeight + body.clientHeight) * scale
-                        currentHeight = splitTableDiv.lastChild.clientHeight * scale
+                        let currentHeight = splitTableDiv.lastChild.clientHeight * scale
                         if (currentHeight + totalHeight >= pageContentHeight - pageEpsilon) {
-                            newDiv = document.createElement("div")
-                            splitTableDiv.appendChild(newDiv)
-                            table = document.createElement("table")
-                            table.className = "table modules-planning"
-                            table.style.width = `${planning.clientWidth}px`
-                            newDiv.appendChild(table)
+                            newDivTable()
                         }
                         splitTableDiv.lastChild.firstChild.appendChild(header.cloneNode(true))
                         splitTableDiv.lastChild.firstChild.appendChild(body.cloneNode(true))
@@ -444,14 +461,9 @@ async function generatePDF(browser, pagePath, type) {
                         /* Last element is always total periods row */
                         const totalRow = modulesRows[i]
                         const height = totalRow.clientHeight * scale
-                        currentHeight = splitTableDiv.lastChild.clientHeight * scale
+                        let currentHeight = splitTableDiv.lastChild.clientHeight * scale
                         if (currentHeight + height >= pageContentHeight - pageEpsilon) {
-                            newDiv = document.createElement("div")
-                            splitTableDiv.appendChild(newDiv)
-                            table = document.createElement("table")
-                            table.className = "table modules-planning"
-                            table.style.width = `${planning.clientWidth}px`
-                            newDiv.appendChild(table)
+                            newDivTable()
                         }
                         splitTableDiv.lastChild.firstChild.appendChild(totalRow.cloneNode(true))
                     }
@@ -459,21 +471,23 @@ async function generatePDF(browser, pagePath, type) {
                 /* Rendering caption at last */
                 const caption = document.querySelector(".caption")
                 const captionHeight = caption.clientHeight * scale
-                currentHeight = splitTableDiv.lastChild.clientHeight * scale
+                let currentHeight = splitTableDiv.lastChild.clientHeight * scale
                 if (currentHeight + captionHeight >= pageContentHeight - pageEpsilon) {
                     newDiv = document.createElement("div")
                     splitTableDiv.appendChild(newDiv)
                 }
                 splitTableDiv.lastChild.appendChild(caption)
-                
+
                 /**
-                 * 
+                 *
                  * @param {Element[]} pages - All the pages to add to PDF
                  * @param {Number} pageNumber - First page on which pages should be added
                  * @param {Promise<any>} resolve - A promise to be resolved when all pages are added
                  */
                 function addPages(pages, pageNumber, resolve) {
                     if (pages.length < 1) {
+                        const nPages = doc.internal.getNumberOfPages()
+                        addHeaderFooterToDoc(doc, 1, nPages, "Programme de formation")
                         resolve(moduleHeaders)
                         return
                     }
@@ -491,16 +505,22 @@ async function generatePDF(browser, pagePath, type) {
                         },
                         y: (pageNumber - 1) * pageContentHeight,
                         margin: margins,
-                        callback: function(doc) {
+                        callback: function (doc) {
                             /* Adding links */
                             const nLinks = page.querySelectorAll(".pdf-link").length
                             for (let i = 0; i < nLinks; i++) {
                                 const link = links[i + linksIndex]
                                 const linkX = marginLeft + link.x * scale + linkShiftX
-                                var linkY = marginTop + (link.yBot - links[linksIndex].yBot + link.h) * scale
+                                const linkY = marginTop + (link.yBot - links[linksIndex].yBot + link.h) * scale
                                 doc.link(linkX, linkY, link.w * scale, link.h * scale, {url: link.url})
                                 if (link.moduleHeader) {
-                                    moduleHeaders.push({ x: linkX, y : linkY, w : link.w * scale, text: link.text, page : pageNumber })
+                                    moduleHeaders.push({
+                                        x: linkX,
+                                        y: linkY,
+                                        w: link.w * scale,
+                                        text: link.text,
+                                        page: pageNumber
+                                    })
                                 }
                             }
                             /* Clearing unwanted blankpages */
@@ -510,13 +530,12 @@ async function generatePDF(browser, pagePath, type) {
                                     doc.deletePage(i)
                                 }
                             }
-                            /* Adding header and footer to new page */
-                            pageHeaderFooter(doc, pageNumber, null, "Programme de formation")
                             linksIndex += nLinks
                             addPages(pages.slice(1), ++pageNumber, resolve)
                         }
                     })
                 }
+
                 return new Promise(resolve => {
                     addPages(Array.prototype.slice.call(splitTableDiv.children), 1, resolve)
                 })
@@ -531,8 +550,8 @@ async function generatePDF(browser, pagePath, type) {
                 const filename = `${formation}.pdf`
                 const doc = new jsPDF(options)
 
-                var unvalidatedModules = []
-                var modulesPage = []
+                let unvalidatedModules = []
+                let modulesPage = []
 
                 const modules = Array.prototype.slice.call(document.querySelectorAll(".module-cell a"))
 
@@ -545,8 +564,8 @@ async function generatePDF(browser, pagePath, type) {
                     generateModulesPlanningPDF(doc).then(modulesCoords => {
                         new Promise(resolveModules => {
                             /**
-                             * 
-                             * @param {Element[]} modules - All modules contained in formation programm. 
+                             *
+                             * @param {Element[]} modules - All modules contained in formation programm.
                              * Elements must have a href atrtibute from which module content shall be
                              * retrieved using JQuery.
                              * @param {Promise<any>} resolve - A promise to be resolved when all modules
@@ -558,18 +577,18 @@ async function generatePDF(browser, pagePath, type) {
                                     return
                                 }
                                 /* Getting module content from link */
-                                $.get(modules.at(0).href, function(data) {
+                                $.get(modules.at(0).href, function (data) {
                                     /* Extracting content */
                                     const moduleName = modules.at(0).innerHTML
-                                    content = $(data).find(".pdf-content")[0]
+                                    const content = $(data).find(".pdf-content")[0]
                                     /* Validated module */
                                     if (content) {
                                         remoteContentDiv.appendChild(content)
                                         doc.addPage()
                                         const startPage = doc.internal.getNumberOfPages()
                                         modulesPage.push({name: moduleName, page: startPage})
-                                        generateModulePDF(content, doc, startPage).then(_ => { 
-                                            addHeaderFooterToDoc(doc, startPage, doc.internal.getNumberOfPages(), null, "Descriptif de module")
+                                        generateModulePDF(content, doc, startPage).then(_ => {
+                                            addHeaderFooterToDoc(doc, startPage, doc.internal.getNumberOfPages(), "Descriptif de module")
                                             remoteContentDiv.removeChild(content)
                                             addModulesToPDF(modules.slice(1), resolve)
                                         })
@@ -580,32 +599,34 @@ async function generatePDF(browser, pagePath, type) {
                                     }
                                 })
                             }
+
                             addModulesToPDF(modules, resolveModules)
                         }).then(_ => {
                             /* Once all modules are added to PDF */
                             document.body.removeChild(remoteContentDiv)
                             if (unvalidatedModules.length > 0) {
                                 doc.addPage()
+                                const nPages = doc.internal.getNumberOfPages()
+                                pageHeaderFooter(doc, nPages, "Descriptif de module")
                                 const boxWidth = doc.internal.pageSize.getWidth() - (marginLeft + marginTop)
                                 const boxHeight = 2 * sectionBoxMargin * 2 + sectionFontSize
-                                var currY = marginTop
+                                let currY = marginTop
                                 doc.setFillColor(sectionBoxColor).rect(marginLeft, currY, boxWidth, boxHeight, "F")
                                 doc.setFontSize(sectionFontSize)
-                                .setFont(undefined, "bold")
-                                .text("Liste des descriptifs de module actuellement indisponibles", marginLeft + sectionBoxMargin, currY + 6 * sectionBoxMargin)
+                                    .setFont(undefined, "bold")
+                                    .text("Liste des descriptifs de module actuellement indisponibles", marginLeft + sectionBoxMargin, currY + 6 * sectionBoxMargin)
                                 currY += boxHeight + sectionSpacingY
                                 doc.setFontSize(modulesNameFontSize).setFont(undefined, "normal")
                                 for (let i = 0; i < unvalidatedModules.length; i++) {
                                     doc.text(`- ${unvalidatedModules.at(i)}`, marginLeft, currY)
                                     currY += modulesNameFontSize + interLine
                                 }
-                                const nPages = doc.internal.getNumberOfPages()
-                                addHeaderFooterToDoc(doc, nPages, nPages, null, "Descriptif de module")
-        
+
+
                                 /* Adding modules description pages to modules planning */
                                 for (let i = 0; i < modulesPage.length; i++) {
                                     const mod = modulesPage[i]
-                                    var page = mod.page
+                                    let page = mod.page
                                     if (page === -1) {
                                         page = nPages
                                     }
@@ -615,15 +636,19 @@ async function generatePDF(browser, pagePath, type) {
                                 }
                             }
                             addPageNumberToDoc(doc)
-                            doc.save(filename, {returnPromise: true}).then(_=> {
-                                setTimeout(() => resolvePDF(), savingDelay)
-                            })
+                            setTimeout(() => { // Waiting for page number, header and footer to be added
+                                doc.save(filename, {returnPromise: true}).then(_ => {
+                                    setTimeout(() => resolvePDF(), savingDelay)
+                                })
+                            }, savingDelay)
+
                         })
                     })
                 })
             }
+
             const split = path.split('/')
-            switch(type) {
+            switch (type) {
                 case "mode":
                     await generateFormationBooklet(split[split.length - 2] + "-" + split[split.length - 1])
                     return
@@ -636,11 +661,11 @@ async function generatePDF(browser, pagePath, type) {
                 default:
             }
         }, [pagePath, type, host, localhost])
-    }  catch(err) {
+        return context
+    } catch (err) {
         console.info(err)
         return context
     }
-    return context
 }
 
 const modes = []
@@ -656,7 +681,7 @@ const topFolder = "public"
  * indicates the function is at modules level and 2 units level.
  */
 function listModulesUnits(folderPaths, depth) {
-    folderPaths.forEach( folderPath => {
+    folderPaths.forEach(folderPath => {
         const results = fs.readdirSync(folderPath)
         const folders = results.filter(res => fs.lstatSync(path.resolve(folderPath, res)).isDirectory())
         const innerFolderPaths = folders.map(folder => path.resolve(folderPath, folder))
@@ -673,7 +698,7 @@ function listModulesUnits(folderPaths, depth) {
  * @param {string[]} folderPaths - Source Paths
  */
 function listFolders(folderPaths) {
-    folderPaths.forEach( folderPath => {
+    folderPaths.forEach(folderPath => {
         const results = fs.readdirSync(folderPath)
         const folders = results.filter(res => fs.lstatSync(path.resolve(folderPath, res)).isDirectory())
         const innerFolderPaths = folders.map(folder => path.resolve(folderPath, folder))
@@ -689,7 +714,7 @@ function listFolders(folderPaths) {
 /**
  * Pads a number to 2 digits
  * @param {Number} num - Number to be pad
- * @returns padded number
+ * @returns {String} padded number
  */
 function padTo2Digits(num) {
     return num.toString().padStart(2, '0');
@@ -729,11 +754,11 @@ const devServerDelay = 5000
 function run() {
     listFolders([path.resolve(__dirname, topFolder)], 0)
     setTimeout(() => {
-            puppeteer.launch({ headless: "new" }).then(browser=> {
+        puppeteer.launch({headless: "new"}).then(browser => {
             const start = performance.now()
             const queueBooklets = new Queue({
                 concurrent: maxParallelBookletGeneration,
-                interval : 20
+                interval: 20
             })
             queueBooklets.enqueue(modes.map(x => {
                 return async () => {
@@ -749,7 +774,7 @@ function run() {
                 console.info("Generated formation booklets in ", msToHMS(moduleStart - start))
                 const queueDescriptions = new Queue({
                     concurrent: maxParallelDescriptionGeneration,
-                    interval : 20
+                    interval: 20
                 })
                 queueDescriptions.enqueue(modules.map(x => {
                     return async () => {
@@ -765,7 +790,7 @@ function run() {
                     console.info("Generated module descriptions in ", msToHMS(unitStart - moduleStart))
                     const queueSheets = new Queue({
                         concurrent: maxParallelSheetGeneration,
-                        interval : 20
+                        interval: 20
                     })
                     queueSheets.enqueue(unites.map(x => {
                         return async () => {
@@ -778,7 +803,7 @@ function run() {
                     })
                     queueSheets.on("end", () => {
                         const end = performance.now()
-                        console.info("Generated unit sheets in ", msToHMS(end -unitStart))
+                        console.info("Generated unit sheets in ", msToHMS(end - unitStart))
                         setTimeout(() => {
                             console.info("Closing browser...")
                             console.info("Generated PDF files in ", msToHMS(end - start))
