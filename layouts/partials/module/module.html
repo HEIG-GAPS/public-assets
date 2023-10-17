@@ -212,28 +212,26 @@
                                 {{ $unit := .Params.json_content }}
                                 <div class="p-2">
                                     <b> {{ $unit.unite_nom }} (<a href="{{ .Permalink }}" class="pdf-link"> {{ $unit.unite_abreviation }}
-                                        </a>) </b>
-                                    <p>
-                                        {{ $unit.unite_contenu }}
-                                    </p>
-                                    <b> {{ i18n "teaching_methods" }} </b> :
-                                    {{ $types := partial "get_teaching_methods" $unit }}
-                                    {{ $types_nom := slice }}
-                                    {{ range $types }}
+                                    </a>) </b>
+                                    <div class="p-2">
+                                        {{ $unit.unite_resume | safeHTML }}
+                                        <b> {{ i18n "teaching_methods" }} </b> :
+                                        {{ $types := partial "get_teaching_methods" $unit }}
+                                        {{ $types_nom := slice }}
+                                        {{ range $types }}
                                         {{ $types_nom = $types_nom | append .type_enseignement_nom }}
-                                    {{ end }}
-                                    {{ $formes_enseignement = $formes_enseignement | append $types_nom }}
-                                    {{ partial "list_as_str" $types_nom }}
+                                        {{ end }}
+                                        {{ $formes_enseignement = $formes_enseignement | append $types_nom }}
+                                        {{ partial "list_as_str" $types_nom }}
+                                    </div>
                                 </div>
                             {{ end }}
-                            {{ $mod.module_contenu }}
                         </div>
                         <div class="p-2">
                             <div class="p-2">
                                 <div>
-                                    <b> {{ i18n "teaching_methods" }} </b> :
+                                    <b> {{ i18n "teaching_methods" }} </b> : {{ partial "list_as_str" ($formes_enseignement | uniq) }}
                                 </div>
-                                {{ partial "list_as_str" ($formes_enseignement | uniq) }}
                             </div>
                         </div>
                         {{ end }}
@@ -328,45 +326,6 @@
                         {{ end }}
                     </div>
                 </div>
-                <div class="card module-enseignants">
-                    <div class="card-header dflex align-center">
-                        <div class="p-2">
-                            <b> {{ i18n "teachers" }} </b>
-                        </div>
-                    </div>
-                    <div class="card-body d-flex flex-column">
-                        {{ if not $mod.module_a_options }}
-                        <div class="p-2">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col"> <b> {{ i18n "unit" }} </b> </th>
-                                        <th class="text-center" scope="col"> <b> {{ i18n "responsible_teacher" }} </b>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {{ range .Pages }}
-                                    {{ $unite := .Params.json_content }}
-                                    <tr>
-                                        <th scope="row"> {{ $unite.unite_nom }} </th>
-                                        <td class="text-center"> {{ $unite.unite_responsable_nom }} </td>
-                                    </tr>
-                                    {{ end }}
-                                </tbody>
-                            </table>
-                        </div>
-                        {{ end }}
-                        <div class="p-2">
-                            <b> {{ i18n "module_responsible_teacher" }} </b> : {{ $mod.module_responsable_nom }}
-                        </div>
-                        {{ if $mod.module_a_options }}
-                            <div class="p-2">
-                                {{ i18n "options_module_depending" | strings.FirstUpper }}.
-                            </div>
-                        {{ end }}
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -377,11 +336,8 @@
             </a>
         </div>
         <div class="p-2 flex-fill d-flex align-content-center justify-content-end flex-wrap">
-            {{ i18n "module_description_validated" }}
-            {{ $mod.module_validation | time.Format ":date_long" }},
-            {{ $mod.module_validation | time.Format ":time_short" }}
-            {{ i18n "by" }}
-            {{ $mod.module_descriptif_validateur_acronyme }}
+            {{ i18n "version_of" | strings.FirstUpper }}
+            {{ $mod.module_validation | time.Format ":date_long" }}
         </div>
     </div>
 </div>

@@ -270,5 +270,8 @@
     },
     "options_module_final_grade_description": {
         "other": "la note du module est calculée à partir des notes des différentes unités du module"
+    },
+    "version_of": {
+        "other": "version du"
     }
 }

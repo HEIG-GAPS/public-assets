@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-var fs = require("fs")
+const fs = require("fs")
 const path = require("path");
 const Queue = require("queue-promise")
 const toml = require("toml")
@@ -50,7 +50,7 @@ async function generatePDF(browser, pagePath, type) {
             const { jsPDF } = window.jspdf
 
             /* PDF generation settings */
-            const savingDelay = 100 // Time to wait before assuming document is saved
+            const savingDelay = 100 // Time to wait in ms before assuming document is saved
 
             /* PDF layout */
             const marginTop = 60
@@ -95,7 +95,7 @@ async function generatePDF(browser, pagePath, type) {
             /* ------------------------- Utils ------------------------- */
 
             /**
-             * Generate a list of objectifs containing the relative position withint content,
+             * Generate a list of objects containing the relative position within content,
              * hyperlink and if the link is a module header of every links present in the content.
              * This function is used to render hyperlinks and PDF anchors in the final documents.
              * @param {Element} content - The Elements containing the contents wanted in the PDF
@@ -309,8 +309,7 @@ async function generatePDF(browser, pagePath, type) {
                     ".module-evaluation",
                     ".module-remediation",
                     ".module-remarques",
-                    ".module-bibliographie",
-                    ".module-enseignants"
+                    ".module-bibliographie"
                 ]
                 return generateSectionsPDF(content, selectors, doc, pageNumber)
             }
