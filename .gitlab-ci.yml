@@ -25,7 +25,8 @@ update_academic_tree:
     - echo ${CI_PROJECT_PATH}
     - echo ${CI_SERVER_URL}
     - git remote rm origin && git remote add origin "https://oauth2:$PAT@$GAPS_CI_LOCATION/${CI_PROJECT_PATH}.git"
-    - git add ./data/bachelor/bachelor.json
+    - git add ./prebuild/data/bachelor.json
+    #- git add ./prebuild/data/master.json
     - git commit -m "New data set from scheduled pipeline"
     - git push origin HEAD:main -o ci.skip
 
