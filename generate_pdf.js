@@ -118,7 +118,7 @@ async function generatePDF(browser, pagePath, type) {
                 for (let i = 0; i < links.length; i++) {
                     const link = links[i]
                     const linkBRect = link.getBoundingClientRect()
-                    const url = link.href.replace(localhost, host)
+                    const url = link.href.replace(localhost, host + "/")
                     linksCoords.push({
                         x: linkBRect.left - contentBRect.left,
                         yTop: linkBRect.top - contentBRect.top,
