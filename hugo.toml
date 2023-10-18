@@ -1,7 +1,7 @@
 theme = 'gaps'
 relativeURLS = false
 defaultContentLanguage = 'fr-ch'
-baseURL = 'https://gaps-programmes-formation/'
+baseURL = 'https://purple-pond-0bbbb5903.3.azurestaticapps.net'
 
 [languages]
     [languages.fr-ch]
