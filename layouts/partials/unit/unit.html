@@ -8,7 +8,7 @@
 {{ $orientation := index .Ancestors 2 }}
 {{ $unit := .Params.json_content }}
 {{ $autres_programmes := partial "unit/get_other_programs_unit" . }}
-{{ $pdf_link := printf "/%spdf%s%s.pdf" .Site.BaseURL .RelPermalink ($unit.unite_abreviation | urlize) }}
+{{ $pdf_link := printf "pdf%s%s.pdf" .RelPermalink ($unit.unite_abreviation | urlize) }}
 <div class="card pdf-content">
     <div class="card-header d-flex align-center flex-row bd-highlight mb-3 unit-title">
         <div class="p-2 d-flex align-content-center flex-wrap flex-grow-1 bd-highlight">
