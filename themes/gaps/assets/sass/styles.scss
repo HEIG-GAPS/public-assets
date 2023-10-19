@@ -3,7 +3,7 @@ $border-custom-line: 1px solid $border-custom-color;
 
 $link-custom-color: rgb(63, 98, 214);
 $link-hover-custom-color: darken($link-custom-color, 10%);
-$link-visited-custom-color: rgb(108, 46, 252);
+$link-visited-custom-color: lighten($link-custom-color, 10%);
 
 a {
     text-decoration: none!important;
@@ -143,10 +143,6 @@ a:visited {
     border-right: 0!important;
 }
 
-.formation-type-card {
-    border: 0!important;
-}
-
 .img-title {
     background: rgba(white, 0.5);
     font-size: 2.2rem;
@@ -211,7 +207,50 @@ $content-width : 90rem;
     width: $content-width;
 }
 
+.homepage-container {
+    scale: 100% 100%;
+    min-height: 50rem;
+}
 
-.home-img {
-    height: 800px!important;
+.borders {
+    border: black solid 1px!important;
+}
+
+.formation-type-title-left {
+    font-size: 2rem;
+    font-weight: bold;
+    color: black;
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    backdrop-filter: blur(15px);
+}
+
+.formation-type-title-right {
+    font-size: 2rem;
+    font-weight: bold;
+    color: black;
+    position: absolute;
+    top: 5%;
+    right: 5%;
+    backdrop-filter: blur(15px);
+}
+
+.formation-type-container {
+    position: relative;
+}
+
+.heig-logo {
+    object-fit: contain;
+    backdrop-filter: blur(15px);
+}
+
+.mse-logo {
+    object-fit: contain;
+    backdrop-filter: blur(15px);
+}
+
+.blurred-container {
+    backdrop-filter: blur(15px);
+    border-radius: 1rem;
 }

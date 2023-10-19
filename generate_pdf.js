@@ -68,8 +68,8 @@ async function generatePDF(browser, pagePath, type) {
             }
 
             /* Image sources */
-            const hesImgPath = "/images/hes_so_logo_cmyk_monochrome-e1654175067456.png"
-            const heigImgPath = "/images/HEIG-VD_logotype-baseline_rouge-rvb.png"
+            const hesImgPath = "/images/logo-heig-21-square-red.svg"
+            const heigImgPath = "/images/logo_hesso_bw.svg"
 
             /* Footer */
             const infos = "T +41 (0)24 557 63 30\ninfo@heig-vd.ch"
@@ -162,7 +162,7 @@ async function generatePDF(browser, pagePath, type) {
                     const imgHeight = marginBot
                     const imgWidth = hesImg.width * imgHeight / hesImg.height
                     footerX = doc.internal.pageSize.getWidth() - marginRight - imgWidth
-                    doc.addImage(hesImg, 'png', footerX, footerY - imgHeight / 2, imgWidth, imgHeight, undefined, 'FAST')
+                    doc.addImage(hesImg, 'svg', footerX, footerY - imgHeight / 2, imgWidth, imgHeight, undefined, 'FAST')
                 })
             }
 
@@ -180,7 +180,7 @@ async function generatePDF(browser, pagePath, type) {
                     doc.setPage(pageNumber)
                     const imgHeight = marginTop - 2 * imgYmargin
                     const imgWidth = heigImg.width * imgHeight / heigImg.height
-                    doc.addImage(heigImg, 'png', headerX, headerY, imgWidth, imgHeight)
+                    doc.addImage(heigImg, 'svg', headerX, headerY, imgWidth, imgHeight)
                     headerX += doc.internal.pageSize.getWidth() - marginLeft - 2 * marginRight - doc.getTextWidth(headerTitle)
                     doc.setFont(undefined, "bold").text(headerTitle, headerX, headerY, {baseline: "top"})
                 })

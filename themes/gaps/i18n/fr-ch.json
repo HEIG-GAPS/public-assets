@@ -1,4 +1,13 @@
 {
+    "bachelor": {
+        "other": "Bachelor"
+    },
+    "master": {
+        "other": "Master"
+    },
+    "formations": {
+        "other": "Formations"
+    },
     "full_time": {
         "other": "Plein temps"
     },
