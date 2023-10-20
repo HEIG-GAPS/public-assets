@@ -1,6 +1,5 @@
 <nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        {{ $keks := 2 }}
+    <ol class="breadcrumb p-3">
         {{ define "breadcrumb" }}
         {{ $ctx := dict "Page" . "Level" (len .Ancestors) }}
         {{ with .Parent }}
@@ -10,10 +9,8 @@
         {{ end }}
         {{ end }}
         {{ if not .IsHome }}
-
         {{ template "breadcrumb" . }}
         <li class="breadcrumb-item active" aria-current="page"> {{ .Title }}</li>
-
         {{ end }}
     </ol>
 </nav>

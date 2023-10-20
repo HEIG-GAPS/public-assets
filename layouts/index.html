@@ -2,32 +2,38 @@
 {{ $bachelor := (index .Pages 0)}}
 {{ $about := (index .Pages 1) }}
 {{ $master := (index .Pages 2) }}
-<nav class="p-0 container-fluid d-flex homepage-container mb-1">
-    <div style="background-image: url('images/HEIGVD_CAMPUS_776-2-copie - copie.jpg');  background-size: cover;" class="borders container-fluid d-flex flex-column align-items-center justify-content-center formation-type-container">
-        <div class="container blurred-container w-auto align-self-baseline formation-type-title-left">
-            <a href="{{ $bachelor.Permalink }}">
-                {{ i18n "formations" }}
-                <br>
-                {{ i18n "bachelor" }}
-            </a>
+<div class="d-flex flex-column formation-container rounded-5 border">
+    <div class="p-0 d-flex flex-fill flex-grow-1 formation-content">
+        <div style="background-image: url('images/HEIGVD_CAMPUS_776-2-copie - copie.jpg');  background-size: cover; background-repeat: no-repeat;"
+             class="container-fluid d-flex align-items-center justify-content-center formation-type-container formation-type-title-left">
+            <div class="blurred-container d-flex justify-content-center">
+                <a href="{{ $bachelor.Permalink }}">
+                    <div class="mb-3 text-center text-white">
+                        <h3> {{ i18n "formations" }} {{ i18n "bachelor" }} </h3>
+                    </div>
+                    <img class="homepage-logo" src="images/logo-heig-21-square-red.svg" alt="logo-heig">
+                </a>
+            </div>
         </div>
-        <div class="blurred-container p-2 h-25 w-25 d-flex align-self-center justify-content-center">
-            <img class="heig-logo" src="images/logo-heig-21-square-red.svg" alt="logo-heig">
+        <div style="background-image: url('images/mse.jpg');  background-size: cover; background-repeat: no-repeat;"
+             class="container-fluid d-flex align-items-center justify-content-center formation-type-container formation-type-title-right">
+            <div class="blurred-container d-flex justify-content-center">
+                <a href="{{ $master.Permalink }}">
+                    <div class="mb-3 text-center text-white">
+                        <h3>{{ i18n "formations" }} {{ i18n "master" }}</h3>
+                    </div>
+                    <img class="homepage-logo" src="images/logo_mse.svg" alt="logo-hes-so">
+                </a>
+            </div>
         </div>
-
+        <div class="logo-center d-flex justify-content-center" style="background-image: url('images/gaps-logo-2.svg');  background-size: contain;  background-position: center"></div>
     </div>
-    <div style="background-image: url('images/mse.jpg');  background-size: cover;" class="borders container-fluid d-flex flex-column align-items-center justify-content-center formation-type-container">
-        <div class="container blurred-container p-2 w-auto align-self-baseline formation-type-title-right">
-            <a href="{{ $master.Permalink }}">
-                {{ i18n "formations" }}
-                <br>
-                {{ i18n "master" }}
-            </a>
+    <div class="container-fluid d-flex flex-fill flex-grow-0 justify-content-between" id="homepage-footer">
+        <div>
+            {{ i18n "generated" }} {{ .Site.Data.bachelor.generation | time.Format ":date_short" }}
+            Copyright © HEIG-VD 2004-2023 / {{ i18n "developped" (dict "Developped" "GAPS") }}
         </div>
-        <div class="blurred-container p-2 h-25 w-75 d-flex align-self-center justify-content-center">
-            <img class="mse-logo" src="images/logo_mse.svg" alt="logo-heig">
-        </div>
-
+        <img class="" src="images/logo_hesso_bw.svg" alt="logo-hes-so">
     </div>
-</nav>
+</div>
 {{ end }}

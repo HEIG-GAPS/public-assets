@@ -27,10 +27,6 @@ $table-striped-columns-order: 3n;
 
 @import "node_modules/bootstrap/scss/mixins";
 
-body {
-    font-family: $headings-font-family;
-}
-
 .btn-custom {
     @include button-variant(
         $btn-custom-color,

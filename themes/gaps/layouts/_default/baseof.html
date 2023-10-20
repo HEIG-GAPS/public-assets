@@ -2,14 +2,11 @@
 <html lang="{{ $.Site.LanguageCode }}">
     {{- partial "head.html" . -}}
     <body>
-        {{- partial "header.html" . -}}
-        <div class="container-sm" id="breadcrumb">
-        {{- partial "breadcrumb.html" . -}}
+        <div id="breadcrumb">
+            {{- partial "breadcrumb.html" . -}}
         </div>
-        <div>
+        <div id="main">
         {{- block "main" . }}{{- end }}
         </div>
-        <br>
-        {{- partial "footer.html" . -}}
     </body>
 </html>
