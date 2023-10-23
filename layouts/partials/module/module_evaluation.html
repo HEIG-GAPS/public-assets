@@ -1,5 +1,3 @@
-{{ $poids_tot_module := 0 }}
-{{ $numerateur_module := "" }}
 {{ $evaluations := partial "module/get_module_evaluation" . }}
 {{ range $evaluations.unites }}
     {{ $poids_tot_unite := 0 }}

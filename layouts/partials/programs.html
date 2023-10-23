@@ -21,7 +21,7 @@
           {{ range $formation_ctx.Pages }}
             {{ $mode := .Params.json_content }}
             {{ if eq $mode.mode_formation_abreviation $col }}
-              <td class="text-center">
+              <td class="text-center align-middle">
                 <!-- Â changer selon la génération du fichier pour chaque langue -->
                 {{ $icon := "fa-solid fa-briefcase" }}
                 {{ if eq $mode.mode_formation_abreviation "PT" }}

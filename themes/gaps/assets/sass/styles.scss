@@ -3,12 +3,9 @@ $border-custom-line: 1px solid $border-custom-color;
 
 $link-custom-color: rgb(63, 98, 214);
 $link-hover-custom-color: darken($link-custom-color, 10%);
-$link-visited-custom-color: lighten($link-custom-color, 10%);
+$link-visited-custom-color: lighten($link-custom-color, 20%);
 
 $main-min-height: 50rem!important;
-
-$gaps-logo-width: 25rem;
-$gaps-logo-height: divide($gaps-logo-width, 2);
 
 @mixin half-circle ($direction: bottom) {
     @if $direction == right {
@@ -26,17 +23,6 @@ $gaps-logo-height: divide($gaps-logo-width, 2);
     @else {
         @error 'Please set correct $direction value.'
     }
-}
-
-#main {
-    margin: 0 5% 5%;
-    min-height: $main-min-height;
-    height: 100%;
-}
-
-#homepage-footer {
-    margin: 1% 0;
-    max-height: fit-content!important;
 }
 
 a {
@@ -61,6 +47,11 @@ a:visited {
 
 .fraction-denominator {
     margin: 0;
+}
+
+.modules-planning {
+    border-collapse: collapse;
+    min-width: inherit;
 }
 
 .module-cell {
@@ -171,25 +162,6 @@ a:visited {
     width: 50%!important;
 }
 
-.formation-card {
-    border-left: 0!important;
-    border-bottom: 0!important;
-    border-right: 0!important;
-}
-
-.img-title {
-    background: rgba(white, 0.5);
-    font-size: 2.2rem;
-    width: fit-content;
-    height: fit-content;
-}
-
-.card  .card {
-    border-right: 0!important;
-    border-left: 0!important;
-    border-bottom: 0!important;
-}
-
 .examen {
     border-right: 4px solid grey;
 }
@@ -204,11 +176,6 @@ a:visited {
 
 .contenu-sous-texte {
     font-size: smaller;
-}
-
-.module-planning {
-    font-size: 7pt;
-    width: 1200px;
 }
 
 .module-planning tbody {
@@ -227,86 +194,24 @@ a:visited {
     background-color: grey;
 }
 
-$content-width : 90rem;
-
-.pdf-content {
-    width: $content-width;
-    min-width: $content-width;
-    max-width: $content-width;
-}
-
-.modules-planning {
-    min-width: $content-width;
-    max-width: $content-width;
-    width: $content-width;
-}
-
-.borders {
-    border: cyan solid 1px!important;
-}
-
-.formation-type-title-left {
-    border-top-left-radius: 2rem;
-}
-
-.formation-type-title-right {
-    border-top-right-radius: 2rem;
-}
-
-.formation-type-container {
-    position: relative;
-}
-
-.homepage-logo {
-    object-fit: contain;
-    margin: 5%;
-}
-
-.formation-container {
-    position: relative;
-    min-height: $main-min-height;
-    height: 100%;
-}
-
-.formation-content {
-    margin: 0!important;
-}
+/* Home page */
+$backdrop-filter-blur-px: 3px;
 
 .blurred-container {
-    background-color: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur($backdrop-filter-blur-px);
+    -webkit-backdrop-filter: blur($backdrop-filter-blur-px);
     border-radius: 1rem;
     padding: 1rem;
-    min-width: 25%;
-    max-width: fit-content;
-    max-height: fit-content;
 }
 
-.logo-center {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    margin: 0 auto;
-    width: $gaps-logo-width;
-    height: $gaps-logo-height;
-    line-height: $gaps-logo-height;
-    @include half-circle(bottom);
+$max-gaps-logo-dim : 8rem;
+
+.gaps-logo {
+    max-width: $max-gaps-logo-dim;
+    max-height: $max-gaps-logo-dim;
 }
 
-@media screen and (max-width: 600px) {
-    .formation-content {
-        display: flex;
-        flex-direction: column;
-    }
-    .formation-type-container {
-        max-width: 600px;
-    }
-    .formation-type-title-left {
-        border-radius: 0;
-    }
-
-    .formation-type-title-right {
-        border-radius: 0;
-    }
+.hes-logo {
+    max-height: 2rem;
 }

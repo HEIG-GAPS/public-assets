@@ -1,53 +1,126 @@
+// Include functions first (so you can manipulate colors, SVGs, calc, etc)
 @import "node_modules/bootstrap/scss/functions";
+
+// Include any default variable overrides here
 $headings-font-family: Helvetica;
+$font-family-sans-serif: Helvetica;
 
-$card-header-color: #6495ed;
-$card-footer-color: $card-header-color;
-$btn-custom-color: darken($card-header-color, 10%);
-$btn-custom-color-hover: darken($btn-custom-color, 5%);
-$btn-custom-text-color: white;
-
-$card-spacer-x: 0;
-$card-spacer-y: 0;
-$card-group-margin: 0;
-$card-cap-color: white;
-$card-bg: ligthen($card-header-color, 10%);
-$card-border-radius: 0;
-$card-border-color: black;
-$card-border-width: 1px;
-
-$form-check-input-disabled-opacity: 1;
-$form-check-input-border: 1px solid black;
-
-$table-striped-columns-order: 3n;
+$card-cap-bg: #79a3f3;
 
 @import "node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss";
 @import "styles.scss";
-@import "node_modules/bootstrap/scss/bootstrap";
 
+@import "node_modules/bootstrap/scss/variables";
+@import "node_modules/bootstrap/scss/variables-dark";
+
+// Include any default map overrides here
+
+@import "node_modules/bootstrap/scss/maps";
 @import "node_modules/bootstrap/scss/mixins";
+@import "node_modules/bootstrap/scss/root";
+
+$btn-custom-color: darken($card-cap-bg, 10%);
+$btn-custom-color-hover: darken($btn-custom-color, 5%);
+$btn-custom-text-color: white;
+
+@import "node_modules/bootstrap/scss/utilities";
+@import "node_modules/bootstrap/scss/reboot";
+@import "node_modules/bootstrap/scss/type";
+@import "node_modules/bootstrap/scss/images";
+@import "node_modules/bootstrap/scss/containers";
+@import "node_modules/bootstrap/scss/grid";
+@import "node_modules/bootstrap/scss/helpers";
+@import "node_modules/bootstrap/scss/breadcrumb";
+@import "node_modules/bootstrap/scss/card";
+@import "node_modules/bootstrap/scss/tables";
+@import "node_modules/bootstrap/scss/buttons";
+@import "node_modules/bootstrap/scss/dropdown";
 
 .btn-custom {
-    @include button-variant(
-        $btn-custom-color,
-        darken($btn-custom-color, 5%),
-        $btn-custom-text-color,
-        $btn-custom-color-hover,
-        darken($btn-custom-color-hover, 5%)
-    );
-    border-radius: .0001;
+  @include button-variant(
+                  $btn-custom-color,
+                  darken($btn-custom-color, 5%),
+                  $btn-custom-text-color,
+                  $btn-custom-color-hover,
+                  darken($btn-custom-color-hover, 5%)
+  );
 }
 
-.card-header {
-    background-color: $card-header-color;
-    padding-bottom: 0;
-    margin-bottom: 0;
-}
+$utilities: map-merge(
+                $utilities, (
+                "top": map-merge(
+                                map-get($utilities, "top"),
+                                ( responsive: true ),
+                ),
+                "bottom": map-merge(
+                                map-get($utilities, "bottom"),
+                                ( responsive: true ),
+                ),
+                "start": map-merge(
+                                map-get($utilities, "start"),
+                                ( responsive: true ),
+                ),
+                "end": map-merge(
+                                map-get($utilities, "end"),
+                                ( responsive: true ),
+                ),
+                "translate-middle": map-merge(
+                                map-get($utilities, "translate-middle"),
+                                ( responsive: true ),
+                ),
+                "width": map-merge(
+                                map-get($utilities, "width"),
+                                ( responsive: true ),
+                ),
+                "height": map-merge(
+                                map-get($utilities, "height"),
+                                ( responsive: true ),
+                ),
+                "rounded-top": map-merge(
+                                map-get($utilities, "rounded-top"),
+                                ( responsive: true ),
+                ),
+                "rounded-bottom": map-merge(
+                                map-get($utilities, "rounded-bottom"),
+                                ( responsive: true ),
+                ),
+                "rounded-end": map-merge(
+                                map-get($utilities, "rounded-end"),
+                                ( responsive: true ),
+                ),
+                "rounded-top-left": (
+                        property: border-top-left-radius,
+                        class: rounded-top-left,
+                        responsive: true,
+                        values: (
+                                null: var(--#{$prefix}border-radius),
+                                0: 0,
+                                1: var(--#{$prefix}border-radius-sm),
+                                2: var(--#{$prefix}border-radius),
+                                3: var(--#{$prefix}border-radius-lg),
+                                4: var(--#{$prefix}border-radius-xl),
+                                5: var(--#{$prefix}border-radius-xxl),
+                                circle: 50%,
+                                pill: var(--#{$prefix}border-radius-pill)
+                        )
+                ),
+                "rounded-top-right": (
+                        property: border-top-right-radius,
+                        class: rounded-top-right,
+                        responsive: true,
+                        values: (
+                                null: var(--#{$prefix}border-radius),
+                                0: 0,
+                                1: var(--#{$prefix}border-radius-sm),
+                                2: var(--#{$prefix}border-radius),
+                                3: var(--#{$prefix}border-radius-lg),
+                                4: var(--#{$prefix}border-radius-xl),
+                                5: var(--#{$prefix}border-radius-xxl),
+                                circle: 50%,
+                                pill: var(--#{$prefix}border-radius-pill)
+                        )
+                )
+        )
+);
 
-.card-body {
-    background-color: $card-bg;
-}
-
-.card-footer {
-    background-color: $card-footer-color;
-}
+@import "node_modules/bootstrap/scss/utilities/api";

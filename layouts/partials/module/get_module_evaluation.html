@@ -1,4 +1,4 @@
-{{ $poids_tot_module := 0 }}
+{{ $poids_tot_module := "" }}
 {{ $numerateur_module := "" }}
 {{ $unites := slice }}
 {{ $ret_dict := dict }}
@@ -14,12 +14,13 @@
             {{ $numerateur_unite = printf "%s + %d x %s" $numerateur_unite (int .ponderation) .type_enseignement_nom }}
         {{ end }}
     {{ end }}
-    {{ $poids_tot_module = add $poids_tot_module (int $unite.unite_coefficient) }}
     {{ if not (eq $unite.unite_coefficient (float 0)) }}
         {{ if eq $i 0 }}
             {{ $numerateur_module = printf "%d x %s" (int $unite.unite_coefficient) $unite.unite_abreviation }}
+            {{ $poids_tot_module = printf "%d" (int $unite.unite_coefficient) }}
         {{ else }}
             {{ $numerateur_module = printf "%s + %d x %s" $numerateur_module (int $unite.unite_coefficient) $unite.unite_abreviation }}
+            {{ $poids_tot_module = printf "%s + %d" $poids_tot_module (int $unite.unite_coefficient) }}
         {{ end }}
     {{ end }}
     {{ $unite_dict := dict "num" $numerateur_unite "denom" $poids_tot_unite "unite" $p }}
