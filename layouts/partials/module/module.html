@@ -5,7 +5,7 @@
 {{ $module_mode_full := false }}
 {{ $eacademique := index .Ancestors 2 }}
 {{ $autres_programmes := partial "module/get_other_programs_module" . }}
-{{ $pdf_link := printf "pdf%s%s.pdf" .RelPermalink ($mod.module_code | urlize) }}
+{{ $pdf_link := printf "%s/pdf%s%s.pdf" .Site.BaseURL .RelPermalink ($mod.module_code | urlize) }}
 <div class="card pdf-content m-0 p-0">
     <div class="card-header border-bottom-0 d-flex flex-row align-center" data-html2canvas-ignore="true">
         <div class="flex-fill d-flex align-content-center">

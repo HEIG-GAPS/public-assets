@@ -4,7 +4,7 @@
 {{ $formation_duree := .Params.json_content.formation_duree_semestres }}
 {{ $periodes_total := newScratch }}
 {{ $pdf := (lower (replace (printf "%s-%s.pdf" (index .Ancestors 0).Params.json_content.formation_abreviation .Params.json_content.mode_formation_abreviation) "/" "-")) }}
-{{ $pdf_link := printf "pdf%s%s" .RelPermalink $pdf }}
+{{ $pdf_link := printf "%s/pdf%s%s" .Site.BaseURL .RelPermalink $pdf }}
 <div class="d-flex align-self-center">
     <button type="button" class="btn btn-custom pdf-button" data-html2canvas-ignore="true" onclick="openAndDownloadPDF('{{ $pdf_link }}')">
         Brochure au format PDF
