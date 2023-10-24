@@ -2,10 +2,11 @@
 {{ $n_semaines_semestre := int .n_semaines_semestre }}
 {{ $n_semaines_hes_ete := int .n_semaines_hes_ete }}
 {{ $n_semaines := int .n_semaines }}
+{{ $ctx := . }}
 {{ $unit := .unite }}
-<td scope="row" class="align-middle text-center coef-value-cell">
+<th scope="row" class="align-middle text-center coef-value-cell fw-normal">
     {{ if lt $unit.unite_coefficient 1 }} {{ i18n "optional_abbreviation" }} {{ else }} {{ $unit.unite_coefficient }} {{ end }}
-</td>
+</th>
 {{ range $col := $cols }}
     {{ $unit_ctx := dict
         "unite" $unit
@@ -22,6 +23,7 @@
     align-middle
     text-center
     period-cell
+    {{ if $ctx.semestrial }}semestrial-cell{{ else }}trimestrial-cell{{ end }}
     {{ if and $examen (not (lt $decoupage.periodes 1)) $last }} examen{{ end }}"
     {{ if hasPrefix $col "S"}} colspan="2" {{ end }}
     >

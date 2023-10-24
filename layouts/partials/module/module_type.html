@@ -6,9 +6,12 @@
     <br>
     {{ range $i, $typ := $types }}
     <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled-module-{{ $mod.module_code }}-type{{$i}}" {{ if eq $type $typ.id
-            }} checked {{ end }} disabled>
-        <label class="form-check-label" for="flexCheckCheckedDisabled-module-{{ $mod.module_code }}-type{{$i}}">
+        <input class="form-check-input"
+               type="checkbox"
+               id="flexCheckCheckedDisabled-module-{{ $mod.module_code }}-type{{$i}}"
+               {{ if eq $type $typ.id }} checked {{ end }} disabled>
+        <label class="form-check-label"
+               for="flexCheckCheckedDisabled-module-{{ $mod.module_code }}-type{{$i}}">
             {{ $typ.texte }}
         </label>
     </div>

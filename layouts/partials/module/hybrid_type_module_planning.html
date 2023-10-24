@@ -45,7 +45,7 @@
             <th scope="col" class="group-alternative-cell table-primary"></th>
             <th scope="col" class="table-primary coef-value-cell text-center align-middle"> ... </th>
             {{ range $col := $trimesters }}
-            <td class="period-cell" {{ if or (hasPrefix $col "S") }}colspan="2"{{ end }}></td>
+            <td class="period-cell hybrid-cell" {{ if or (hasPrefix $col "S") }}colspan="2"{{ end }}></td>
             {{ end }}
         </tr>
     {{ else }}

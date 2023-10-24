@@ -11,9 +11,9 @@
     {{ $n_semaines = $n_semaines_semestre }}
     {{ $cols = .semestres }}
 {{ end }}
-<td scope="row" class="align-middle text-center coef-value-cell">
+<th scope="row" class="align-middle text-center fw-normal coef-value-cell">
     {{ if lt $unit.unite_coefficient 1 }} {{ i18n "optional_abbreviation" }} {{ else }} {{ $unit.unite_coefficient }} {{ end }}
-</td>
+</th>
 {{ range $col := $cols }}
     {{ $unit_ctx := dict
         "unite" $unit
@@ -34,6 +34,7 @@
     align-middle
     text-center
     period-cell
+    {{ if $unit.unite_trimestrielle }}tri{{ else }}se{{ end }}mestrial-cell
     {{ if and $examen (not (lt $decoupage.periodes 1)) $last }} examen{{ end }}"
     >{{ if not (lt $decoupage.periodes 1) }}
             {{ $periodes }}

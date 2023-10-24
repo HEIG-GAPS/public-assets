@@ -1,9 +1,9 @@
 $border-custom-color: grey;
 $border-custom-line: 1px solid $border-custom-color;
 
-$link-custom-color: rgb(63, 98, 214);
+$link-custom-color: rgb(30, 77, 255);
 $link-hover-custom-color: darken($link-custom-color, 10%);
-$link-visited-custom-color: lighten($link-custom-color, 20%);
+$link-visited-custom-color: rgb(119, 84, 255);
 
 $main-min-height: 50rem!important;
 
@@ -49,6 +49,8 @@ a:visited {
     margin: 0;
 }
 
+/* Modules planning */
+
 .modules-planning {
     border-collapse: collapse;
     min-width: inherit;
@@ -81,14 +83,12 @@ a:visited {
 }
 
 .group-alternative-cell {
-    border-top: 0;
     border-bottom: 0;
     width: 5%;
 }
 
 .top-alternative {
     border-top: $border-custom-line!important;
-    border-bottom: 0;
 }
 
 .group-alternative-A {
@@ -100,15 +100,13 @@ a:visited {
 }
 
 .semester-cell {
-    border-top: $border-custom-line;
     border-bottom: 0;
 }
 
 .only-semester-cell {
-    border-top: $border-custom-line;
-    border-bottom: $border-custom-line!important;
     border-right: 0!important;
     border-left: 0!important;
+    border-top: $border-custom-line;
 }
 
 .only-semester-cell:last-child {
@@ -192,6 +190,38 @@ a:visited {
 
 .selectable-units td:last-of-type {
     background-color: grey;
+}
+
+$planning-bg-color: rgba(122, 167, 243, 0.6);
+
+.semestrial-cell:nth-of-type(6n - 5) {
+    background-color: $planning-bg-color!important;
+}
+.semestrial-cell:nth-of-type(6n - 4) {
+    background-color: $planning-bg-color!important;
+}
+.semestrial-cell:nth-of-type(6n - 3) {
+    background-color: $planning-bg-color!important;
+}
+
+.trimestrial-cell:nth-of-type(10n - 9) {
+    background-color: $planning-bg-color!important;
+}
+.trimestrial-cell:nth-of-type(10n - 8) {
+    background-color: $planning-bg-color!important;
+}
+.trimestrial-cell:nth-of-type(10n - 7) {
+    background-color: $planning-bg-color!important;
+}
+.trimestrial-cell:nth-of-type(10n - 6) {
+    background-color: $planning-bg-color!important;
+}
+.trimestrial-cell:nth-of-type(10n - 5) {
+    background-color: $planning-bg-color!important;
+}
+
+.total-periods-cell {
+    background-color: $planning-bg-color!important;
 }
 
 /* Home page */

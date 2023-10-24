@@ -2,10 +2,10 @@
 <html class="h-100" lang="{{ $.Site.LanguageCode }}">
     {{- partial "head.html" . -}}
     <body class="h-100">
-        <div class="h-auto" id="breadcrumb">
+        <div class="h-auto ms-5 mt-2" id="breadcrumb">
             {{- partial "breadcrumb.html" . -}}
         </div>
-        <div class="h-75 m-5">
+        <div class="h-75 ms-5 me-5 mt-0 mb-3">
         {{- block "main" . }}{{- end }}
         </div>
         {{- partial "footer.html" . -}}

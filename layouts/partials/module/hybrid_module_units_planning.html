@@ -28,20 +28,21 @@
                         "groupe_id" $unite.unite_id_groupe_alternatives
                         "unites" $page.Pages
                         }}
-                    <td
+                    <th
                     scope="col"
                     rowspan="{{ partial "get_number_of_units_alternative" $ctx_alternative }}"
                     class="
                     group-alternative-cell
                     text-center
+                    fw-normal
                     align-middle
                     group-alternative-{{ $groupe_alternative.groupe_alternative_lettre }}">
                         {{ $groupe_alternative.groupe_alternative_lettre }} ({{ $groupe_alternative.groupe_alternatives_volume_minimal }})
-                    </td>
+                    </th>
                         {{ $alternatives_cell = false }}
                 {{ end }}
             {{ else }}
-                <td scope="col" class="group-alternative-cell"></td>
+                <th scope="col" class="group-alternative-cell"></th>
             {{ end }}
             {{ partial "module/hybrid_module_units_planning_periods" (merge $ctx (dict "unite" $unite)) }}
         </tr>

@@ -20,11 +20,6 @@ async function generatePDF(browser, pagePath, type) {
     /* Creating new BrowserContext and opening page */
     const context = await browser.createIncognitoBrowserContext()
     const page = await context.newPage()
-    await page.setViewport({
-        width: 1280,
-        height: 960
-    })
-
     /* Navigate to page */
     await page.goto(localhost + pagePath, {waitUntil: 'domcontentloaded'})
 
@@ -50,7 +45,7 @@ async function generatePDF(browser, pagePath, type) {
             const {jsPDF} = window.jspdf
 
             /* PDF generation settings */
-            const savingDelay = 1000 // Time to wait in ms before assuming document is saved
+            const savingDelay = 1200 // Time to wait in ms before assuming document is saved
 
             /* PDF layout */
             const marginTop = 60

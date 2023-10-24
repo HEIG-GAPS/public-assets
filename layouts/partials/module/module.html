@@ -7,9 +7,9 @@
 {{ $autres_programmes := partial "module/get_other_programs_module" . }}
 {{ $pdf_link := printf "%s/pdf%s%s.pdf" .Site.BaseURL .RelPermalink ($mod.module_code | urlize) }}
 <div class="card pdf-content m-0 p-0">
-    <div class="card-header border-bottom-0 d-flex flex-row align-center" data-html2canvas-ignore="true">
+    <div class="card-header border-bottom-0 d-flex flex-row align-items-center" data-html2canvas-ignore="true">
         <div class="flex-fill d-flex align-content-center">
-            <a class="btn btn-custom" href="{{ (index .Ancestors 0).Permalink }}">
+            <a class="btn btn-custom text-white" href="{{ (index .Ancestors 0).Permalink }}">
                 {{ i18n "back_to_list" }}
             </a>
         </div>
@@ -94,7 +94,7 @@
                     </div>
                 </div>
                 <div class="card module-intitule border-0">
-                    <div class="card-header d-flex align-center rounded-0">
+                    <div class="card-header d-flex align-center border-0 rounded-0">
                         <div class="p-2">
                             <b> 1. {{ i18n "module_title" }} </b>
                         </div>
@@ -146,7 +146,7 @@
                     </div>
                 </div>
                 <div class="card module-organisation border-0">
-                    <div class="card-header dflex align-center rounded-0">
+                    <div class="card-header dflex align-center border-0 rounded-0">
                         <div class="p-2">
                             <b> 2. {{ i18n "organization" }} </b>
                         </div>
@@ -168,7 +168,7 @@
                     </div>
                 </div>
                 <div class="card module-prerequis border-0">
-                    <div class="card-header dflex align-center rounded-0">
+                    <div class="card-header dflex align-center border-0 rounded-0">
                         <div class="p-2">
                             <b> 3. {{ i18n "prerequisites" }} </b>
                         </div>
@@ -178,7 +178,7 @@
                     </div>
                 </div>
                 <div class="card module-objectifs border-0">
-                    <div class="card-header dflex align-center rounded-0">
+                    <div class="card-header dflex align-center border-0 rounded-0">
                         <div class="p-2">
                             <b> 4. {{ i18n "learning_objectives" }} </b>
                         </div>
@@ -190,7 +190,7 @@
                     </div>
                 </div>
                 <div class="card module-enseignements border-0">
-                    <div class="card-header dflex align-center rounded-0">
+                    <div class="card-header dflex align-center border-0 rounded-0">
                         <div class="p-2">
                             <b> 5. {{ i18n "content_teaching_methods" }} </b>
                         </div>
@@ -238,7 +238,7 @@
                     </div>
                 </div>
                 <div class="card module-evaluation border-0">
-                    <div class="card-header dflex align-center rounded-0">
+                    <div class="card-header dflex align-center border-0 rounded-0">
                         <div class="p-2">
                             <b> 6. {{ i18n "evaluation" }} </b>
                         </div>
@@ -273,7 +273,7 @@
                     </div>
                 </div>
                 <div class="card module-remediation border-0">
-                    <div class="card-header dflex align-center rounded-0">
+                    <div class="card-header dflex align-center border-0 rounded-0">
                         <div class="p-2">
                             <b> 7. {{ i18n "remediation" }} </b>
                         </div>
@@ -285,7 +285,7 @@
                     </div>
                 </div>
                 <div class="card module-remarques border-0">
-                    <div class="card-header dflex align-center rounded-0">
+                    <div class="card-header dflex align-center border-0 rounded-0">
                         <div class="p-2">
                             <b> 8. {{ i18n "remarks" }} </b>
                         </div>
@@ -302,7 +302,7 @@
                     </div>
                 </div>
                 <div class="card module-bibliographie border-0">
-                    <div class="card-header dflex align-center rounded-0">
+                    <div class="card-header dflex align-center border-0 rounded-0">
                         <div class="p-2">
                             <b> 9. {{ i18n "bibliography" }} </b>
                         </div>
@@ -329,13 +329,13 @@
             </div>
         </div>
     </div>
-    <div class="card-footer d-flex align-center">
+    <div class="card-footer border-0 d-flex align-items-center">
         <div class="flex-fill d-flex align-content-center" data-html2canvas-ignore="true">
-            <a class="btn btn-custom" href="{{ (index .Ancestors 0).Permalink }}">
+            <a class="btn btn-custom text-white" href="{{ (index .Ancestors 0).Permalink }}">
                 {{ i18n "back_to_list" }}
             </a>
         </div>
-        <div class="p-2 flex-fill d-flex align-content-center justify-content-end flex-wrap">
+        <div class="p-2  flex-fill d-flex align-content-center justify-content-end flex-wrap">
             {{ i18n "version_of" | strings.FirstUpper }}
             {{ $mod.module_validation | time.Format ":date_long" }}
         </div>
@@ -346,10 +346,12 @@
     <div class="p-2 card-header d-flex align-center">
         <b> {{ i18n "unvalidated_module_header" }} </b>
     </div>
-    <div class="p-2 card-body">
-        <p>
-            {{ i18n "unvalidated_module_body" }}
-        </p>
+    <div class="p-2 card-body d-flex align-items-center">
+        <div>
+            <p class="m-0">
+                {{ i18n "unvalidated_module_body" }}
+            </p>
+        </div>
     </div>
 </div>
 {{ end }}
