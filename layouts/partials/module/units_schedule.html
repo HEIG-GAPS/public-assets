@@ -1,4 +1,6 @@
 {{ $cols := .cols }}
+{{ if gt (len .unites) 0  }}
+<b> {{ i18n "mandatory_unit" (len .unites) }} </b>
 <table class="table table-borderless">
     <thead>
         <tr>
@@ -50,3 +52,4 @@
         {{ end }}
     </tbody>
 </table>
+{{ end }}

@@ -1,5 +1,7 @@
 {{ $poids_tot_module := "" }}
 {{ $numerateur_module := "" }}
+{{ $test := dict }}
+{{ $groupes_unites := partial "module/get_module_units_groups" . }}
 {{ $unites := slice }}
 {{ $ret_dict := dict }}
 {{ range $i, $p := .Pages }}

@@ -1,28 +1,85 @@
 {{ $evaluations := partial "module/get_module_evaluation" . }}
-{{ range $evaluations.unites }}
-    {{ $poids_tot_unite := 0 }}
-    {{ $unite := .unite.Params.json_content }}
+{{ $groupes := partial "module/get_module_units_groups" . }}
+{{ $mod_num := "" }}
+{{ $mod_denom := "" }}
+{{ range $groupes.obligatoires }}
+    {{ $eval := partial "unit/get_unite_evaluation.html" . }}
+    {{ $unite := .Params.json_content }}
+    {{ if eq $mod_num "" }}
+        {{ $mod_num = printf "%d x %s" (int $unite.unite_coefficient) $unite.unite_abreviation }}
+    {{ else }}
+        {{ $mod_num = printf "%s + %d x %s" $mod_num (int $unite.unite_coefficient) $unite.unite_abreviation }}
+    {{ end }}
+    {{ if eq $mod_denom "" }}
+        {{ $mod_denom = printf "%d" (int $unite.unite_coefficient) }}
+    {{ else }}
+        {{ $mod_denom = printf "%s + %d" $mod_denom (int $unite.unite_coefficient) }}
+    {{ end }}
     <div class="p-2 d-flex flex-column">
         <b> {{ $unite.unite_nom }}
-            (<a href="{{ .unite.Permalink }}" class="pdf-link"> {{ $unite.unite_abreviation }} </a>) 
+            (<a href="{{ $unite.Permalink }}" class="pdf-link"> {{ $unite.unite_abreviation }} </a>)
             [{{ i18n "weight" }}: {{ $unite.unite_coefficient }}]
         </b>
         <div class="d-flex flex-row">
             <div class="flex-fill w-50">
-                <b> {{ i18n "final_grade" }} </b> = 
+                <b> {{ i18n "final_grade" }} </b> =
             </div>
             <div class="flex-fill w-50 justify-content-center">
                 <div class="w-75">
                     <div class="fraction-numerator text-center">
-                        {{ .num }}
-                        </div>
-                        <div class="fraction-denominator text-center">
-                            {{ .denom }}
-                        </div>
+                        {{ $eval.num }}
+                    </div>
+                    <div class="fraction-denominator text-center">
+                        {{ $eval.denom }}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+{{ end }}
+{{ range sort $groupes.groupes "groupe_alternative_lettre" }}
+    {{ $groupe_lettre := .groupe_alternative_lettre }}
+    {{ if eq $mod_num "" }}
+        {{ $groupe := printf "%s %s" (i18n "group_abreviation") $groupe_lettre }}
+        {{ $groupe_note := printf "%s %s" (i18n "grade") $groupe }}
+        {{ $groupe_ponderation := printf "%s %s" (i18n "ponderation") $groupe }}
+        {{ $mod_num = printf "%s x %s" $groupe_ponderation $groupe_note }}
+    {{ else }}
+        {{ $groupe := printf "%s %s" (i18n "group_abreviation") $groupe_lettre }}
+        {{ $groupe_note := printf "%s %s" (i18n "grade") $groupe }}
+        {{ $groupe_ponderation := printf "%s %s" (i18n "ponderation") $groupe }}
+        {{ $mod_num = printf "%s + %s x %s" $mod_num $groupe_ponderation $groupe_note }}
+    {{ end }}
+    {{ if eq $mod_denom "" }}
+        {{ $mod_denom = printf "%d" (int .groupe_alternatives_volume_minimal) }}
+    {{ else }}
+        {{ $mod_denom = printf "%s + %d" $mod_denom (int .groupe_alternatives_volume_minimal) }}
+    {{ end }}
+    {{ range .unites }}
+        {{ $unite := .Params.json_content }}
+        {{ $eval := partial "unit/get_unite_evaluation.html" . }}
+        <div class="p-2 d-flex flex-column">
+            <b> {{ $unite.unite_nom }}
+                (<a href="{{ $unite.Permalink }}" class="pdf-link"> {{ $unite.unite_abreviation }} </a>)
+                [{{ i18n "weight" }}: {{ $unite.unite_coefficient }}] [{{ i18n "group" }}: {{ $groupe_lettre }}]
+            </b>
+            <div class="d-flex flex-row">
+                <div class="flex-fill w-50">
+                    <b> {{ i18n "final_grade" }} </b> =
+                </div>
+                <div class="flex-fill w-50 justify-content-center">
+                    <div class="w-75">
+                        <div class="fraction-numerator text-center">
+                            {{ $eval.num }}
+                        </div>
+                        <div class="fraction-denominator text-center">
+                            {{ $eval.denom }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{ end }}
 {{ end }}
 <div class="p-2">
     <b> {{ i18n "final_module_grade" }} </b>
@@ -35,13 +92,12 @@
         <div class="flex-fill w-50 justify-content-center">
             <div class="w-75">
                 <div class="fraction-numerator text-center">
-                {{ $evaluations.num }}
+                {{ $mod_num }}
                 </div>
                 <div class="fraction-denominator text-center">
-                    {{ $evaluations.denom }}
+                    {{ $mod_denom }}
                 </div>
             </div>
-            
         </div>
     </div>
 </div>

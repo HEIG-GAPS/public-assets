@@ -176,11 +176,23 @@
     "final_grade": {
         "other": "Note finale"
     },
+    "grade": {
+        "other": "Note"
+    },
+    "ponderation": {
+        "other": "Pondération"
+    },
     "weight": {
         "other": "poids"
     },
     "alternative_groups_units": {
         "other": "Unités alternatives du groupe"
+    },
+    "group": {
+        "other": "groupe"
+    },
+    "group_abreviation": {
+        "other": "gr."
     },
     "min_work_volume": {
         "other": "Volume minimal de travail minimal à suivre "

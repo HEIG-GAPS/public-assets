@@ -1,10 +1,10 @@
 {{ $cols := .cols }}
 {{ $groupes := .groupes }}
 {{ $ctx := . }}
-{{ range $groupe := $groupes }}
+{{ range $groupe := sort $groupes "groupe_alternative_lettre" }}
     <b> {{ i18n "alternative_groups_units" }} {{ .groupe_alternative_lettre }} </b>
     <br>
-    <span> {{ i18n "min_work_volume" }} : {{ $groupe.groupe_alternatives_volume_minimal }} </span>
+    <i> {{ i18n "min_work_volume" }} : {{ $groupe.groupe_alternatives_volume_minimal }} </i>
     <div class="container">
         <table class="table table-borderless">
             <thead>
@@ -15,15 +15,13 @@
                 </tr>
             </thead>
             <tbody>
-                {{ range $ctx.unites }}
+                {{ range .unites }}
                     {{ $unit := .Params.json_content }}
-                    {{ if  eq $unit.unite_id_groupe_alternatives $groupe.groupe_alternatives_id}}
-                        <tr>
-                            <td class="text-centered"> {{ $unit.unite_abreviation }} </td>
-                            <td class="text-centered"> {{ $unit.unite_charge }} </td>
-                            <td class="text-centered"> {{ $unit.unite_nom }} </td>
-                        </tr>
-                    {{ end }}
+                    <tr>
+                        <td class="text-centered"> {{ $unit.unite_abreviation }} </td>
+                        <td class="text-centered"> {{ $unit.unite_charge }} </td>
+                        <td class="text-centered"> {{ $unit.unite_nom }} </td>
+                    </tr>
                 {{ end }}
             </tbody>
         </table>
@@ -38,26 +36,24 @@
             </tr>
         </thead>
         <tbody>
-            {{ range $ctx.unites }}
+            {{ range .unites }}
                 {{ $unit := .Params.json_content }}
-                {{ if  eq $unit.unite_id_groupe_alternatives $groupe.groupe_alternatives_id}}
                 {{ $types := partial "get_teaching_methods" $unit }}
-                    {{ range $types }}
-                        {{ $decoupage := partial "get_teaching_method_periods_type" (dict 
-                        "type" .type_enseignement_nom
-                        "decoupages" $unit.decoupages
-                        )}}
-                        <tr>
-                            <th scope="row"> {{ $unit.unite_abreviation }} {{ .type_enseignement_nom }} </th>
-                            {{ range $cols }}
-                            <td class="text-center"> 
-                                {{ if eq . $decoupage.type }}
-                                    {{ $decoupage.periodes }} 
-                                {{ end }}
-                            </td>
+                {{ range $types }}
+                    {{ $decoupage := partial "get_teaching_method_periods_type" (dict
+                    "type" .type_enseignement_nom
+                    "decoupages" $unit.decoupages
+                    )}}
+                    <tr>
+                        <th scope="row"> {{ $unit.unite_abreviation }} {{ .type_enseignement_nom }} </th>
+                        {{ range $cols }}
+                        <td class="text-center">
+                            {{ if eq . $decoupage.type }}
+                                {{ $decoupage.periodes }}
                             {{ end }}
-                        </tr>
-                    {{ end }}
+                        </td>
+                        {{ end }}
+                    </tr>
                 {{ end }}
             {{ end }}
         </tbody>

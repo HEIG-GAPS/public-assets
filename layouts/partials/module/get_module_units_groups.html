@@ -1,12 +1,19 @@
 {{ $mod := . }}
 {{ $unites_obligatoires := slice }}
+{{ $unites_facultatives := slice }}
 {{ range .Pages }}
 {{ $unite := .Params.json_content }}
     {{ if eq $unite.unite_id_groupe_alternatives nil }}
-        {{ $unites_obligatoires = ($unites_obligatoires | append .) }}
+        {{ if $unite.unite_obligatoire }}
+            {{ $unites_obligatoires = ($unites_obligatoires | append .) }}
+        {{ else }}
+            {{ $unites_facultatives = ($unites_facultatives | append .) }}
+        {{ end }}
     {{ end }}
 {{ end }}
-{{ $ret := dict "Obligatoires" $unites_obligatoires }}
+{{ $ret := dict "obligatoires" $unites_obligatoires }}
+{{ $ret = merge $ret (dict "facultatives" $unites_facultatives) }}
+{{ $groupes := slice }}
 {{ range .Params.json_content.groupes_alternatives }}
     {{ $group := . }}
     {{ $units := slice }}
@@ -17,6 +24,7 @@
         {{ end }}
     {{ end }}
     {{ $dict := merge . (dict "unites" $units) }}
-    {{ $ret = merge $ret (dict $group.groupe_alternative_lettre $dict) }}
+    {{ $groupes = $groupes | append $dict }}
 {{ end }}
+{{ $ret = merge $ret (dict "groupes" $groupes) }}
 {{ return $ret }}
