@@ -20,8 +20,10 @@ async function generatePDF(browser, pagePath, type) {
     /* Creating new BrowserContext and opening page */
     const context = await browser.createIncognitoBrowserContext()
     const page = await context.newPage()
+    page.on('console', msg => console.log('PAGE ' + pagePath + ': ', msg.text()))
     /* Navigate to page */
     await page.goto(localhost + pagePath, {waitUntil: 'domcontentloaded'})
+    await page.setViewport({width: 1920, height: 1080})
 
     /* Setting up destination folder */
     const client = await page.target().createCDPSession()
@@ -45,7 +47,8 @@ async function generatePDF(browser, pagePath, type) {
             const {jsPDF} = window.jspdf
 
             /* PDF generation settings */
-            const savingDelay = 1200 // Time to wait in ms before assuming document is saved
+            const savingDelay = 1500 // Time to wait in ms before assuming document is saved
+            const imgWriteDelay = 500 // Time to wait in ms before assuming image is written in PDF
 
             /* PDF layout */
             const marginTop = 60
@@ -63,8 +66,8 @@ async function generatePDF(browser, pagePath, type) {
             }
 
             /* Image sources */
-            const hesImgPath = "/images/logo-heig-21-square-red.svg"
-            const heigImgPath = "/images/logo_hesso_bw.svg"
+            const hesImgPath = "/images/logo_hesso_bw.svg"
+            const heigImgPath = "/images/logo-heig-21-fr.svg"
 
             /* Footer */
             const infos = "T +41 (0)24 557 63 30\ninfo@heig-vd.ch"
@@ -72,15 +75,35 @@ async function generatePDF(browser, pagePath, type) {
 
             /* Header */
             const imgYmargin = 10
-            const hesImg = new Image()
-            hesImg.src = hesImgPath
-            const heigImg = new Image()
-            heigImg.src = heigImgPath
             const hesImgLoaded = new Promise(resolve => {
-                hesImg.onload = () => resolve()
+                $.get(hesImgPath, function(data) {
+                    const svg = new XMLSerializer().serializeToString(data.documentElement)
+                    const img = document.createElement('img');
+                    img.src = 'data:image/svg+xml;base64,' + window.btoa(svg);
+                    img.onload = function () {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
+                        const imgData = canvas.toDataURL('image/png', 1.0);
+                        resolve([imgData, img.width, img.height])
+                    }
+                });
             })
             const heigImgLoaded = new Promise(resolve => {
-                heigImg.onload = () => resolve()
+                $.get(heigImgPath, function(data) {
+                    const svg = new XMLSerializer().serializeToString(data.documentElement)
+                    const img = document.createElement('img');
+                    img.src = 'data:image/svg+xml;base64,' + window.btoa(svg);
+                    img.onload = function () {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
+                        const imgData = canvas.toDataURL('image/png', 1.0);
+                        resolve([imgData, img.width, img.height])
+                    }
+                });
             })
 
             /* Unvalidated modules page */
@@ -92,6 +115,7 @@ async function generatePDF(browser, pagePath, type) {
 
             /* Hyperlinks injection */
             const linkShiftX = 0.5
+            let linkShiftY = - 1;
             const pageAnchorShiftX = 2
 
             /* Other settings */
@@ -134,11 +158,14 @@ async function generatePDF(browser, pagePath, type) {
              * @param {jsPDF} doc - jsPDF document to write in
              */
             function addPageNumberToDoc(doc) {
-                const nPages = doc.internal.getNumberOfPages()
-                for (let i = 1; i <= nPages; i++) {
-                    doc.setPage(i)
-                    doc.setFont(undefined, "normal").text(`${i} / ${nPages}`, marginLeft, doc.internal.pageSize.getHeight() - marginBot / 2, {baseline: "bottom"})
-                }
+                return new Promise(resolve => {
+                    const nPages = doc.internal.getNumberOfPages()
+                    for (let i = 1; i <= nPages; i++) {
+                        doc.setPage(i)
+                        doc.setFont(undefined, "normal").text(`${i} / ${nPages}`, marginLeft, doc.internal.pageSize.getHeight() - marginBot / 2, {baseline: "bottom"})
+                    }
+                    resolve("Added page number to PDF")
+                })
             }
 
             /**
@@ -152,12 +179,17 @@ async function generatePDF(browser, pagePath, type) {
                 doc.setFontSize(footerFontSize)
                 let footerX = (doc.internal.pageSize.getWidth() - marginLeft - marginRight) / 2 - doc.getTextWidth(infos) / 2
                 doc.text(infos, footerX, footerY, {baseline: "bottom"})
-                hesImgLoaded.then(_ => {
-                    doc.setPage(pageNumber)
-                    const imgHeight = marginBot
-                    const imgWidth = hesImg.width * imgHeight / hesImg.height
-                    footerX = doc.internal.pageSize.getWidth() - marginRight - imgWidth
-                    doc.addImage(hesImg, 'svg', footerX, footerY - imgHeight / 2, imgWidth, imgHeight, undefined, 'FAST')
+                return new Promise(resolve => {
+                    hesImgLoaded.then(([imgDataURL, width, height]) => {
+                        doc.setPage(pageNumber)
+                        const imgHeight = marginBot - 2 * imgYmargin
+                        const imgWidth = width * imgHeight / height
+                        footerX = doc.internal.pageSize.getWidth() - marginRight - imgWidth
+                        doc.addImage(imgDataURL, "PNG", footerX, footerY - imgHeight / 2, imgWidth, imgHeight, undefined, 'FAST')
+                        setTimeout(() => {
+                            resolve("Added footer to PDF on page " + pageNumber)
+                        }, imgWriteDelay)
+                    })
                 })
             }
 
@@ -171,14 +203,20 @@ async function generatePDF(browser, pagePath, type) {
                 doc.setPage(pageNumber)
                 const headerY = imgYmargin
                 let headerX = marginLeft
-                heigImgLoaded.then(_ => {
-                    doc.setPage(pageNumber)
-                    const imgHeight = marginTop - 2 * imgYmargin
-                    const imgWidth = heigImg.width * imgHeight / heigImg.height
-                    doc.addImage(heigImg, 'svg', headerX, headerY, imgWidth, imgHeight)
-                    headerX += doc.internal.pageSize.getWidth() - marginLeft - 2 * marginRight - doc.getTextWidth(headerTitle)
-                    doc.setFont(undefined, "bold").text(headerTitle, headerX, headerY, {baseline: "top"})
-                })
+                return new Promise(resolve => {
+                        heigImgLoaded.then(([imgDataURL, width, height]) => {
+                            doc.setPage(pageNumber)
+                            const imgHeight = marginTop - 2 * imgYmargin
+                            const imgWidth = width * imgHeight / height
+                            doc.addImage(imgDataURL, "PNG", headerX, headerY, imgWidth, imgHeight, undefined, 'FAST')
+                            headerX += doc.internal.pageSize.getWidth() - marginLeft - 2 * marginRight - doc.getTextWidth(headerTitle)
+                            doc.setFont(undefined, "bold").text(headerTitle, headerX, headerY, {baseline: "top"})
+                            setTimeout(() => {
+                                resolve("Added header to PDF on page " + pageNumber)
+                            }, imgWriteDelay)
+                        })
+                    }
+                )
             }
 
             /**
@@ -188,8 +226,12 @@ async function generatePDF(browser, pagePath, type) {
              * @param {string} headerTitle - The title of the header
              */
             function pageHeaderFooter(doc, pageNumber, headerTitle) {
-                pageFooter(doc, pageNumber)
-                pageHeader(doc, pageNumber, headerTitle)
+                return new Promise(resolve => {
+                    const tasks = [pageFooter(doc, pageNumber), pageHeader(doc, pageNumber, headerTitle)]
+                    Promise.all(tasks).then(_ => {
+                        resolve("Added header and footer to PDF on page " + pageNumber)
+                    })
+                })
             }
 
             /**
@@ -200,9 +242,15 @@ async function generatePDF(browser, pagePath, type) {
              * @param {*} headerTitle - The title of the header
              */
             function addHeaderFooterToDoc(doc, startPage, endPage, headerTitle) {
+                let tasks = []
                 for (let i = startPage; i <= endPage; i++) {
-                    pageHeaderFooter(doc, i, headerTitle)
+                    tasks.push(pageHeaderFooter(doc, i, headerTitle))
                 }
+                return new Promise(resolve => {
+                    Promise.all(tasks).then(_ => {
+                        resolve("Added header and footer to PDF on pages " + startPage + " to " + endPage)
+                    })
+                })
             }
 
             /* ------------------------- PDF sections population ------------------------- */
@@ -238,12 +286,13 @@ async function generatePDF(browser, pagePath, type) {
                 doc.html(content, {
                     html2canvas: {
                         allowTaint: true,
+                        logging: false,
                         useCORS: true,
                         scale: scale,
                         removeContainer: true,
-                        onclone: (_, elem) => {
-                            elem.style.setProperty("zoom", (1 / window.devicePixelRatio * 100) + "%")
-                        }
+                        width: content.clientWidth,
+                        height: content.clientHeight,
+                        windowWidth: pageContentWidth
                     },
                     y: (pageNumber - 1) * pageContentHeight + pageY,
                     margin: margins,
@@ -279,8 +328,8 @@ async function generatePDF(browser, pagePath, type) {
              * @returns {Promise<any>} a promise resolved when all sections are added to PDF
              */
             function generateSectionsPDF(content, selectors, doc, pageNumber) {
-                /* 
-                Getting content to be render by section (A section shall not 
+                /*
+                Getting content to be render by section (A section shall not
                 be split on multiple page)
                 */
                 let sections = []
@@ -331,12 +380,14 @@ async function generatePDF(browser, pagePath, type) {
                     const content = document.querySelector(".pdf-content")
                     if (content) {
                         generateModulePDF(content, doc, 1).then(_ => {
-                            addHeaderFooterToDoc(doc, 1, doc.internal.getNumberOfPages(), "Descriptif de module")
-                            addPageNumberToDoc(doc)
-                            doc.save(filename, {returnPromise: true}).then(_ => {
-                                setTimeout(_ => {
-                                    resolve()
-                                }, savingDelay)
+                            const tasks = [addHeaderFooterToDoc(doc, 1, doc.internal.getNumberOfPages(), "Descriptif de module"),
+                            addPageNumberToDoc(doc)]
+                            Promise.all(tasks).then(_ => {
+                                doc.save(filename, {returnPromise: true}).then(_ => {
+                                    setTimeout(_ => {
+                                        resolve()
+                                    }, savingDelay)
+                                })
                             })
                         })
                     } else {
@@ -381,12 +432,14 @@ async function generatePDF(browser, pagePath, type) {
                     const content = document.querySelector(".pdf-content")
                     if (content) {
                         generateUnitPDF(content, doc, 1).then(_ => {
-                            addHeaderFooterToDoc(doc, 1, doc.internal.getNumberOfPages(), "Fiche d'unité")
-                            addPageNumberToDoc(doc)
-                            doc.save(filename, {returnPromise: true}).then(_ => {
-                                setTimeout(_ => {
-                                    resolve()
-                                }, savingDelay)
+                            const tasks = [addHeaderFooterToDoc(doc, 1, doc.internal.getNumberOfPages(), "Fiche d'unité"),
+                            addPageNumberToDoc(doc)]
+                            Promise.all(tasks).then(_ => {
+                                doc.save(filename, {returnPromise: true}).then(_ => {
+                                    setTimeout(_ => {
+                                        resolve()
+                                    }, savingDelay)
+                                })
                             })
                         })
                     } else {
@@ -492,11 +545,9 @@ async function generatePDF(browser, pagePath, type) {
                         html2canvas: {
                             allowTaint: true,
                             useCORS: true,
+                            logging: false,
                             scale: scale,
-                            removeContainer: true,
-                            onclone: (_, elem) => {
-                                elem.style.setProperty("zoom", (1 / window.devicePixelRatio * 100) + "%")
-                            }
+                            removeContainer: true
                         },
                         y: (pageNumber - 1) * pageContentHeight,
                         margin: margins,
@@ -506,7 +557,7 @@ async function generatePDF(browser, pagePath, type) {
                             for (let i = 0; i < nLinks; i++) {
                                 const link = links[i + linksIndex]
                                 const linkX = marginLeft + link.x * scale + linkShiftX
-                                const linkY = marginTop + (link.yBot - links[linksIndex].yBot + link.h) * scale
+                                const linkY = marginTop + (link.yBot - links[linksIndex].yBot + link.h) * scale + linkShiftY
                                 doc.link(linkX, linkY, link.w * scale, link.h * scale, {url: link.url})
                                 if (link.moduleHeader) {
                                     moduleHeaders.push({
@@ -547,6 +598,7 @@ async function generatePDF(browser, pagePath, type) {
 
                 let unvalidatedModules = []
                 let modulesPage = []
+                let headerFooterTasks = []
 
                 const modules = Array.prototype.slice.call(document.querySelectorAll(".module-cell a"))
 
@@ -579,11 +631,12 @@ async function generatePDF(browser, pagePath, type) {
                                     /* Validated module */
                                     if (content) {
                                         remoteContentDiv.appendChild(content)
+                                        remoteContentDiv.style.width = `${content.clientWidth}px`
                                         doc.addPage()
                                         const startPage = doc.internal.getNumberOfPages()
                                         modulesPage.push({name: moduleName, page: startPage})
                                         generateModulePDF(content, doc, startPage).then(_ => {
-                                            addHeaderFooterToDoc(doc, startPage, doc.internal.getNumberOfPages(), "Descriptif de module")
+                                            headerFooterTasks.push(addHeaderFooterToDoc(doc, startPage, doc.internal.getNumberOfPages(), "Descriptif de module"))
                                             remoteContentDiv.removeChild(content)
                                             addModulesToPDF(modules.slice(1), resolve)
                                         })
@@ -594,7 +647,6 @@ async function generatePDF(browser, pagePath, type) {
                                     }
                                 })
                             }
-
                             addModulesToPDF(modules, resolveModules)
                         }).then(_ => {
                             /* Once all modules are added to PDF */
@@ -602,7 +654,7 @@ async function generatePDF(browser, pagePath, type) {
                             if (unvalidatedModules.length > 0) {
                                 doc.addPage()
                                 const nPages = doc.internal.getNumberOfPages()
-                                pageHeaderFooter(doc, nPages, "Descriptif de module")
+                                headerFooterTasks.push(pageHeaderFooter(doc, nPages, "Descriptif de module"))
                                 const boxWidth = doc.internal.pageSize.getWidth() - (marginLeft + marginTop)
                                 const boxHeight = 2 * sectionBoxMargin * 2 + sectionFontSize
                                 let currY = marginTop
@@ -630,12 +682,12 @@ async function generatePDF(browser, pagePath, type) {
                                     doc.textWithLink("§", coords.x + coords.w + pageAnchorShiftX, coords.y + 2, {pageNumber: page})
                                 }
                             }
-                            addPageNumberToDoc(doc)
-                            setTimeout(() => { // Waiting for page number, header and footer to be added
+                            headerFooterTasks.push(addPageNumberToDoc(doc))
+                            Promise.all(headerFooterTasks).then(_ => {
                                 doc.save(filename, {returnPromise: true}).then(_ => {
                                     setTimeout(() => resolvePDF(), savingDelay)
                                 })
-                            }, savingDelay)
+                            })
 
                         })
                     })
@@ -749,11 +801,11 @@ const devServerDelay = 5000
 function run() {
     listFolders([path.resolve(__dirname, topFolder)], 0)
     setTimeout(() => {
-        puppeteer.launch({headless: "new"}).then(browser => {
+        puppeteer.launch({headless: "new" }).then(browser => {
             const start = performance.now()
             const queueBooklets = new Queue({
                 concurrent: maxParallelBookletGeneration,
-                interval: 20
+                interval: 0
             })
             queueBooklets.enqueue(modes.map(x => {
                 return async () => {
@@ -769,7 +821,7 @@ function run() {
                 console.info("Generated formation booklets in ", msToHMS(moduleStart - start))
                 const queueDescriptions = new Queue({
                     concurrent: maxParallelDescriptionGeneration,
-                    interval: 20
+                    interval: 0
                 })
                 queueDescriptions.enqueue(modules.map(x => {
                     return async () => {
@@ -785,7 +837,7 @@ function run() {
                     console.info("Generated module descriptions in ", msToHMS(unitStart - moduleStart))
                     const queueSheets = new Queue({
                         concurrent: maxParallelSheetGeneration,
-                        interval: 20
+                        interval: 0
                     })
                     queueSheets.enqueue(unites.map(x => {
                         return async () => {

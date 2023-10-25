@@ -19,6 +19,9 @@
 
     {{ $dompurify := resources.Get "js/purify.min.js" }}
     {{ $dompurify_js := slice $dompurify | resources.Concat "js/purify_bundle.js" | resources.Minify }}
+
+    {{ $canvg := resources.Get "js/canvg.min.js" }}
+    {{ $canvg_js := slice $canvg | resources.Concat "js/canvg_bundle.js" | resources.Minify }}
     
     <script src="{{$bootstrap_js.RelPermalink}}" defer></script>
     <script src="{{$fontawesome_js.RelPermalink}}" defer></script>
@@ -26,9 +29,11 @@
     <script src="{{$jspdf_js.RelPermalink}}"></script>
     <script src="{{$html2canvas_js.RelPermalink}}" defer></script>
     <script src="{{$dompurify_js.RelPermalink}}" defer></script>
+    <script src="{{$canvg_js.RelPermalink}}" type="module" defer></script>
 
-    <script src="/js/pdf.js"></script>
+
     <!-- Auto collapsing breadcrumb -->
     <script src="/js/collapsing_breadcrumb.js"></script>
+    <script src="/js/pdf.js"></script>
     
 </footer>

@@ -39,14 +39,8 @@ baseURL = 'https://purple-pond-0bbbb5903.3.azurestaticapps.net'
         source = "node_modules/dompurify/dist/purify.min.js"
         target = "assets/js/purify.min.js"
     [[module.mounts]]
-        source = "node_modules/html-to-image/dist/html-to-image.js"
-        target = "assets/js/html-to-image.js"
-    [[module.mounts]]
-        source = "node_modules/jspdf-autotable/dist/jspdf.plugin.autotable.min.js"
-        target = "assets/js/jspdf.plugin.autotable.min.js"
-    [[module.mounts]]
-        source = "node_modules/html-to-text/lib/html-to-text.js"
-        target = "assets/js/html-to-text.js"
+        source = "node_modules/canvg/dist/index.js"
+        target = "assets/js/canvg.min.js"
 
 [prebuild_module]
     [[module.mounts]]
