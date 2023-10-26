@@ -9,11 +9,13 @@
     {{ $unite := .Params.json_content }}
     {{ $numerateur_unite := "" }}
     {{ range $j, $q := $unite.ponderations }}
-        {{ $poids_tot_unite = add $poids_tot_unite .ponderation }}
-        {{ if eq $j 0 }}
+        {{ if gt .ponderation 0 }}
+            {{ $poids_tot_unite = add $poids_tot_unite .ponderation }}
+            {{ if eq $j 0 }}
             {{ $numerateur_unite = printf "%d x %s" (int .ponderation) .type_enseignement_nom }}
-        {{ else }}
+            {{ else }}
             {{ $numerateur_unite = printf "%s + %d x %s" $numerateur_unite (int .ponderation) .type_enseignement_nom }}
+            {{ end }}
         {{ end }}
     {{ end }}
     {{ if not (eq $unite.unite_coefficient (float 0)) }}

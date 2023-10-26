@@ -8,6 +8,8 @@ $font-family-sans-serif: Helvetica;
 $card-cap-bg: rgba(7, 98, 253, 0.6);
 $form-check-input-disabled-opacity: 1;
 
+$breadcrumb-font-size: 0.9rem;
+
 @import "node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss";
 @import "styles.scss";
 
@@ -19,6 +21,24 @@ $form-check-input-disabled-opacity: 1;
 @import "node_modules/bootstrap/scss/maps";
 @import "node_modules/bootstrap/scss/mixins";
 @import "node_modules/bootstrap/scss/root";
+
+* {
+  @include font-size(0.9rem);
+}
+
+table {
+  @include font-size(0.7rem);
+}
+
+.pdf-content {
+  @include font-size(0.7rem);
+}
+
+.caption {
+  @include font-size(0.7rem);
+}
+
+
 
 @import "node_modules/bootstrap/scss/utilities";
 @import "node_modules/bootstrap/scss/reboot";
@@ -34,17 +54,16 @@ $form-check-input-disabled-opacity: 1;
 @import "node_modules/bootstrap/scss/forms";
 
 $btn-custom-color: darken($card-cap-bg, 10%);
-$btn-custom-color-hover: darken($btn-custom-color, 5%);
+$btn-custom-border: $btn-custom-color;
 $btn-custom-text-color: white;
 
 .btn-custom {
   @include button-variant(
                   $btn-custom-color,
-                  darken($btn-custom-color, 5%),
-                  $btn-custom-text-color,
-                  $btn-custom-color-hover,
-                  darken($btn-custom-color-hover, 5%)
+                  $btn-custom-border
   );
+  @include font-size(0.7rem);
+  font-weight: bold;
 }
 
 $utilities: map-merge(

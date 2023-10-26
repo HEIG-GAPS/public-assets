@@ -25,6 +25,7 @@ $main-min-height: 50rem!important;
     }
 }
 
+/* Links decorations */
 a {
     text-decoration: none!important;
 }
@@ -53,7 +54,11 @@ a:visited {
 
 .modules-planning {
     border-collapse: collapse;
-    min-width: inherit;
+    min-width: 45rem;
+}
+
+.modules-planning tbody:last-of-type {
+    border-bottom: $border-custom-line;
 }
 
 .module-cell {
@@ -188,10 +193,6 @@ a:visited {
     border-left: $border-custom-line!important;
 }
 
-.selectable-units td:last-of-type {
-    background-color: grey;
-}
-
 $planning-bg-color: rgba(122, 167, 243, 0.6);
 
 .semestrial-cell:nth-of-type(6n - 5) {
@@ -220,6 +221,10 @@ $planning-bg-color: rgba(122, 167, 243, 0.6);
     background-color: $planning-bg-color!important;
 }
 
+.selectable-units td:last-of-type {
+    background-color: grey!important;
+}
+
 .total-periods-cell {
     background-color: $planning-bg-color!important;
 }
@@ -233,6 +238,7 @@ $backdrop-filter-blur-px: 3px;
     -webkit-backdrop-filter: blur($backdrop-filter-blur-px);
     border-radius: 1rem;
     padding: 1rem;
+    font-weight: bold;
 }
 
 $max-gaps-logo-dim : 8rem;
@@ -244,4 +250,9 @@ $max-gaps-logo-dim : 8rem;
 
 .hes-logo {
     max-height: 2rem;
+}
+
+/* Module description */
+.grade-container {
+    width: fit-content;
 }

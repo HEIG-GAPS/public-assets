@@ -75,8 +75,8 @@ async function generatePDF(browser, pagePath, type) {
 
             /* Header */
             const imgYmargin = 10
-            const hesImgLoaded = loadSVG(hesImgPath, 3)
-            const heigImgLoaded = loadSVG(heigImgPath, 4)
+            const hesImgLoaded = loadSVG(hesImgPath, 4)
+            const heigImgLoaded = loadSVG(heigImgPath, 5)
 
             /* Unvalidated modules page */
             const sectionBoxMargin = 2
@@ -488,7 +488,7 @@ async function generatePDF(browser, pagePath, type) {
                     splitTableDiv.appendChild(newDiv)
                     table = document.createElement("table")
                     table.className = "table modules-planning"
-                    table.style.width = `${planning.clientWidth}px`
+                    table.style.width = `${planning.clientWidth}px;`
                     newDiv.appendChild(table)
                 }
 

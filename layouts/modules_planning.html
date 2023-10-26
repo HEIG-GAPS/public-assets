@@ -10,48 +10,49 @@
         Brochure au format PDF
     </button>
 </div>
-<table class="table modules-planning">
-    {{ range .Pages }}
+<div class="table-responsive">
+    <table class="container-fluid table modules-planning">
+        {{ range .Pages }}
         {{ $module_trimestriel := partial "module_trimestriel" . }}
         {{ $module_semestriel := partial "module_semestriel" . }}
         {{ $mod_page := . }}
         {{ $mod := .Params.json_content }}
-        {{ $mod_ctx := dict 
-                        "module" .
-                        "formation_duree" $formation_duree 
-                        "n_semaines_semestre" $n_semaines_semestre
-                        "n_semaines_trimestre" $n_semaines_trimestre
-                        "n_semaines_hes_ete" $n_semaines_hes_ete
-                    }}
-        {{ if $module_semestriel }}
-            {{ partial "module/semestrial_module_planning" (merge $mod_ctx (dict "n_semaines" $n_semaines_semestre)) }}
-        {{ else }}
-            {{ if $module_trimestriel }}
-                {{ partial "module/trimestrial_module_planning" (merge $mod_ctx (dict "n_semaines" $n_semaines_trimestre)) }}
-            {{ else }}
-                {{ $semesters := partial "get_semesters" $formation_duree }}
-                {{ $trimesters := partial "get_only_trimesters" $formation_duree }}
-                {{ partial "module/hybrid_type_module_planning" (merge $mod_ctx (dict "semestres" $semesters "trimestres" $trimesters))}}
-            {{ end }}
-        {{ end }}
-    {{ end }}
-    {{ $semesters := partial "get_semesters" $formation_duree }}
-    {{ $trimesters := partial "get_trimesters" (int $formation_duree) }}
-    {{ $periodes_tot_ctx := dict 
-        "page" . 
+        {{ $mod_ctx := dict
+        "module" .
+        "formation_duree" $formation_duree
         "n_semaines_semestre" $n_semaines_semestre
         "n_semaines_trimestre" $n_semaines_trimestre
         "n_semaines_hes_ete" $n_semaines_hes_ete
         }}
-    {{ $unite_trimestrielle := partial "planning_trimestriel" . }}
-    {{ $cols := slice }}
-    {{ if $unite_trimestrielle }}
+        {{ if $module_semestriel }}
+        {{ partial "module/semestrial_module_planning" (merge $mod_ctx (dict "n_semaines" $n_semaines_semestre)) }}
+        {{ else }}
+        {{ if $module_trimestriel }}
+        {{ partial "module/trimestrial_module_planning" (merge $mod_ctx (dict "n_semaines" $n_semaines_trimestre)) }}
+        {{ else }}
+        {{ $semesters := partial "get_semesters" $formation_duree }}
+        {{ $trimesters := partial "get_only_trimesters" $formation_duree }}
+        {{ partial "module/hybrid_type_module_planning" (merge $mod_ctx (dict "semestres" $semesters "trimestres" $trimesters))}}
+        {{ end }}
+        {{ end }}
+        {{ end }}
+        {{ $semesters := partial "get_semesters" $formation_duree }}
+        {{ $trimesters := partial "get_trimesters" (int $formation_duree) }}
+        {{ $periodes_tot_ctx := dict
+        "page" .
+        "n_semaines_semestre" $n_semaines_semestre
+        "n_semaines_trimestre" $n_semaines_trimestre
+        "n_semaines_hes_ete" $n_semaines_hes_ete
+        }}
+        {{ $unite_trimestrielle := partial "planning_trimestriel" . }}
+        {{ $cols := slice }}
+        {{ if $unite_trimestrielle }}
         {{ $cols = $trimesters }}
-    {{ else }}
+        {{ else }}
         {{ $cols = $semesters }}
-    {{ end }}
-    {{ $periods_tot := partial "get_module_total_periods" $periodes_tot_ctx }}
-    <tbody>
+        {{ end }}
+        {{ $periods_tot := partial "get_module_total_periods" $periodes_tot_ctx }}
+        <tbody>
         <tr>
             <td class="week-cell table-primary">
                 <b> {{ i18n "per_week_periods" }} </b>
@@ -60,12 +61,18 @@
             <td rowspan="2" class="week-cell table-primary">
             </td>
             {{ range $col := $cols }}
-                    {{ $periodes := $periods_tot.Get $col }}
-                    <td class="text-center period-cell total-periods-cell" {{ if hasPrefix $col "S" }} colspan="2" {{ end }}> {{ if gt $periodes 0 }} {{ $periodes }} {{ end }} </td>
+            {{ $periodes := $periods_tot.Get $col }}
+            <td class="text-center period-cell total-periods-cell" {{ if hasPrefix $col "S" }} colspan="2" {{ end }}> {{ if gt $periodes 0 }} {{ $periodes }} {{ end }} </td>
             {{ end }}
         </tr>
-    </tbody>
-</table>
+        </tbody>
+    </table>
+</div>
+<div class="d-flex align-self-center mt-3 mb-3">
+    <button type="button" class="btn btn-custom pdf-button" data-html2canvas-ignore="true" onclick="openAndDownloadPDF('{{ $pdf_link }}')">
+        Brochure au format PDF
+    </button>
+</div>
 <div class="d-flex flex-column caption">
     <div>
         <b> {{ i18n "caption" }} </b> :
