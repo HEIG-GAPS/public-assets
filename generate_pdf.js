@@ -75,8 +75,8 @@ async function generatePDF(browser, pagePath, type) {
 
             /* Header */
             const imgYmargin = 10
-            const hesImgLoaded = loadSVG(hesImgPath, 1.5)
-            const heigImgLoaded = loadSVG(heigImgPath, 2)
+            const hesImgLoaded = loadSVG(hesImgPath, 3)
+            const heigImgLoaded = loadSVG(heigImgPath, 4)
 
             /* Unvalidated modules page */
             const sectionBoxMargin = 2
@@ -99,6 +99,7 @@ async function generatePDF(browser, pagePath, type) {
             /**
              * Loads an SVG file and returns a promise resolving with the image data, width and height
              * @param svgPath - Path to the SVG file
+             * @param dimensionScale - Scale to apply to the SVG dimensions to maintain final quality
              * @returns {Promise<unknown>} A promise resolving with the image data, width and height
              */
             function loadSVG(svgPath, dimensionScale = 1) {
