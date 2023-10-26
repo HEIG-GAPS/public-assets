@@ -39,7 +39,7 @@ baseURL = 'https://purple-pond-0bbbb5903.3.azurestaticapps.net'
         source = "node_modules/dompurify/dist/purify.min.js"
         target = "assets/js/purify.min.js"
     [[module.mounts]]
-        source = "node_modules/canvg/dist/index.js"
+        source = "node_modules/canvg/lib/umd.js"
         target = "assets/js/canvg.min.js"
 
 [prebuild_module]

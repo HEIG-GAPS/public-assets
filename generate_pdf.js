@@ -75,40 +75,12 @@ async function generatePDF(browser, pagePath, type) {
 
             /* Header */
             const imgYmargin = 10
-            const hesImgLoaded = new Promise(resolve => {
-                $.get(hesImgPath, function(data) {
-                    const svg = new XMLSerializer().serializeToString(data.documentElement)
-                    const img = document.createElement('img');
-                    img.src = 'data:image/svg+xml;base64,' + window.btoa(svg);
-                    img.onload = function () {
-                        const canvas = document.createElement('canvas');
-                        canvas.width = img.width;
-                        canvas.height = img.height;
-                        canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
-                        const imgData = canvas.toDataURL('image/png', 1.0);
-                        resolve([imgData, img.width, img.height])
-                    }
-                });
-            })
-            const heigImgLoaded = new Promise(resolve => {
-                $.get(heigImgPath, function(data) {
-                    const svg = new XMLSerializer().serializeToString(data.documentElement)
-                    const img = document.createElement('img');
-                    img.src = 'data:image/svg+xml;base64,' + window.btoa(svg);
-                    img.onload = function () {
-                        const canvas = document.createElement('canvas');
-                        canvas.width = img.width;
-                        canvas.height = img.height;
-                        canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height);
-                        const imgData = canvas.toDataURL('image/png', 1.0);
-                        resolve([imgData, img.width, img.height])
-                    }
-                });
-            })
+            const hesImgLoaded = loadSVG(hesImgPath, 1.5)
+            const heigImgLoaded = loadSVG(heigImgPath, 2)
 
             /* Unvalidated modules page */
             const sectionBoxMargin = 2
-            const sectionBoxColor = "#6495ed"
+            const sectionBoxColor = "#0762FD99"
             const sectionFontSize = 10
             const modulesNameFontSize = 8
             const sectionSpacingY = 10
@@ -120,8 +92,34 @@ async function generatePDF(browser, pagePath, type) {
 
             /* Other settings */
             const interLine = 3
+            const remoteContentDivWidth = 1200 // Width unit is px
 
             /* ------------------------- Utils ------------------------- */
+
+            /**
+             * Loads an SVG file and returns a promise resolving with the image data, width and height
+             * @param svgPath - Path to the SVG file
+             * @returns {Promise<unknown>} A promise resolving with the image data, width and height
+             */
+            function loadSVG(svgPath, dimensionScale = 1) {
+                return new Promise(resolve => {
+                    $.get(svgPath, function(data) {
+                        const svg = new XMLSerializer().serializeToString(data.documentElement)
+                        const img = document.createElement('img');
+                        img.src = 'data:image/svg+xml;base64,' + window.btoa(svg);
+                        img.onload = function () {
+                            const canvas = document.createElement('canvas');
+                            const width = img.width * dimensionScale
+                            const height = img.height * dimensionScale
+                            canvas.width = width;
+                            canvas.height = height;
+                            canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+                            const imgData = canvas.toDataURL('image/png', 1.0);
+                            resolve([imgData, img.width, img.height])
+                        }
+                    });
+                })
+            }
 
             /**
              * Generate a list of objects containing the relative position within content,
@@ -476,6 +474,7 @@ async function generatePDF(browser, pagePath, type) {
                 splitTableDiv.appendChild(newDiv)
                 let table = document.createElement("table")
                 table.className = "table modules-planning"
+                table.style.width = `${planning.clientWidth}px`
                 newDiv.appendChild(table)
 
                 /* Doc constants */
@@ -604,7 +603,7 @@ async function generatePDF(browser, pagePath, type) {
 
                 /* Adding a new div to document body to allow rendering of html from modules pages */
                 let remoteContentDiv = document.createElement("div")
-                remoteContentDiv.style = "visibility: hidden; position: fixed; left: -10000px; top: -10000px; border: 0px;"
+                remoteContentDiv.style = `visibility: hidden; position: fixed; left: -10000px; top: -10000px; border: 0px; width: ${remoteContentDivWidth}px`
                 document.body.appendChild(remoteContentDiv)
                 return new Promise(resolvePDF => {
                     /* Adding planning first */
@@ -631,7 +630,7 @@ async function generatePDF(browser, pagePath, type) {
                                     /* Validated module */
                                     if (content) {
                                         remoteContentDiv.appendChild(content)
-                                        remoteContentDiv.style.width = `${content.clientWidth}px`
+                                        content.style.width = `${content.clientWidth}px`
                                         doc.addPage()
                                         const startPage = doc.internal.getNumberOfPages()
                                         modulesPage.push({name: moduleName, page: startPage})
@@ -655,7 +654,7 @@ async function generatePDF(browser, pagePath, type) {
                                 doc.addPage()
                                 const nPages = doc.internal.getNumberOfPages()
                                 headerFooterTasks.push(pageHeaderFooter(doc, nPages, "Descriptif de module"))
-                                const boxWidth = doc.internal.pageSize.getWidth() - (marginLeft + marginTop)
+                                const boxWidth = doc.internal.pageSize.getWidth() - (marginLeft + marginRight)
                                 const boxHeight = 2 * sectionBoxMargin * 2 + sectionFontSize
                                 let currY = marginTop
                                 doc.setFillColor(sectionBoxColor).rect(marginLeft, currY, boxWidth, boxHeight, "F")
@@ -679,7 +678,7 @@ async function generatePDF(browser, pagePath, type) {
                                     }
                                     const coords = modulesCoords.filter(m => m.text.includes(mod.name)).at(0)
                                     doc.setPage(coords.page)
-                                    doc.textWithLink("§", coords.x + coords.w + pageAnchorShiftX, coords.y + 2, {pageNumber: page})
+                                    doc.textWithLink("§", coords.x + coords.w + pageAnchorShiftX, coords.y + 3, {pageNumber: page})
                                 }
                             }
                             headerFooterTasks.push(addPageNumberToDoc(doc))
@@ -788,15 +787,18 @@ function msToHMS(milliseconds) {
 }
 
 /* PDF parallel Scrapping settings */
-const maxParallelBookletGeneration = 2
-const maxParallelDescriptionGeneration = 5
-const maxParallelSheetGeneration = 5
+const maxParallelBookletGeneration = 3
+const maxParallelDescriptionGeneration = 6
+const maxParallelSheetGeneration = 7
 
+/* Delays to wait fo asychronous tasks (Img writing, saving documents, opening/closing browser contexts) */
 const browserClosingDelay = 1000
 const devServerDelay = 5000
 
 /**
- * Generates all the PDF from the public folder (containing hugo site pages)
+ * Generates all the PDF from the site using Puppeteer. Every page path is obtained from
+ * the public folder (containing hugo site pages). The PDF are generated in parallel using Queue-promise
+ * library.
  */
 function run() {
     listFolders([path.resolve(__dirname, topFolder)], 0)
