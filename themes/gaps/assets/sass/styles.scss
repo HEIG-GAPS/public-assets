@@ -241,11 +241,35 @@ $backdrop-filter-blur-px: 3px;
     font-weight: bold;
 }
 
-$max-gaps-logo-dim : 8rem;
+$max-gaps-logo-dim : 20rem;
+
+.gaps-logo-container {
+    min-width: $max-gaps-logo-dim;
+    min-height: divide($max-gaps-logo-dim, 2);
+    max-width: $max-gaps-logo-dim;
+    max-height: divide($max-gaps-logo-dim, 2);
+}
 
 .gaps-logo {
+    min-width: $max-gaps-logo-dim;
+    min-height: divide($max-gaps-logo-dim, 2);
     max-width: $max-gaps-logo-dim;
-    max-height: $max-gaps-logo-dim;
+    max-height: divide($max-gaps-logo-dim, 2);
+    @include half-circle(bottom);
+}
+
+@media screen and (max-width: 768px) {
+    .gaps-logo-container {
+        min-width: divide($max-gaps-logo-dim, 2);
+        min-height: $max-gaps-logo-dim;
+        max-width: divide($max-gaps-logo-dim, 2);
+        max-height: $max-gaps-logo-dim;
+    }
+    .gaps-logo {
+        transform: rotate(-90deg) translateX(-25%) translateY(-50%);
+        position: relative!important;
+    }
+
 }
 
 .hes-logo {

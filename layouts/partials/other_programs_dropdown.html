@@ -1,0 +1,14 @@
+<div class="dropdown mb-1">
+    <a class="btn btn-custom dropdown-toggle" role="button" data-bs-toggle="dropdown"
+       aria-expanded="false">
+        {{ i18n "programs" }}
+    </a>
+    <ul class="dropdown-menu">
+        {{ range . }}
+        {{ $m := .Params.json_content }}
+        <li>
+            <a class="dropdown-item" href="{{ .page.Permalink }}"> {{ .formation }} {{ .mode }} </a>
+        </li>
+        {{ end }}
+    </ul>
+</div>

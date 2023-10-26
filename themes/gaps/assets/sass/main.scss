@@ -22,23 +22,9 @@ $breadcrumb-font-size: 0.9rem;
 @import "node_modules/bootstrap/scss/mixins";
 @import "node_modules/bootstrap/scss/root";
 
-* {
-  @include font-size(0.9rem);
+html {
+  @include font-size(1vh);
 }
-
-table {
-  @include font-size(0.7rem);
-}
-
-.pdf-content {
-  @include font-size(0.7rem);
-}
-
-.caption {
-  @include font-size(0.7rem);
-}
-
-
 
 @import "node_modules/bootstrap/scss/utilities";
 @import "node_modules/bootstrap/scss/reboot";
@@ -62,7 +48,7 @@ $btn-custom-text-color: white;
                   $btn-custom-color,
                   $btn-custom-border
   );
-  @include font-size(0.7rem);
+  @include font-size(1rem);
   font-weight: bold;
 }
 

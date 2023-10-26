@@ -7,14 +7,14 @@
 {{ $autres_programmes := partial "module/get_other_programs_module" . }}
 {{ $pdf_link := printf "%s/pdf%s%s.pdf" .Site.BaseURL .RelPermalink ($mod.module_code | urlize) }}
 <div class="card pdf-content m-0 p-0">
-    <div class="card-header border-bottom-0 d-flex flex-row align-items-center" data-html2canvas-ignore="true">
+    <div class="card-header border-bottom-0 d-flex align-items-center" data-html2canvas-ignore="true">
         <div class="flex-fill d-flex align-content-center">
             <a class="btn btn-custom text-white" href="{{ (index .Ancestors 0).Permalink }}">
                 {{ i18n "back_to_list" }}
             </a>
         </div>
         <div class="p-2 flex-fill d-flex align-content-center justify-content-end flex-wrap">
-            <span> {{ i18n "module_description" }} </span>
+            <h5> {{ i18n "module_description" }} </h5>
         </div>
     </div>
     <div class="card-body m-0 p-0">
@@ -27,20 +27,7 @@
                     </div>
                 </div>
                 <div class="p-2 d-flex flex-column align-items-center flex-grow-0">
-                    <div class="dropdown mb-1" data-html2canvas-ignore="true">
-                        <a class="btn btn-custom dropdown-toggle" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            {{ i18n "programs" }}
-                        </a>
-                        <ul class="dropdown-menu">
-                            {{ range $autres_programmes }}
-                            {{ $m := .Params.json_content }}
-                            <li>
-                                <a class="dropdown-item" href="{{ .page.Permalink }}"> {{ .formation }} {{ .mode }} </a>
-                            </li>
-                            {{ end }}
-                        </ul>
-                    </div>
+                    {{ partial "other_programs_dropdown" $autres_programmes }}
                     <button type="button" class="btn btn-custom pdf-button w-50" data-html2canvas-ignore="true" onclick="openAndDownloadPDF('{{ $pdf_link }}')">
                         PDF
                     </button>

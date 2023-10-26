@@ -32,6 +32,9 @@
     "module_description": {
         "other": "Descriptif de module"
     },
+    "unit_sheet": {
+        "other": "Fiche d'unité"
+    },
     "programs": {
         "other": "Programmes"
     },
