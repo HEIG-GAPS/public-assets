@@ -54,7 +54,6 @@ a:visited {
 
 .modules-planning {
     border-collapse: collapse;
-    min-width: 45rem;
 }
 
 .modules-planning tbody:last-of-type {
@@ -241,18 +240,15 @@ $backdrop-filter-blur-px: 3px;
     font-weight: bold;
 }
 
+
 $max-gaps-logo-dim : 20rem;
 
 .gaps-logo-container {
-    min-width: $max-gaps-logo-dim;
-    min-height: divide($max-gaps-logo-dim, 2);
     max-width: $max-gaps-logo-dim;
     max-height: divide($max-gaps-logo-dim, 2);
 }
 
 .gaps-logo {
-    min-width: $max-gaps-logo-dim;
-    min-height: divide($max-gaps-logo-dim, 2);
     max-width: $max-gaps-logo-dim;
     max-height: divide($max-gaps-logo-dim, 2);
     @include half-circle(bottom);
@@ -260,13 +256,13 @@ $max-gaps-logo-dim : 20rem;
 
 @media screen and (max-width: 768px) {
     .gaps-logo-container {
-        min-width: divide($max-gaps-logo-dim, 2);
-        min-height: $max-gaps-logo-dim;
-        max-width: divide($max-gaps-logo-dim, 2);
-        max-height: $max-gaps-logo-dim;
+        max-width: divide($max-gaps-logo-dim, 4);
+        max-height: divide($max-gaps-logo-dim, 2);
     }
     .gaps-logo {
-        transform: rotate(-90deg) translateX(-25%) translateY(-50%);
+        max-width: divide($max-gaps-logo-dim, 3);
+        max-height: divide($max-gaps-logo-dim, 1.5);
+        transform: rotate(-90deg) translateY(-25%);
         position: relative!important;
     }
 

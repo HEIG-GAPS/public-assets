@@ -22,8 +22,32 @@ $breadcrumb-font-size: 0.9rem;
 @import "node_modules/bootstrap/scss/mixins";
 @import "node_modules/bootstrap/scss/root";
 
-html {
-  @include font-size(1vh);
+.blurred-container {
+  @include font-size(1.5rem);
+}
+
+.modules-planning {
+  @include font-size(.75rem);
+}
+
+.caption {
+  @include font-size(.75rem);
+}
+
+.card {
+    @include font-size(.75rem);
+}
+
+.card-header {
+    @include font-size(.75rem);
+}
+
+.module-titre {
+    @include font-size(1rem);
+}
+
+.units-schedule {
+  @include font-size(.7rem);
 }
 
 @import "node_modules/bootstrap/scss/utilities";
@@ -48,7 +72,7 @@ $btn-custom-text-color: white;
                   $btn-custom-color,
                   $btn-custom-border
   );
-  @include font-size(1rem);
+  @include font-size(.75rem);
   font-weight: bold;
 }
 

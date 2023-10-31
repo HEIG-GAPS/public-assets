@@ -13,22 +13,22 @@
                 {{ i18n "back_to_list" }}
             </a>
         </div>
-        <div class="p-2 flex-fill d-flex align-content-center justify-content-end flex-wrap">
-            <h5> {{ i18n "module_description" }} </h5>
+        <div class="p-2 flex-fill d-flex align-content-center justify-content-end flex-wrap" data-html2canvas-ignore="true">
+            <b>{{ i18n "module_description" }}</b>
         </div>
     </div>
     <div class="card-body m-0 p-0">
         <div class="card m-0 p-0 border-0">
             <div class="card-header d-flex align-center flex-row module-titre rounded-0 border-0">
-                <div class="p-2 d-flex flex-wrap flex-grow-1">
-                    <div class="p-2">{{ $mod.module_nom}}</div>
+                <div class="p-2 d-flex flex-wrap flex-column flex-grow-1">
+                    <div class="p-2"><b>{{ $mod.module_nom}}</b></div>
                     <div class="p-2">
-                        {{ $mod.module_code }} - {{ index $upper_infos "mode" }}
+                        <b>{{ $mod.module_code }} - {{ index $upper_infos "mode" }}</b>
                     </div>
                 </div>
                 <div class="p-2 d-flex flex-column align-items-center flex-grow-0">
                     {{ partial "other_programs_dropdown" $autres_programmes }}
-                    <button type="button" class="btn btn-custom pdf-button w-50" data-html2canvas-ignore="true" onclick="openAndDownloadPDF('{{ $pdf_link }}')">
+                    <button type="button" class="btn btn-custom pdf-button" data-html2canvas-ignore="true" onclick="openAndDownloadPDF('{{ $pdf_link }}')">
                         PDF
                     </button>
                 </div>
@@ -68,7 +68,7 @@
                             {{ $upper_infos.orientation }}
                         </div>
                     </div>
-                    <div class="d-flex flex-row p-2">
+                    <div class="d-flex flex-row p-2 mb-3">
                         <div class="p-2 w-25">
                             <b> {{ i18n "mode" }} </b>
                         </div>

@@ -16,7 +16,7 @@
     <tr>
         <th scope="row"> {{ $mode }} </th>
         {{ range $i, $col :=  $cols }}
-        <td class="text-center">
+        <td class="text-center p-1 p-md-2">
             {{ if eq $i (sub (len $cols) 1) }}
             x
             {{ end }}

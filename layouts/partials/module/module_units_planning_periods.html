@@ -4,7 +4,7 @@
 {{ $n_semaines := int .n_semaines }}
 {{ $ctx := . }}
 {{ $unit := .unite }}
-<th scope="row" class="align-middle text-center coef-value-cell fw-normal">
+<th scope="row" class="align-middle text-center coef-value-cell fw-normal p-1 p-md-2">
     {{ if lt $unit.unite_coefficient 1 }} {{ i18n "optional_abbreviation" }} {{ else }} {{ $unit.unite_coefficient }} {{ end }}
 </th>
 {{ range $col := $cols }}
@@ -20,6 +20,7 @@
         {{ $periodes = div $decoupage.periodes $n_semaines_hes_ete }}
     {{ end }}
     <td class="
+    p-1 p-md-2
     align-middle
     text-center
     period-cell

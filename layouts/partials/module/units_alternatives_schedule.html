@@ -26,38 +26,36 @@
             </tbody>
         </table>
     </div>
-    <div class="table-responsive">
-        <table class="table table-bordered alternative-units-schedule-table-{{ $groupe.groupe_alternative_lettre }}">
-            <thead>
-            <tr>
-                <th scope="col"> {{ i18n "type" }} </th>
-                {{ range $cols }}
-                <th class="text-center" scope="col">{{ . }}</th>
-                {{ end }}
-            </tr>
-            </thead>
-            <tbody>
-            {{ range .unites }}
-            {{ $unit := .Params.json_content }}
-            {{ $types := partial "get_teaching_methods" $unit }}
-            {{ range $types }}
-            {{ $decoupage := partial "get_teaching_method_periods_type" (dict
-            "type" .type_enseignement_nom
-            "decoupages" $unit.decoupages
-            )}}
-            <tr>
-                <th scope="row"> {{ $unit.unite_abreviation }} {{ .type_enseignement_nom }} </th>
-                {{ range $cols }}
-                <td class="text-center">
-                    {{ if eq . $decoupage.type }}
-                    {{ $decoupage.periodes }}
-                    {{ end }}
-                </td>
-                {{ end }}
-            </tr>
+    <table class="table table-bordered units-schedule">
+        <thead>
+        <tr>
+            <th scope="col"> {{ i18n "type" }} </th>
+            {{ range $cols }}
+            <th class="text-center align-middle p-1 p-md-2" scope="col">{{ . }}</th>
             {{ end }}
+        </tr>
+        </thead>
+        <tbody>
+        {{ range .unites }}
+        {{ $unit := .Params.json_content }}
+        {{ $types := partial "get_teaching_methods" $unit }}
+        {{ range $types }}
+        {{ $decoupage := partial "get_teaching_method_periods_type" (dict
+        "type" .type_enseignement_nom
+        "decoupages" $unit.decoupages
+        )}}
+        <tr>
+            <th scope="row"> {{ $unit.unite_abreviation }} {{ .type_enseignement_nom }} </th>
+            {{ range $cols }}
+            <td class="text-center align-middle p-1 p-md-2">
+                {{ if eq . $decoupage.type }}
+                {{ $decoupage.periodes }}
+                {{ end }}
+            </td>
             {{ end }}
-            </tbody>
-        </table>
-    </div>
+        </tr>
+        {{ end }}
+        {{ end }}
+        </tbody>
+    </table>
 {{ end }}

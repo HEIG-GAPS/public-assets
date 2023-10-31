@@ -48,7 +48,7 @@ async function generatePDF(browser, pagePath, type) {
 
             /* PDF generation settings */
             const savingDelay = 1500 // Time to wait in ms before assuming document is saved
-            const imgWriteDelay = 500 // Time to wait in ms before assuming image is written in PDF
+            const imgWriteDelay = 5 // Time to wait in ms before assuming image is written in PDF
 
             /* PDF layout */
             const marginTop = 60
@@ -80,7 +80,7 @@ async function generatePDF(browser, pagePath, type) {
 
             /* Unvalidated modules page */
             const sectionBoxMargin = 2
-            const sectionBoxColor = "#0762FD99"
+            const sectionBoxColor = "#0762FD"
             const sectionFontSize = 10
             const modulesNameFontSize = 8
             const sectionSpacingY = 10
@@ -173,18 +173,15 @@ async function generatePDF(browser, pagePath, type) {
              * @param {Number} pageNumber - The number of the page where the footer should be added
              */
             function pageFooter(doc, pageNumber) {
-                doc.setPage(pageNumber)
                 const footerY = doc.internal.pageSize.getHeight() - marginBot / 2
-                doc.setFontSize(footerFontSize)
                 let footerX = (doc.internal.pageSize.getWidth() - marginLeft - marginRight) / 2 - doc.getTextWidth(infos) / 2
-                doc.text(infos, footerX, footerY, {baseline: "bottom"})
+                doc.setPage(pageNumber).setFont(undefined, "normal").setFontSize(footerFontSize).text(infos, footerX, footerY, {baseline: "bottom"})
                 return new Promise(resolve => {
                     hesImgLoaded.then(([imgDataURL, width, height]) => {
-                        doc.setPage(pageNumber)
                         const imgHeight = marginBot - 2 * imgYmargin
                         const imgWidth = width * imgHeight / height
                         footerX = doc.internal.pageSize.getWidth() - marginRight - imgWidth
-                        doc.addImage(imgDataURL, "PNG", footerX, footerY - imgHeight / 2, imgWidth, imgHeight, undefined, 'FAST')
+                        doc.setPage(pageNumber).addImage(imgDataURL, "PNG", footerX, footerY - imgHeight / 2, imgWidth, imgHeight, undefined, 'FAST')
                         setTimeout(() => {
                             resolve("Added footer to PDF on page " + pageNumber)
                         }, imgWriteDelay)
@@ -199,17 +196,15 @@ async function generatePDF(browser, pagePath, type) {
              * @param {string} headerTitle - The title of the header
              */
             function pageHeader(doc, pageNumber, headerTitle) {
-                doc.setPage(pageNumber)
                 const headerY = imgYmargin
                 let headerX = marginLeft
                 return new Promise(resolve => {
                         heigImgLoaded.then(([imgDataURL, width, height]) => {
-                            doc.setPage(pageNumber)
                             const imgHeight = marginTop - 2 * imgYmargin
                             const imgWidth = width * imgHeight / height
-                            doc.addImage(imgDataURL, "PNG", headerX, headerY, imgWidth, imgHeight, undefined, 'FAST')
+                            doc.setPage(pageNumber).addImage(imgDataURL, "PNG", headerX, headerY, imgWidth, imgHeight, undefined, 'FAST')
                             headerX += doc.internal.pageSize.getWidth() - marginLeft - 2 * marginRight - doc.getTextWidth(headerTitle)
-                            doc.setFont(undefined, "bold").text(headerTitle, headerX, headerY, {baseline: "top"})
+                            doc.setPage(pageNumber).setFont(undefined, "bold").text(headerTitle, headerX, headerY, {baseline: "top"})
                             setTimeout(() => {
                                 resolve("Added header to PDF on page " + pageNumber)
                             }, imgWriteDelay)
@@ -274,6 +269,40 @@ async function generatePDF(browser, pagePath, type) {
                 const pageContentHeight = doc.internal.pageSize.getHeight() - (marginTop + marginBot)
                 const scale = pageContentWidth / content.clientWidth
                 let nextY = pageY
+                if (contentHeight * scale >= pageContentHeight - pageEpsilon) {
+                    const splitContentDiv = document.createElement("div")
+                    splitContentDiv.style = `visibility: hidden; position: fixed; right: -10000px; top: -10000px; border: 0px; width: ${remoteContentDivWidth}px`
+                    document.body.appendChild(splitContentDiv)
+                    let newDiv = document.createElement("div")
+                    splitContentDiv.appendChild(newDiv)
+                    newDiv.className = content.className
+                    const children = content.children
+                    const header = children[0]
+                    const body = children[1]
+                    const bodyParts = body.children[0].children
+                    const bodyLastPart = body.children[1]
+                    newDiv.appendChild(header.cloneNode(true))
+                    let newBody = document.createElement("div")
+                    newBody.className = body.className
+                    newDiv.appendChild(newBody)
+                    for (let i = 0; i < bodyParts.length; i++) {
+                        newDiv = document.createElement("div")
+                        splitContentDiv.appendChild(newDiv)
+                        newDiv.className = content.className
+                        newBody = document.createElement("div")
+                        newBody.className = body.className
+                        newDiv.appendChild(newBody)
+                        newBody.appendChild(bodyParts[i].cloneNode(true))
+                    }
+                    newDiv = document.createElement("div")
+                    splitContentDiv.appendChild(newDiv)
+                    newDiv.className = content.className
+                    newBody = document.createElement("div")
+                    newBody.className = body.className
+                    newDiv.appendChild(newBody)
+                    newBody.appendChild(bodyLastPart.cloneNode(true))
+                    addContentsToPDF(Array.prototype.slice.call(splitContentDiv.children).concat(contents.slice(1)), doc, pageY, pageNumber, resolve)
+                }
                 if (pageY + contentHeight * scale >= pageContentHeight - pageEpsilon) {
                     doc.addPage()
                     pageNumber++
@@ -598,7 +627,7 @@ async function generatePDF(browser, pagePath, type) {
 
                 let unvalidatedModules = []
                 let modulesPage = []
-                let headerFooterTasks = []
+                let startPage = 1
 
                 const modules = Array.prototype.slice.call(document.querySelectorAll(".module-cell a"))
 
@@ -609,6 +638,7 @@ async function generatePDF(browser, pagePath, type) {
                 return new Promise(resolvePDF => {
                     /* Adding planning first */
                     generateModulesPlanningPDF(doc).then(modulesCoords => {
+                        startPage = doc.internal.getNumberOfPages() + 1
                         new Promise(resolveModules => {
                             /**
                              *
@@ -636,7 +666,6 @@ async function generatePDF(browser, pagePath, type) {
                                         const startPage = doc.internal.getNumberOfPages()
                                         modulesPage.push({name: moduleName, page: startPage})
                                         generateModulePDF(content, doc, startPage).then(_ => {
-                                            headerFooterTasks.push(addHeaderFooterToDoc(doc, startPage, doc.internal.getNumberOfPages(), "Descriptif de module"))
                                             remoteContentDiv.removeChild(content)
                                             addModulesToPDF(modules.slice(1), resolve)
                                         })
@@ -649,27 +678,24 @@ async function generatePDF(browser, pagePath, type) {
                             }
                             addModulesToPDF(modules, resolveModules)
                         }).then(_ => {
-                            /* Once all modules are added to PDF */
                             document.body.removeChild(remoteContentDiv)
                             if (unvalidatedModules.length > 0) {
                                 doc.addPage()
+                                /* This section does not render must wait before writing */
                                 const nPages = doc.internal.getNumberOfPages()
-                                headerFooterTasks.push(pageHeaderFooter(doc, nPages, "Descriptif de module"))
                                 const boxWidth = doc.internal.pageSize.getWidth() - (marginLeft + marginRight)
                                 const boxHeight = 2 * sectionBoxMargin * 2 + sectionFontSize
                                 let currY = marginTop
                                 doc.setFillColor(sectionBoxColor).rect(marginLeft, currY, boxWidth, boxHeight, "F")
-                                doc.setFontSize(sectionFontSize)
-                                    .setFont(undefined, "bold")
-                                    .text("Liste des descriptifs de module actuellement indisponibles", marginLeft + sectionBoxMargin, currY + 6 * sectionBoxMargin)
+                                doc.setFont(undefined, "bold")
+                                   .setFontSize(sectionFontSize).text("Liste des descriptifs de module actuellement indisponibles", marginLeft + sectionBoxMargin, currY + 6 * sectionBoxMargin)
+                                doc.setFont(undefined, "normal")
+                                   .setFontSize(modulesNameFontSize)
                                 currY += boxHeight + sectionSpacingY
-                                doc.setFontSize(modulesNameFontSize).setFont(undefined, "normal")
                                 for (let i = 0; i < unvalidatedModules.length; i++) {
                                     doc.text(`- ${unvalidatedModules.at(i)}`, marginLeft, currY)
                                     currY += modulesNameFontSize + interLine
                                 }
-
-
                                 /* Adding modules description pages to modules planning */
                                 for (let i = 0; i < modulesPage.length; i++) {
                                     const mod = modulesPage[i]
@@ -679,21 +705,24 @@ async function generatePDF(browser, pagePath, type) {
                                     }
                                     const coords = modulesCoords.filter(m => m.text.includes(mod.name)).at(0)
                                     doc.setPage(coords.page)
-                                    doc.textWithLink("§", coords.x + coords.w + pageAnchorShiftX, coords.y + 3, {pageNumber: page})
+                                    doc.textWithLink("§", coords.x + coords.w + pageAnchorShiftX, coords.y + 3.5, {pageNumber: page})
                                 }
                             }
-                            headerFooterTasks.push(addPageNumberToDoc(doc))
-                            Promise.all(headerFooterTasks).then(_ => {
-                                doc.save(filename, {returnPromise: true}).then(_ => {
-                                    setTimeout(() => resolvePDF(), savingDelay)
+                            addHeaderFooterToDoc(doc, startPage, doc.internal.getNumberOfPages(), "Descriptif de module").then(_ => {
+                                addPageNumberToDoc(doc).then(_ => {
+                                    setTimeout(_ => {
+                                        doc.save(filename, {returnPromise: true}).then(_ => {
+                                            setTimeout(_ => {
+                                                resolvePDF()
+                                            }, savingDelay)
+                                        })
+                                    }, savingDelay)
                                 })
                             })
-
                         })
                     })
                 })
             }
-
             const split = path.split('/')
             switch (type) {
                 case "mode":

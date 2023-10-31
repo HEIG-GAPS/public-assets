@@ -17,7 +17,7 @@
     {{ end }}
     <div class="p-2 mb-2 d-flex flex-column">
         <b> {{ $unite.unite_nom }}
-            (<a href="{{ $unite.Permalink }}" class="pdf-link"> {{ $unite.unite_abreviation }} </a>)
+            (<a href="{{ .Permalink }}" class="pdf-link"> {{ $unite.unite_abreviation }} </a>)
             [{{ i18n "weight" }}: {{ $unite.unite_coefficient }}]
         </b>
         {{ partial "module/module_evaluation_grade" (dict "num" $eval.num "denom" $eval.denom)  }}
@@ -46,7 +46,7 @@
         {{ $eval := partial "unit/get_unite_evaluation.html" . }}
         <div class="p-2 mb-2 d-flex flex-column">
             <b> {{ $unite.unite_nom }}
-                (<a href="{{ $unite.Permalink }}" class="pdf-link"> {{ $unite.unite_abreviation }} </a>)
+                (<a href="{{ .Permalink }}" class="pdf-link"> {{ $unite.unite_abreviation }} </a>)
                 [{{ i18n "weight" }}: {{ $unite.unite_coefficient }}] [{{ i18n "group" }}: {{ $groupe_lettre }}]
             </b>
             {{ partial "module/module_evaluation_grade" (dict "num" $eval.num "denom" $eval.denom)  }}

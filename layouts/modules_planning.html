@@ -10,7 +10,7 @@
         Brochure au format PDF
     </button>
 </div>
-<table class="container-fluid table modules-planning">
+<table class="table modules-planning">
     {{ range .Pages }}
     {{ $module_trimestriel := partial "module_trimestriel" . }}
     {{ $module_semestriel := partial "module_semestriel" . }}
@@ -61,7 +61,7 @@
         </td>
         {{ range $col := $cols }}
         {{ $periodes := $periods_tot.Get $col }}
-        <td class="text-center period-cell total-periods-cell" {{ if hasPrefix $col "S" }} colspan="2" {{ end }}> {{ if gt $periodes 0 }} {{ $periodes }} {{ end }} </td>
+        <td class="text-center align-middle period-cell total-periods-cell" {{ if hasPrefix $col "S" }} colspan="2" {{ end }}> {{ if gt $periodes 0 }} {{ $periodes }} {{ end }} </td>
         {{ end }}
     </tr>
     </tbody>
