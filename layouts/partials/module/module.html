@@ -29,7 +29,7 @@
             <div class="p-2 d-flex flex-wrap flex-column flex-grow-1">
                 <div class="p-2"><b>{{ $mod.module_nom}} <br> {{ $mod.module_code }} - {{ index $upper_infos "mode" }} </b></div>
             </div>
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center" data-html2canvas-ignore="true">
                 <button type="button" class="btn btn-custom pdf-button" data-html2canvas-ignore="true" onclick="openAndDownloadPDF('{{ $pdf_link }}')">
                     PDF
                 </button>
