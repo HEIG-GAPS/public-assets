@@ -862,7 +862,7 @@ class PDFGenerator {
 function generatePDF() {
     listFolders([path.resolve(__dirname, topFolder)])
     setTimeout(() => {
-        puppeteer.launch({ headless: false }).then(browser => {
+        puppeteer.launch({ headless: "new" }).then(browser => {
             const pdfGenerator = new PDFGenerator(browser, {width: 1920, height: 1080}, maxParallelBookletGeneration, maxParallelDescriptionGeneration, maxParallelSheetGeneration)
             pdfGenerator.run(modes, modules, unites, maxParallelBookletGeneration, maxParallelDescriptionGeneration, maxParallelSheetGeneration).then(_ => {
                 browser.close().then()
