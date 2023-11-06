@@ -864,7 +864,7 @@ function generatePDF() {
     setTimeout(() => {
         puppeteer.launch({ headless: false }).then(browser => {
             const pdfGenerator = new PDFGenerator(browser, {width: 1920, height: 1080}, maxParallelBookletGeneration, maxParallelDescriptionGeneration, maxParallelSheetGeneration)
-            pdfGenerator.run(["bachelor/economie-et-services/heg/ee/ee/pt/"], modules, unites, maxParallelBookletGeneration, maxParallelDescriptionGeneration, maxParallelSheetGeneration).then(_ => {
+            pdfGenerator.run(modes, modules, unites, maxParallelBookletGeneration, maxParallelDescriptionGeneration, maxParallelSheetGeneration).then(_ => {
                 browser.close().then()
             })
         })
