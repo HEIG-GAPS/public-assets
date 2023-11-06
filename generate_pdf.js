@@ -366,11 +366,6 @@ class PDFGenerator {
 
                 splitContent() {
                     this._splitContent(this.contentRoot)
-                    for (let page of Array.prototype.slice.call(this.splitContentDiv.children)) {
-                        page.lastChild.classList.remove("border-bottom-0")
-                        page.lastChild.classList.add("rounded-bottom-0")
-                        page.firstChild.classList.add("rounded-top-0")
-                    }
                 }
 
                 _splitContent(content) {
