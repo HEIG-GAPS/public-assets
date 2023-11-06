@@ -9,12 +9,14 @@
     </div>
     <div class="flex-fill w-50 d-flex justify-content-center">
         <div class="grade-container">
-            <div class="fraction-numerator text-center">
+            <div class="text-center">
                 {{ .num }}
             </div>
+            {{ if ne .denom "None" }}
             <div class="fraction-denominator text-center">
                 {{ .denom }}
             </div>
+            {{ end }}
         </div>
     </div>
 </div>

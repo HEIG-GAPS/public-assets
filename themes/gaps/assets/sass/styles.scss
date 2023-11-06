@@ -42,12 +42,8 @@ a:visited {
     color: $link-visited-custom-color;
 }
 
-.fraction-numerator {
-    border-bottom: solid 1px black;
-}
-
 .fraction-denominator {
-    margin: 0;
+    border-top: solid 1px black;
 }
 
 /* Modules planning */

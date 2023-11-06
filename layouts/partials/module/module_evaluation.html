@@ -20,7 +20,7 @@
             (<a href="{{ .Permalink }}" class="pdf-link"> {{ $unite.unite_abreviation }} </a>)
             [{{ i18n "weight" }}: {{ $unite.unite_coefficient }}]
         </b>
-        {{ partial "module/module_evaluation_grade" (dict "num" $eval.num "denom" $eval.denom)  }}
+        {{ partial "module/module_evaluation_grade" $eval  }}
     </div>
 {{ end }}
 {{ range sort $groupes.groupes "groupe_alternative_lettre" }}

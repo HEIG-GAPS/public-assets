@@ -15,9 +15,7 @@
                 </a>
             </div>
             <div>
-                <div>
-                    {{ partial "other_programs_dropdown" $autres_programmes }}
-                </div>
+                {{ partial "other_programs_dropdown" $autres_programmes }}
             </div>
         </div>
         <div class="p-2 mb-2 align-self-center">
@@ -287,7 +285,6 @@
                 {{ else }}
                 {{ $mod.module_remarques | safeHTML }}
                 {{ end }}
-                <br>
             </div>
         </div>
     </div>
