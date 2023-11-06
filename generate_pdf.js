@@ -817,9 +817,14 @@ class PDFGenerator {
 
             async function PDF(generatorType) {
                 const doc = new jsPDF(options)
-                const generator = new generatorType(document.querySelector(".pdf-content"), doc, ["DIV"])
-                await generator.generateFile()
-                await generator.savePDF(filename)
+                const content = document.querySelector(".pdf-content")
+                if (content) {
+                    const generator = new generatorType(content, doc, ["DIV"])
+                    await generator.generateFile()
+                    await generator.savePDF(filename)
+                } else {
+                    console.warn("No content found, skipping generation")
+                }
             }
 
             switch (type) {
@@ -857,9 +862,9 @@ class PDFGenerator {
 function generatePDF() {
     listFolders([path.resolve(__dirname, topFolder)])
     setTimeout(() => {
-        puppeteer.launch({ headless: "new" }).then(browser => {
+        puppeteer.launch({ headless: false }).then(browser => {
             const pdfGenerator = new PDFGenerator(browser, {width: 1920, height: 1080}, maxParallelBookletGeneration, maxParallelDescriptionGeneration, maxParallelSheetGeneration)
-            pdfGenerator.run(modes, modules, unites, maxParallelBookletGeneration, maxParallelDescriptionGeneration, maxParallelSheetGeneration).then(_ => {
+            pdfGenerator.run(["bachelor/economie-et-services/heg/ee/ee/pt/"], modules, unites, maxParallelBookletGeneration, maxParallelDescriptionGeneration, maxParallelSheetGeneration).then(_ => {
                 browser.close().then()
             })
         })
