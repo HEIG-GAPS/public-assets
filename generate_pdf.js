@@ -87,7 +87,7 @@ const maxParallelSheetGeneration = 7
 
 /* Delays to wait fo asychronous tasks (Img writing, saving documents, opening/closing browser contexts) */
 const saveTime = 50
-const devServerDelay = 5000
+const devServerDelay = 4000
 
 class PDFGenerator {
     constructor(browser, viewport) {
