@@ -22,32 +22,48 @@ $breadcrumb-font-size: 0.9rem;
 @import "node_modules/bootstrap/scss/mixins";
 @import "node_modules/bootstrap/scss/root";
 
-.blurred-container {
-  @include font-size(1.5rem);
-}
+$modules-planning-padding: 0.2em !important;
 
 .modules-planning {
-  @include font-size(.75rem);
+  @include font-size(0.6em);
+}
+
+.module-cell {
+  @include padding($modules-planning-padding);
+}
+
+.unit-cell {
+  @include padding($modules-planning-padding);
+}
+
+.coef-cell {
+  @include padding($modules-planning-padding);
+}
+
+.module-info-cell {
+  @include padding($modules-planning-padding);
+}
+
+.group-alternative-cell {
+  @include padding(0 !important);
+  @include margin(0 !important);
 }
 
 .caption {
-  @include font-size(.75rem);
+  @include font-size(0.75rem !important);
 }
 
 .card {
-    @include font-size(.75rem);
+  @include font-size(0.75rem !important);
 }
 
 .card-header {
-    @include font-size(.75rem);
+  @include font-size(0.9rem !important);
 }
 
-.module-titre {
-    @include font-size(1rem);
-}
-
-.units-schedule {
-  @include font-size(.7rem);
+.card-body table {
+  @include font-size(0.65rem !important);
+  @include padding(0 !important);
 }
 
 @import "node_modules/bootstrap/scss/utilities";
@@ -72,7 +88,7 @@ $btn-custom-text-color: white;
                   $btn-custom-color,
                   $btn-custom-border
   );
-  @include font-size(.75rem);
+  @include font-size(0.75rem);
   font-weight: bold;
 }
 

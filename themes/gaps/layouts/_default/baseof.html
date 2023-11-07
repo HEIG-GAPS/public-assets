@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html class="h-100" lang="{{ $.Site.LanguageCode }}">
+<html class="h-100 w-100" lang="{{ $.Site.LanguageCode }}">
     {{- partial "head.html" . -}}
-    <body class="h-100 d-flex flex-column align-middle">
+    <body class="h-100 d-flex flex-column justify-content-center align-middle">
         <div class="ms-5 mt-2" id="breadcrumb">
             {{- partial "breadcrumb.html" . -}}
         </div>
-        <div class="d-flex flex-column align-items-center flex-fill w-100 m-5 mt-0 mb-3">
+        <div class="d-flex flex-column flex-fill m-0 p-1 m-md-3 p-md-3 overflow-y-auto">
         {{- block "main" . }}{{- end }}
         </div>
         {{- partial "footer.html" . -}}

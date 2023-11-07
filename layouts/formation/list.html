@@ -1,8 +1,9 @@
 {{ define "main" }}
-<nav class="container-sm">
+<div>
     <div class="display-4"> {{ .Content }} </div>
     <br>
     <div class="container row">
+        keks
           {{ range .Pages }}
           {{ $mode := .Params.json_content }}
           <div class="container col text-center">
@@ -22,5 +23,5 @@
           </div>
           {{ end }}
     </div>
-</nav>
+</div>
 {{ end }}

@@ -841,6 +841,12 @@ class PDFGenerator {
         const split = relativePath.split('/')
         const dest = 'pdf/' + relativePath
         let filename = split[split.length - 1]
+        switch (type) {
+            case "mode":
+                filename = split[split.length - 2] + " - " + filename
+                break;
+            default:
+        }
         const [page, context] = await this.openNewPage(relativePath)
         await this.loadPage(page)
         await this.setDownloadFolder(page, dest)

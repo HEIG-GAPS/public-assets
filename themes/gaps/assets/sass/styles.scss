@@ -60,31 +60,26 @@ a:visited {
     border-top: $border-custom-line;
     border-left: $border-custom-line;
     border-bottom: 0;
-    width: 60%!important;
 }
 
 .module-info-cell {
     border-left: $border-custom-line;
     border-bottom: 0;
-    width: 60%!important;
 }
 
 .coef-cell {
     border-top: $border-custom-line;
     border-right: 1px dotted $border-custom-color;
     border-bottom: 0;
-    width: 5%;
 }
 
 .under-coef-cell {
     border-right: 1px dotted $border-custom-color;
     border-bottom: 0;
-    width: 5%;
 }
 
 .group-alternative-cell {
     border-bottom: 0;
-    width: 5%;
 }
 
 .top-alternative {
@@ -147,7 +142,6 @@ a:visited {
 .unit-cell {
     border-bottom: 0;
     border-left: $border-custom-line!important;
-    width: 60%!important;
 }
 
 .period-cell {
@@ -166,10 +160,6 @@ a:visited {
 
 .contenu-en-tete {
     border-bottom: 2px solid grey;
-}
-
-.contenu-type {
-    width: 90%;
 }
 
 .contenu-sous-texte {

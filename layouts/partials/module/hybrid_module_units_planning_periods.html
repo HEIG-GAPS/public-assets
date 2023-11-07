@@ -11,7 +11,7 @@
     {{ $n_semaines = $n_semaines_semestre }}
     {{ $cols = .semestres }}
 {{ end }}
-<th scope="row" class="align-middle text-center fw-normal coef-value-cell p-1 p-md-2">
+<th scope="row" class="align-middle text-center fw-normal coef-value-cell">
     {{ if lt $unit.unite_coefficient 1 }} {{ i18n "optional_abbreviation" }} {{ else }} {{ $unit.unite_coefficient }} {{ end }}
 </th>
 {{ range $col := $cols }}
@@ -31,7 +31,6 @@
     colspan="2"
     {{ end }}
     class="
-    p-1 p-md-2
     align-middle
     text-center
     period-cell

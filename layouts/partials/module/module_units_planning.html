@@ -20,7 +20,7 @@
             {{ end }}
         {{ end }}
         <tr>
-            <th scope="row" class="unit-cell p-1 p-md-2">
+            <th scope="row" class="unit-cell align-middle">
                 <a href="{{ .Permalink }}" class="pdf-link">{{ $unite.unite_nom }} ({{ $unite.unite_abreviation }})</a>
             </th>
             {{ if not (eq $groupe_alternative "None")}}
@@ -33,7 +33,6 @@
                     scope="col"
                     rowspan="{{ partial "get_number_of_units_alternative" $ctx }}"
                     class="
-                    p-1 p-md-2
                     group-alternative-cell
                     text-center
                     fw-normal
@@ -44,7 +43,7 @@
                         {{ $alternatives_cell = false }}
                 {{ end }}
             {{ else }}
-                <th scope="col" class="group-alternative-cell p-1 p-md-2"></th>
+                <th scope="col" class="group-alternative-cell"></th>
             {{ end }}
             {{ partial "module/module_units_planning_periods" (merge $ctx (dict "unite" $unite)) }}
         </tr>

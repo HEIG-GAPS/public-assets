@@ -1,33 +1,16 @@
 {{ define "main" }}
 {{ $ing := (index .Pages 0)}}
 {{ $ee := (index .Pages 1) }}
-<div class="container h-100 w-100 d-flex flex-column align-items-center rounded-5 border m-0 p-0">
-    <div class="container-fluid position-relative h-100 w-100 d-flex flex-column flex-md-row rounded-top-5 flex-fill formation-content m-0 p-0">
-        <div style="background-image: url('/images/st_roch.jpg');  background-size: cover; background-repeat: no-repeat; background-position: center"
-             class="w-100 w-md-50 h-50 h-md-100 rounded-top-5 rounded-top-md-0 rounded-top-left-md-5 d-flex align-items-center justify-content-center">
-            <div class="blurred-container p-2 m-0 d-flex justify-content-between">
-                <a class="h-100" href="{{ $ee.Permalink }}">
-                    <div class="text-center text-black">
-                        {{ $ee.Title }}
-                    </div>
-                </a>
-            </div>
-        </div>
-        <div style="background-image: url('/images/cheseaux.jpg');  background-size: cover; background-repeat: no-repeat; background-position: center"
-             class="w-100 w-md-50 h-50 h-md-100 rounded-top-right-md-5 d-flex align-items-center justify-content-center m-0 p-0">
-            <div class="blurred-container p-2 m-0 d-flex justify-content-between">
-                <a class="h-100" href="{{ $ing.Permalink }}">
-                    <div class="text-center text-black">
-                        {{ $ing.Title }}
-                    </div>
-                </a>
-            </div>
-        </div>
-        <div class="gaps-logo-container
-                    position-absolute top-50 top-md-0 start-0 start-md-50 translate-middle-y translate-middle-md-x">
-            <img class="gaps-logo" src="/images/gaps-logo-2.svg" alt="logo-gaps">
-        </div>
-    </div>
-    {{ partial "content_footer" . }}
-</div>
+{{ $ctx := dict
+                "ctx" .
+                "first" (dict
+                            "Title" $ee.Title
+                            "Permalink" $ee.Permalink
+                            "background" "/images/st_roch.jpg")
+                "second" (dict
+                            "Title" $ing.Title
+                            "Permalink" $ing.Permalink
+                            "background" "/images/cheseaux.jpg")
+}}
+{{ partial "binaryChoiceCard.html" $ctx }}
 {{ end }}

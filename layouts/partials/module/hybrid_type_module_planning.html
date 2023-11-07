@@ -5,13 +5,13 @@
 {{ $trimesters := .trimestres }}
 <thead class="table-primary">
     <tr>
-        <th scope="col" class="module-cell p-1 p-md-2">
+        <th scope="col" class="module-cell">
             <div>
                 <a href="{{ $page.Permalink }}" class="pdf-link module-header">{{$module.module_nom}} ({{ $module.module_code }})</a>
             </div>
         </th>
-        <th scope="col" class="top-alternative group-alternative-cell table-primary p-1 p-md-2"></th>
-        <th scope="col" class="align-middle text-center coef-cell p-1 p-md-2" rowspan="2"> {{ i18n "coefficient" }} </th>
+        <th scope="col" class="top-alternative group-alternative-cell table-primary"></th>
+        <th scope="col" class="align-middle text-center coef-cell" rowspan="2"> {{ i18n "coefficient" }} </th>
         {{ range $semesters }}
                 <th scope="col"
                     {{ if (hasPrefix . "E") }} 
@@ -19,20 +19,20 @@
                     {{ else }}
                         rowspan="1" colspan="2"
                     {{ end }}
-                class="align-middle text-center semester-cell {{ if (hasPrefix . "E") }} under-semester-cell{{ end }} p-1 p-md-2"> {{ . }} </th>
+                class="align-middle text-center semester-cell {{ if (hasPrefix . "E") }} under-semester-cell{{ end }}"> {{ . }} </th>
         {{ end }}
     </tr>
     <tr>
-        <th scope="col" class="module-info-cell p-1 p-md-2">
+        <th scope="col" class="module-info-cell">
             <span>
                 {{$module.module_credits}} ECTS | {{ i18n "compensation_threshold_table" }} 
                 {{ $module.module_seuil_compensation }} | {{ i18n "repetition_threshold_table" }} 
                 {{ $module.module_seuil_repetition }}  
             </span>
         </th>
-        <th scope="col" class="group-alternative-cell table-primary p-1 p-md-2"></th>
+        <th scope="col" class="group-alternative-cell table-primary"></th>
         {{ range $trimesters }}
-            <th scope="col" class="align-middle text-center trimester-cell under-semester-cell p-1 p-md-2">
+            <th scope="col" class="align-middle text-center trimester-cell under-semester-cell">
                 {{ . }}
             </th>
         {{ end }}
@@ -41,11 +41,11 @@
 <tbody>
     {{ if eq (len $page.Pages) 0 }}
         <tr class="selectable-units">
-            <th scope="col" class="table-primary unit-cell p-1 p-md-2"> <b> {{ i18n "selectable_units" }} </b> </th>
-            <th scope="col" class="group-alternative-cell table-primary p-1 p-md-2"></th>
-            <th scope="col" class="table-primary coef-value-cell text-center align-middle p-1 p-md-2"> ... </th>
+            <th scope="col" class="table-primary unit-cell"> <b> {{ i18n "selectable_units" }} </b> </th>
+            <th scope="col" class="group-alternative-cell table-primary"></th>
+            <th scope="col" class="table-primary coef-value-cell text-center align-middle"> ... </th>
             {{ range $col := $trimesters }}
-            <td class="period-cell hybrid-cell p-1 p-md-2" {{ if or (hasPrefix $col "S") }}colspan="2"{{ end }}></td>
+            <td class="period-cell hybrid-cell" {{ if or (hasPrefix $col "S") }}colspan="2"{{ end }}></td>
             {{ end }}
         </tr>
     {{ else }}
