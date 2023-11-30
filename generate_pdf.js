@@ -8,47 +8,52 @@ const localhost = "http://localhost:1313/"
 const config = toml.parse(fs.readFileSync("./hugo.toml", 'utf-8'))
 const host = config.baseURL
 
-const modes = []
-const modules = []
-const unites = []
-const topFolder = "public"
+const jsonPath = __dirname + path.sep + "prebuild" + path.sep + "data" + path.sep + "bachelor.json"
+const basePath = "bachelor"
+const bachelor = require(jsonPath)
 
-/**
- * Retrieves the list of modules and units from every specified paths.
- * This script writes in the global variables modules and unites
- * @param {string[]} folderPaths - Source Paths
- * @param {Number} depth - The current depth from source paths. Assuming that 1
- * indicates the function is at modules level and 2 units level.
- */
-function listModulesUnits(folderPaths, depth) {
-    folderPaths.forEach(folderPath => {
-        const results = fs.readdirSync(folderPath)
-        const folders = results.filter(res => fs.lstatSync(path.resolve(folderPath, res)).isDirectory())
-        const innerFolderPaths = folders.map(folder => path.resolve(folderPath, folder))
-        if (depth === 1) modules.push(path.relative(topFolder, folderPath))
-        if (depth === 2) unites.push(path.relative(topFolder, folderPath))
-        if (innerFolderPaths.length === 0) return
-        listModulesUnits(innerFolderPaths, depth + 1)
-    })
+function sanitizeString(str) {
+    return str.toLowerCase()
+                .replaceAll(/[À-Åà-å]/g, "a")
+                .replaceAll(/[È-Ëè-ë]/g, "e")
+                .replaceAll(/[Ì-Ïì-ï]/g, "i")
+                .replaceAll(/[Ò-Öò-ö]/g, "o")
+                .replaceAll(/[Ù-Üù-ü]/g, "u")
+                .replaceAll(/[Çç]/g, "c")
+                .replaceAll(/[ \/]/g, "-")
 }
 
-/**
- * Retrieves the list of formation programms, modules and units from every specified paths
- * This script writes in the global variables modes, modules and unites
- * @param {string[]} folderPaths - Source Paths
- */
-function listFolders(folderPaths) {
-    folderPaths.forEach(folderPath => {
-        const results = fs.readdirSync(folderPath)
-        const folders = results.filter(res => fs.lstatSync(path.resolve(folderPath, res)).isDirectory())
-        const innerFolderPaths = folders.map(folder => path.resolve(folderPath, folder))
-        if (innerFolderPaths.length === 0) return
-        if (!(folderPath.endsWith("/pt") || folderPath.endsWith("/tp-ee"))) listFolders(innerFolderPaths)
-        else {
-            modes.push(path.relative(topFolder, folderPath))
-            listModulesUnits(innerFolderPaths, 1)
+function getPagesPath() {
+    let modes = []
+    let modules = []
+    let unites = []
+    for (let domain of bachelor.domaines) {
+        const domainPath = basePath + "/" + sanitizeString(domain.domaine_nom)
+        for (let academicEntity of domain.entites_academiques) {
+            const academicEntityPath = domainPath + "/" + sanitizeString(academicEntity.entite_academique_abreviation)
+            for (let option of academicEntity.filieres) {
+                const optionPath = academicEntityPath + "/" + sanitizeString(option.filiere_abreviation)
+                for (let formation of option.formations) {
+                    const formationPath = optionPath + "/" + sanitizeString(formation.formation_abreviation)
+                    for (let mode of formation.modes_formation) {
+                        const modePath = formationPath + "/" + sanitizeString(mode.mode_formation_abreviation)
+                        modes.push(modePath)
+                        for (let module of mode.modules) {
+                            const modulePath = modePath + "/" + sanitizeString(module.module_code)
+                            modules.push(modulePath)
+                            if ('unites' in module && module.unites != null) {
+                                for (let unite of module.unites) {
+                                    const unitePath = modulePath + "/" + sanitizeString(unite.unite_abreviation)
+                                    unites.push(unitePath)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-    })
+    }
+    return [modes, modules, unites]
 }
 
 /**
@@ -86,7 +91,7 @@ const maxParallelDescriptionGeneration = 6
 const maxParallelSheetGeneration = 7
 
 /* Delays to wait fo asychronous tasks (Img writing, saving documents, opening/closing browser contexts) */
-const saveTime = 50
+const saveTime = 300
 const devServerDelay = 4000
 
 class PDFGenerator {
@@ -556,10 +561,6 @@ class PDFGenerator {
                     }
                 }
 
-                addPagesCallback(content, pageNumber) {
-                    this.clearOverflowingPages(pageNumber)
-                }
-
                 addPages(pages, pageNumber) {
                     const generator = this
                     function _addPages(pages, pageNumber, resolve) {
@@ -580,7 +581,7 @@ class PDFGenerator {
                             y: (pageNumber - 1) * generator.height,
                             margin: margins,
                             callback: function (_) {
-                                generator.addPagesCallback(page, pageNumber)
+                                generator.clearOverflowingPages(pageNumber)
                                 _addPages(pages.slice(1), ++pageNumber, resolve)
                             }
                         })
@@ -838,12 +839,12 @@ class PDFGenerator {
     }
 
     async generatePDFFromRelativePath(relativePath, type) {
-        const split = relativePath.split('/')
-        const dest = 'pdf/' + relativePath
+        const split = relativePath.split("/")
+        const dest = __dirname + path.sep + 'pdf' + path.sep + relativePath.replaceAll("/", path.sep)
         let filename = split[split.length - 1]
         switch (type) {
             case "mode":
-                filename = split[split.length - 2] + " - " + filename
+                filename = split[split.length - 2] + "-" + filename
                 break;
             default:
         }
@@ -861,7 +862,7 @@ class PDFGenerator {
 }
 
 function generatePDF() {
-    listFolders([path.resolve(__dirname, topFolder)])
+    [modes, modules, unites] = getPagesPath()
     setTimeout(() => {
         puppeteer.launch({ headless: "new" }).then(browser => {
             const pdfGenerator = new PDFGenerator(browser, {width: 1920, height: 1080}, maxParallelBookletGeneration, maxParallelDescriptionGeneration, maxParallelSheetGeneration)
