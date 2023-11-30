@@ -5,7 +5,6 @@
 $headings-font-family: Helvetica;
 $font-family-sans-serif: Helvetica;
 
-$card-cap-bg: rgba(7, 98, 253, 0.6);
 $form-check-input-disabled-opacity: 1;
 
 $breadcrumb-font-size: 0.9rem;
@@ -78,19 +77,6 @@ $modules-planning-padding: 0.2em !important;
 @import "node_modules/bootstrap/scss/buttons";
 @import "node_modules/bootstrap/scss/dropdown";
 @import "node_modules/bootstrap/scss/forms";
-
-$btn-custom-color: darken($card-cap-bg, 10%);
-$btn-custom-border: $btn-custom-color;
-$btn-custom-text-color: white;
-
-.btn-custom {
-  @include button-variant(
-                  $btn-custom-color,
-                  $btn-custom-border
-  );
-  @include font-size(0.75rem);
-  font-weight: bold;
-}
 
 $utilities: map-merge(
                 $utilities, (

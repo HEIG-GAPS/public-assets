@@ -6,7 +6,7 @@
 {{ $pdf := (lower (replace (printf "%s-%s.pdf" (index .Ancestors 0).Params.json_content.formation_abreviation .Params.json_content.mode_formation_abreviation) "/" "-")) }}
 {{ $pdf_link := printf "%s/pdf%s%s" .Site.BaseURL .RelPermalink $pdf }}
 <div class="d-flex mb-3 align-self-center">
-    <button type="button" class="btn btn-custom pdf-button" data-html2canvas-ignore="true" onclick="openAndDownloadPDF('{{ $pdf_link }}')">
+    <button type="button" class="btn btn-primary" data-html2canvas-ignore="true" onclick="openAndDownloadPDF('{{ $pdf_link }}')">
         Brochure au format PDF
     </button>
 </div>
@@ -68,7 +68,7 @@
         </tbody>
     </table>
     <div class="d-flex justify-content-center mt-3 mb-3">
-        <button type="button" class="btn btn-custom pdf-button" data-html2canvas-ignore="true" onclick="openAndDownloadPDF('{{ $pdf_link }}')">
+        <button type="button" class="btn btn-primary" data-html2canvas-ignore="true" onclick="openAndDownloadPDF('{{ $pdf_link }}')">
             Brochure au format PDF
         </button>
     </div>

@@ -10,7 +10,7 @@
     <div class="d-flex flex-column" data-html2canvas-ignore="true">
         <div class="d-flex justify-content-between">
             <div>
-                <a class="btn btn-custom text-white" href="{{ (index .Ancestors 0).Permalink }}">
+                <a class="btn btn-primary" href="{{ (index .Ancestors 0).Permalink }}">
                     {{ i18n "back_to_list" }}
                 </a>
             </div>
@@ -28,7 +28,7 @@
                 <div class="p-2"><b>{{ $mod.module_nom}} <br> {{ $mod.module_code }} - {{ index $upper_infos "mode" }} </b></div>
             </div>
             <div class="d-flex align-items-center" data-html2canvas-ignore="true">
-                <button type="button" class="btn btn-custom pdf-button" data-html2canvas-ignore="true" onclick="openAndDownloadPDF('{{ $pdf_link }}')">
+                <button type="button" class="btn btn-primary" data-html2canvas-ignore="true" onclick="openAndDownloadPDF('{{ $pdf_link }}')">
                     PDF
                 </button>
             </div>
@@ -314,7 +314,7 @@
         </div>
         <div class="card-footer border-0 d-flex align-items-center">
             <div class="flex-fill d-flex align-content-center" data-html2canvas-ignore="true">
-                <a class="btn btn-custom text-white" href="{{ (index .Ancestors 0).Permalink }}">
+                <a class="btn btn-primary" href="{{ (index .Ancestors 0).Permalink }}">
                     {{ i18n "back_to_list" }}
                 </a>
             </div>
