@@ -8,6 +8,9 @@
 {{ $pdf_link := printf "%s/pdf%s%s.pdf" .Site.BaseURL .RelPermalink ($mod.module_code | urlize) }}
 <div class="pdf-content">
     <div class="d-flex flex-column" data-html2canvas-ignore="true">
+        <div class="p-2 mb-2 align-self-center">
+            <h3> <b>{{ i18n "module_description" }}</b> </h3>
+        </div>
         <div class="d-flex justify-content-between">
             <div>
                 <a class="btn btn-primary" href="{{ (index .Ancestors 0).Permalink }}">
@@ -17,9 +20,6 @@
             <div>
                 {{ partial "other_programs_dropdown" $autres_programmes }}
             </div>
-        </div>
-        <div class="p-2 mb-2 align-self-center">
-            <h3> <b>{{ i18n "module_description" }}</b> </h3>
         </div>
     </div>
     <div class="card rounded-bottom-0 border-bottom-0">

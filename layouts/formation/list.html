@@ -2,8 +2,7 @@
 <div>
     <div class="display-4"> {{ .Content }} </div>
     <br>
-    <div class="container row">
-        keks
+    <div class="container d-flex justify-content-evenly">
           {{ range .Pages }}
           {{ $mode := .Params.json_content }}
           <div class="container col text-center">

@@ -23,8 +23,12 @@ $breadcrumb-font-size: 0.9rem;
 
 $modules-planning-padding: 0.2em !important;
 
+a {
+  text-decoration: none !important;
+}
+
 .modules-planning {
-  @include font-size(0.6em);
+  @include font-size(0.65em);
 }
 
 .module-cell {

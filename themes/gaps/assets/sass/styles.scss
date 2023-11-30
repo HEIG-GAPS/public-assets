@@ -1,10 +1,6 @@
 $border-custom-color: grey;
 $border-custom-line: 1px solid $border-custom-color;
 
-$link-custom-color: rgb(30, 77, 255);
-$link-hover-custom-color: darken($link-custom-color, 10%);
-$link-visited-custom-color: rgb(119, 84, 255);
-
 $main-min-height: 50rem!important;
 
 @mixin half-circle ($direction: bottom) {
@@ -23,23 +19,6 @@ $main-min-height: 50rem!important;
     @else {
         @error 'Please set correct $direction value.'
     }
-}
-
-/* Links decorations */
-a {
-    text-decoration: none!important;
-}
-
-a:link {
-    color: $link-custom-color;
-}
-
-a:hover {
-    color: $link-hover-custom-color;
-}
-
-a:visited {
-    color: $link-visited-custom-color;
 }
 
 .fraction-denominator {
