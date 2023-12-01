@@ -2,8 +2,7 @@
 @import "node_modules/bootstrap/scss/functions";
 
 // Include any default variable overrides here
-$headings-font-family: Helvetica;
-$font-family-sans-serif: Helvetica;
+$headings-font-family: Arial, Helvetica, sans-serif;
 
 $form-check-input-disabled-opacity: 1;
 
@@ -16,6 +15,7 @@ $breadcrumb-font-size: 0.9rem;
 @import "node_modules/bootstrap/scss/variables-dark";
 
 // Include any default map overrides here
+$card-cap-bg: #939090;
 
 @import "node_modules/bootstrap/scss/maps";
 @import "node_modules/bootstrap/scss/mixins";
@@ -57,11 +57,11 @@ a {
 }
 
 .card {
-  @include font-size(0.75rem !important);
+  @include font-size(0.85rem !important);
 }
 
 .card-header {
-  @include font-size(0.9rem !important);
+  @include font-size(1rem !important);
 }
 
 .card-body table {

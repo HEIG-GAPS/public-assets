@@ -233,9 +233,9 @@ class PDFGenerator {
 
             /* Unvalidated modules page */
             const sectionBoxMargin = 2
-            const sectionBoxColor = "#0762FD"
-            const sectionFontSize = 10
-            const modulesNameFontSize = 8
+            const sectionBoxColor = "#939090"
+            const sectionFontSize = 7
+            const modulesNameFontSize = 5
             const sectionSpacingY = 10
 
             /* Hyperlinks injection */
@@ -360,13 +360,11 @@ class PDFGenerator {
                         currentCloneNode = cloneParent
                         currentNode = parent
                     }
-                    currentCloneNode.style.position = "fixed"
-                    currentCloneNode.style.left = "-10000px"
                     body.appendChild(currentCloneNode)
                 }
 
                 fitsInPage() {
-                    return this.currentHeight <= this.height
+                    return this.currentHeight + 5 < this.height
                 }
 
                 splitContent() {
@@ -768,7 +766,7 @@ class PDFGenerator {
                                 modulePage = modulePage.page !== -1 ? modulePage.page : this.doc.internal.getNumberOfPages()
                                 const x = (header.x + header.w) * this.scale + marginLeft + pageAnchorShiftX
                                 const y = (header.yTop + header.h) * this.scale + marginTop + pageAnchorShiftY
-                                this.doc.textWithLink("§", x, y, {pageNumber: modulePage})
+                                this.doc.setFont(undefined, 'normal').setFontSize(3).textWithLink("§", x - 1, y + 1, {pageNumber: modulePage})
                             }
                             page++
                         }
@@ -862,7 +860,7 @@ class PDFGenerator {
 }
 
 function generatePDF() {
-    [modes, modules, unites] = getPagesPath()
+    let [modes, modules, unites] = getPagesPath()
     setTimeout(() => {
         puppeteer.launch({ headless: "new" }).then(browser => {
             const pdfGenerator = new PDFGenerator(browser, {width: 1920, height: 1080}, maxParallelBookletGeneration, maxParallelDescriptionGeneration, maxParallelSheetGeneration)

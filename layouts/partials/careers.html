@@ -2,7 +2,7 @@
   {{ range .Pages }}
       <div class="card formation-card border-0">
           <div class="p-2 card-header">
-                  {{ .Title }} ({{ .Params.json_content.filiere_abreviation }})
+                  <strong> {{ .Title }} ({{ .Params.json_content.filiere_abreviation }}) </strong>
           </div>
           <div class="card-body">
             {{ partial "programs.html" .}}

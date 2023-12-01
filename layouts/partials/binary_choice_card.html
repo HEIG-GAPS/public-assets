@@ -3,10 +3,10 @@
     <div class="container position-relative h-100 w-100 d-flex flex-column flex-md-row rounded-top-5 flex-fill formation-content m-0 p-0">
         <div style="background-image: url('{{ .first.background }}');  background-size: cover; background-repeat: no-repeat; background-position: center"
              class="w-100 w-md-50 h-50 h-md-100 rounded-top-5 rounded-top-md-0 rounded-top-left-md-5 d-flex align-items-center justify-content-center m-0 p-0">
-            <div class="blurred-container p-2 m-0 {{ if .first.logo }}h-50 h-md-25{{ end }} w-md-50 d-flex justify-content-around">
+            <div class="shadow-lg blurred-container p-2 m-0 {{ if .first.logo }}h-50 h-md-25{{ end }} w-md-50 d-flex justify-content-around">
                 <a class="h-100 d-flex flex-column justify-content-around align-middle" href="{{ .first.Permalink }}">
                     <div class="mw-100 mh-50 p-2 text-center text-black">
-                        <h5 class="m-0"> <strong> {{ .first.Title }} </strong> </h5>
+                        <h4 class="m-0"> <strong> {{ .first.Title }} </strong> </h4>
                     </div>
                     {{ if .first.logo }}
                     <img class="img-fluid float-end" src="{{ .first.logo.link }}" alt="{{ .first.logo.alt }}">
@@ -16,10 +16,10 @@
         </div>
         <div style="background-image: url('{{ .second.background }}');  background-size: cover; background-repeat: no-repeat; background-position: center"
              class="w-100 w-md-50 h-50 h-md-100 rounded-top-right-md-5 d-flex align-items-center justify-content-center m-0 p-0">
-            <div class="blurred-container p-2 m-0 {{ if .first.logo }}h-50 h-md-25{{ end }} w-md-50">
+            <div class="shadow-lg blurred-container p-2 m-0 {{ if .first.logo }}h-50 h-md-25{{ end }} w-md-50">
                 <a class="h-100 d-flex flex-column justify-content-around align-middle" href="{{ .second.Permalink }}">
                     <div class="mw-100 mh-50 p-2 text-center text-black">
-                        <h5 class="m-0"> <strong> {{ .second.Title }} </strong> </h5>
+                        <h4 class="m-0"> <strong> {{ .second.Title }} </strong> </h4>
                     </div>
                     {{ if .second.logo }}
                     <img class="img-fluid float-end" src="{{ .second.logo.link }}" alt="{{ .second.logo.alt }}">

@@ -41,7 +41,7 @@
 <tbody>
     {{ if eq (len $page.Pages) 0 }}
         <tr class="selectable-units">
-            <th scope="col" class="table-primary unit-cell"> <b> {{ i18n "selectable_units" }} </b> </th>
+            <th scope="col" class="table-primary unit-cell align-middle"> <b> {{ i18n "selectable_units" }} </b> </th>
             <th scope="col" class="group-alternative-cell table-primary"></th>
             <th scope="col" class="table-primary coef-value-cell text-center align-middle"> ... </th>
             {{ range $col := $trimesters }}
