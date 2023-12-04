@@ -12,6 +12,11 @@ const jsonPath = __dirname + path.sep + "prebuild" + path.sep + "data" + path.se
 const basePath = "bachelor"
 const bachelor = require(jsonPath)
 
+/**
+ * Replaces known diacritics in a string by their non-diacritic equivalent
+ * @param str
+ * @returns {string}
+ */
 function sanitizeString(str) {
     return str.toLowerCase()
                 .replaceAll(/[À-Åà-å]/g, "a")
@@ -20,9 +25,17 @@ function sanitizeString(str) {
                 .replaceAll(/[Ò-Öò-ö]/g, "o")
                 .replaceAll(/[Ù-Üù-ü]/g, "u")
                 .replaceAll(/[Çç]/g, "c")
+                .replaceAll(/:/g, "")
                 .replaceAll(/[ \/]/g, "-")
 }
 
+/**
+ * Generates 3 arrays containing the relative path to every page of the website. The first array contains the path to
+ * every formation mode page, the second array contains the path to every module description page and the third array
+ * contains the path to every unit sheet page.
+ * Note that the Hugo site is generated from the bachelor.json file, so the paths are generated from the same file.
+ * @returns {*[][]}
+ */
 function getPagesPath() {
     let modes = []
     let modules = []
@@ -68,7 +81,7 @@ function padTo2Digits(num) {
 /**
  * Convert milliseconds in human friendly time range
  * @param {Number} milliseconds - Number of millisecond to process
- * @returns {string} formated time range string
+ * @returns {string} formatted time range string
  */
 function msToHMS(milliseconds) {
     let seconds = Math.floor(milliseconds / 1000);
@@ -90,16 +103,33 @@ const maxParallelBookletGeneration = 3
 const maxParallelDescriptionGeneration = 6
 const maxParallelSheetGeneration = 7
 
-/* Delays to wait fo asychronous tasks (Img writing, saving documents, opening/closing browser contexts) */
+/* Delays to wait fo asynchronous tasks (Img writing, saving documents, opening/closing browser contexts) */
 const saveTime = 300
 const devServerDelay = 4000
 
+/**
+ * PDFGenerator class to handle PDF generation from a list of relative paths, using puppeteer, Queue-promise and jsPDF.
+ */
 class PDFGenerator {
     constructor(browser, viewport) {
         this.browser = browser
         this.viewport = viewport
     }
 
+    /**
+     * Runs the PDF generation from a list of relative paths. The generation is done in 3 steps:
+     * 1. Generation of formation booklets
+     * 2. Generation of module descriptions
+     * 3. Generation of unit sheets
+     * Each step runs parallel tasks, with a maximum number of parallel generation specified by the user.
+     * @param booklets
+     * @param modules
+     * @param units
+     * @param maxParallelBookletGeneration
+     * @param maxParallelDescriptionGeneration
+     * @param maxParallelSheetGeneration
+     * @returns {Promise<unknown>}
+     */
     run(booklets, modules, units, maxParallelBookletGeneration, maxParallelDescriptionGeneration, maxParallelSheetGeneration) {
         return new Promise(resolve => {
             const start = performance.now()
@@ -162,14 +192,28 @@ class PDFGenerator {
         })
     }
 
+    /**
+     * Opens a new browser context. Each PDF generation is done in a new context to avoid conflicts between them.
+     * @returns {Promise<*>}
+     */
     async openNewContext() {
         return await this.browser.createIncognitoBrowserContext()
     }
 
+    /**
+     * Closes a browser context
+     * @param context
+     * @returns {Promise<*>}
+     */
     async closeContext(context) {
         return await context.close()
     }
 
+    /**
+     * Opens a new page in a new context and loads the page at the specified relative path.
+     * @param relativePath
+     * @returns {Promise<*[]>}
+     */
     async openNewPage(relativePath) {
         const context = await this.openNewContext()
         const page = await context.newPage()
@@ -180,6 +224,12 @@ class PDFGenerator {
         return [page, context]
     }
 
+    /**
+     * Sets the download folder for the specified page.
+     * @param page
+     * @param folder
+     * @returns {Promise<void>}
+     */
     async setDownloadFolder(page, folder) {
         const client = await page.target().createCDPSession()
         if (!fs.existsSync(path.join(__dirname, folder))) fs.mkdirSync(folder, {recursive: true})
@@ -189,6 +239,12 @@ class PDFGenerator {
         })
     }
 
+    /**
+     * Loads the page content from the DOM. This is used to be sure that the page is fully loaded before generating the
+     * PDF.
+     * @param page
+     * @returns {Promise<void>}
+     */
     async loadPage(page) {
         const dom = await page.$eval('html', element => {
             return element.innerHTML
@@ -196,6 +252,13 @@ class PDFGenerator {
         await page.setContent(dom)
     }
 
+    /**
+     * Generates a PDF file from the specified page and saves it to the specified filename.
+     * @param page
+     * @param filename
+     * @param type
+     * @returns {Promise<void>}
+     */
     async generatePDF(page, filename, type) {
         await page.evaluate(async ([filename, type, host, localhost]) => {
 
@@ -215,7 +278,8 @@ class PDFGenerator {
                 unit: "px",
                 format: "a4",
                 margin: margins,
-                compress: true
+                compress: true,
+                precision: 10
             }
 
             /* Image sources */
@@ -305,6 +369,9 @@ class PDFGenerator {
             }
 
             /* ------------------------- PDF sections population ------------------------- */
+            /**
+             * A class to split HTML content into pages that fit in a PDF document.
+             */
             class ContentSplitter {
                 constructor(contentRoot, width, height, splittableContent) {
                     this.contentRoot = contentRoot
@@ -364,13 +431,28 @@ class PDFGenerator {
                 }
 
                 fitsInPage() {
-                    return this.currentHeight + 5 < this.height
+                    return this.currentHeight <= this.height
                 }
 
                 splitContent() {
                     this._splitContent(this.contentRoot)
+                    for (let child of Array.prototype.slice.call(this.splitContentDiv.children)) {
+                        child.classList.add("border-1")
+                    }
                 }
 
+                /**
+                 * Splits the content into pages that fit in the PDF document. The content is split iterating on the
+                 * children of the content root. If a child is a node of type specified in the splittableContent and
+                 * will not fit in the current page, the function is called recursively on this node. For each
+                 * encountered element, the function tries to add it to the current page. If the content does not fit in
+                 * the page, the function tries to split the content. If the content cannot be split, a new page is
+                 * added to the document and the content is added to this new page.
+                 * No PDF document is involved yet as this method will work with divs as the document pages
+                 * and a scale factor calculated from the width of the content root and the width of the PDF document.
+                 * @param content
+                 * @private
+                 */
                 _splitContent(content) {
                     /* Ignores unwanted content */
                     if (content.getAttribute("data-html2canvas-ignore") !== null) return
@@ -399,7 +481,7 @@ class PDFGenerator {
                                 this._splitContent(childrenElements[i])
                             }
                             this.currentDiv = this.currentDiv.parentNode
-                        } else { // Leaf
+                        } else {
                             console.info("Content cannot be split, adding new page")
                             /* Cleans empty divs added to try content split */
                             let curr = this.currentDiv
@@ -421,17 +503,19 @@ class PDFGenerator {
                                 currentCloneNode = cloneParent
                                 currentNode = parent
                             }
+                            this.splitContentDiv.appendChild(currentCloneNode)
                             if (!this.fitsInPage()) {
                                 console.warn("Content cannot be split and is too big for one page")
                                 this.currentDiv.removeChild(this.currentDiv.lastChild)
-                                return
                             }
-                            this.splitContentDiv.appendChild(currentCloneNode)
                         }
                     }
                 }
             }
 
+            /**
+             * A class to generate a PDF document from HTML content.
+             */
             class PDFGenerator extends ContentSplitter {
                 constructor(content, doc, splittableContent) {
                     super(content, doc.internal.pageSize.getWidth() - (marginLeft + marginRight), doc.internal.pageSize.getHeight() - (marginTop + marginBot), splittableContent);
@@ -524,6 +608,14 @@ class PDFGenerator {
                     return Promise.all(tasks)
                 }
 
+                /**
+                 * Adds hyperlinks to the document specified page. As jsPDF does not support HTML links, the function
+                 * uses the getLinksRelativeCoords function to get the relative position of every link in the content
+                 * and adds a link to the PDF document at the same position.
+                 * @param content
+                 * @param pageNumber
+                 * @returns {Promise<unknown>}
+                 */
                 addLinksToContent(content, pageNumber) {
                     return new Promise(resolve => {
                         if (content) {
@@ -550,6 +642,11 @@ class PDFGenerator {
                     return Promise.all(tasks)
                 }
 
+                /**
+                 * Clears overflow pages from the document. jsPDF seems to add blank pages overflow pages when calling
+                 * the html function (Maybe a scaling issue ?). This function removes these pages.
+                 * @param wantedPages - The number of pages wanted in the document
+                 */
                 clearOverflowingPages(wantedPages) {
                     const nPages = this.doc.internal.getNumberOfPages()
                     if (nPages > wantedPages) {
@@ -559,27 +656,34 @@ class PDFGenerator {
                     }
                 }
 
+                /**
+                 * Adds pages to the document. The function adds a page to the document for each page in the pages
+                 * array, considering that each element of the array fits in one page.
+                 * @param pages
+                 * @param pageNumber
+                 * @returns {Promise<unknown>}
+                 */
                 addPages(pages, pageNumber) {
-                    const generator = this
+                    const pdfGenerator = this
                     function _addPages(pages, pageNumber, resolve) {
                         if (pages.length < 1) {
                             resolve()
                             return
                         }
                         const page = pages.at(0)
-                        generator.doc.addPage()
-                        generator.doc.html(page, {
+                        pdfGenerator.doc.addPage()
+                        pdfGenerator.doc.html(page, {
                             html2canvas: {
                                 allowTaint: true,
                                 useCORS: true,
                                 logging: false,
-                                scale: generator.scale,
+                                scale: pdfGenerator.scale,
                                 removeContainer: true
                             },
-                            y: (pageNumber - 1) * generator.height,
+                            y: (pageNumber - 1) * pdfGenerator.height,
                             margin: margins,
                             callback: function (_) {
-                                generator.clearOverflowingPages(pageNumber)
+                                pdfGenerator.clearOverflowingPages(pageNumber)
                                 _addPages(pages.slice(1), ++pageNumber, resolve)
                             }
                         })
@@ -589,12 +693,29 @@ class PDFGenerator {
                     })
                 }
 
+                /**
+                 * Adds the content to the document from the specified start page. The function splits the content into
+                 * pages that fit in the PDF document and adds these pages to the document.
+                 * Note that you can provide a contentStart and contentEnd to specify the range of pages to add to the
+                 * document.
+                 * @param pageNumber
+                 * @param contentStart
+                 * @param contentEnd
+                 * @returns {Promise<void>}
+                 */
                 async populatePDF(pageNumber, contentStart = 0, contentEnd = -1) {
                     if (contentEnd === -1) contentEnd = this.nPages
                     if (contentStart > contentEnd) throw new Error("Content start page is greater than content end page")
                     await this.addPages(Array.prototype.slice.call(this.splitContentDiv.children, contentStart, contentEnd), pageNumber)
                 }
 
+                /**
+                 * Saves the document with the specified filename. This method calls the corresponding jsPDF method, so
+                 * keep in mind that if you provide a path as filename, the file will be saved in the download folder
+                 * but with the formatted path as filename.
+                 * @param filename
+                 * @returns {Promise<void>}
+                 */
                 async savePDF(filename) {
                     console.info("Saving PDF")
                     await this.doc.save(filename, {returnPromise: true})
@@ -602,6 +723,9 @@ class PDFGenerator {
                 }
             }
 
+            /**
+             * A class to generate a PDF document from a unit sheet page.
+             */
             class unitPDFGenerator extends PDFGenerator {
                 constructor(content, doc, splittableContent) {
                     super(content, doc, splittableContent);
@@ -616,6 +740,9 @@ class PDFGenerator {
                 }
             }
 
+            /**
+             * A class to generate a PDF document from a module description page.
+             */
             class modulePDFGenerator extends PDFGenerator {
                 constructor(content, doc, splittableContent) {
                     super(content, doc, splittableContent);
@@ -630,6 +757,9 @@ class PDFGenerator {
                 }
             }
 
+            /**
+             * A class to generate a PDF document from a formation booklet page.
+             */
             class formationBookletGenerator extends PDFGenerator {
                 constructor(content, doc, splittableContent) {
                     super(content, doc, splittableContent);
@@ -651,8 +781,6 @@ class PDFGenerator {
                         currentCloneNode = cloneParent
                         currentNode = parent
                     }
-                    currentCloneNode.style.position = "fixed"
-                    currentCloneNode.style.left = "-10000px"
                     body.appendChild(currentCloneNode)
                 }
 
@@ -740,6 +868,7 @@ class PDFGenerator {
                         let modulePage = modules.at(moduleIndex)
                         modulePage.page = currentPage
                         moduleIndex++
+                        this.scale = this.width / module.offsetWidth
                         this.splitContentDiv = this.contentRoot.parentNode.cloneNode(false)
                         this.addContentToBody()
                         this.currentDiv = this.splitContentDiv
@@ -765,8 +894,8 @@ class PDFGenerator {
                                 let modulePage = this.modulesPage.find(x => x.text === header.text)
                                 modulePage = modulePage.page !== -1 ? modulePage.page : this.doc.internal.getNumberOfPages()
                                 const x = (header.x + header.w) * this.scale + marginLeft + pageAnchorShiftX
-                                const y = (header.yTop + header.h) * this.scale + marginTop + pageAnchorShiftY
-                                this.doc.setFont(undefined, 'normal').setFontSize(3).textWithLink("§", x - 1, y + 1, {pageNumber: modulePage})
+                                const y = (header.yBot) * this.scale + marginTop + pageAnchorShiftY
+                                this.doc.setFont(undefined, 'normal').setFontSize(4).textWithLink("§", x - 1, y + 1, {pageNumber: modulePage})
                             }
                             page++
                         }

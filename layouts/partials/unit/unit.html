@@ -1,7 +1,7 @@
 {{ $modes_formation := slice }}
 {{ $modes := index .Ancestors 2 }}
 {{ range $modes.Pages }}
-    {{ $modes_formation = $modes_formation | append . }}
+{{ $modes_formation = $modes_formation | append . }}
 {{ end }}
 {{ $mode_formation := index .Ancestors 1 }}
 {{ $module := index .Ancestors 0 }}
@@ -161,11 +161,13 @@
                 </div>
             </div>
         </div>
+        {{ if $unit.unite_validation }}
         <div class="card-footer border-0 d-flex align-items-center" data-html2canvas-ignore="true">
             <div class="p-2  flex-fill d-flex align-content-center justify-content-end flex-wrap">
                 {{ i18n "version_of" | strings.FirstUpper }}
                 {{ $unit.unite_validation | time.Format ":date_long" }}
             </div>
         </div>
+        {{ end }}
     </div>
 </div>
