@@ -11,7 +11,7 @@
     </button>
 </div>
 <div class="pdf-content">
-    <table class="table modules-planning">
+    <table class="table modules-planning border-0">
         {{ range .Pages }}
         {{ $module_trimestriel := partial "module_trimestriel" . }}
         {{ $module_semestriel := partial "module_semestriel" . }}
@@ -54,11 +54,11 @@
         {{ $periods_tot := partial "get_module_total_periods" $periodes_tot_ctx }}
         <tbody>
         <tr>
-            <td class="week-cell table-primary">
+            <td class="week-cell">
                 <b> {{ i18n "per_week_periods" }} </b>
             </td>
-            <td class="week-cell table-primary"></td>
-            <td rowspan="2" class="week-cell table-primary">
+            <td class="week-cell"></td>
+            <td rowspan="2" class="week-cell">
             </td>
             {{ range $col := $cols }}
             {{ $periodes := $periods_tot.Get $col }}

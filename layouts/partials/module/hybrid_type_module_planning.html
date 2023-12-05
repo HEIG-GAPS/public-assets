@@ -10,12 +10,12 @@
                 <a href="{{ $page.Permalink }}" class="pdf-link module-header">{{$module.module_nom}} ({{ $module.module_code }})</a>
             </div>
         </th>
-        <th scope="col" class="top-alternative group-alternative-cell table-primary"></th>
+        <th scope="col" class="top-alternative group-alternative-cell"></th>
         <th scope="col" class="align-middle text-center coef-cell" rowspan="2"> {{ i18n "coefficient" }} </th>
         {{ range $semesters }}
                 <th scope="col"
                     {{ if (hasPrefix . "E") }} 
-                        rowspan="2" colspan="1" 
+                        rowspan="2" colspan="1"
                     {{ else }}
                         rowspan="1" colspan="2"
                     {{ end }}

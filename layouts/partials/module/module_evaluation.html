@@ -20,6 +20,9 @@
             (<a href="{{ .Permalink }}" class="pdf-link"> {{ $unite.unite_abreviation }} </a>)
             [{{ i18n "weight" }}: {{ $unite.unite_coefficient }}]
         </b>
+
+    </div>
+    <div class="p-2">
         {{ partial "module/module_evaluation_grade" $eval  }}
     </div>
 {{ end }}
@@ -49,6 +52,8 @@
                 (<a href="{{ .Permalink }}" class="pdf-link"> {{ $unite.unite_abreviation }} </a>)
                 [{{ i18n "weight" }}: {{ $unite.unite_coefficient }}] [{{ i18n "group" }}: {{ $groupe_lettre }}]
             </b>
+        </div>
+        <div class="p-2">
             {{ partial "module/module_evaluation_grade" (dict "num" $eval.num "denom" $eval.denom)  }}
         </div>
     {{ end }}

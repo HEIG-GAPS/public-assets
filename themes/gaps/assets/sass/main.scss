@@ -28,7 +28,7 @@ a {
 }
 
 .modules-planning {
-  @include font-size(0.65em);
+  @include font-size(0.7em);
 }
 
 .module-cell {
@@ -53,11 +53,11 @@ a {
 }
 
 .caption {
-  @include font-size(0.75rem !important);
+  @include font-size(0.8rem !important);
 }
 
 .card {
-  @include font-size(0.85rem !important);
+  @include font-size(0.8rem !important);
 }
 
 .card-header {
@@ -65,7 +65,7 @@ a {
 }
 
 .card-body table {
-  @include font-size(0.65rem !important);
+  @include font-size(0.8rem !important);
   @include padding(0 !important);
 }
 

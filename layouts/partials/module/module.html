@@ -22,7 +22,7 @@
             </div>
         </div>
     </div>
-    <div class="card rounded-bottom-0 border-bottom-0">
+    <div class="card border-bottom-0 rounded-bottom-0">
         <div class="card-header d-flex align-center flex-row module-titre">
             <div class="p-2 d-flex flex-wrap flex-column flex-grow-1">
                 <div class="p-2"><b>{{ $mod.module_nom}} <br> {{ $mod.module_code }} - {{ index $upper_infos "mode" }} </b></div>
@@ -247,7 +247,7 @@
                 <b>{{ i18n "final_module_grade" }}</b>
             </div>
             <div class="p-2">
-                {{ i18n "options_module_final_grade_description" | strings.FirstUpper }}.
+                {{ i18n "options_module_final_grade_description" | strings.FirstUpper }}
                 <div class="p-2">
                     {{ i18n "final_grade" }} = {{ i18n "options_module_depending" }}
                 </div>
@@ -255,6 +255,8 @@
             {{ else }}
             <div class="p-2">
                 {{ i18n "repetition_threshold" }} : {{ $mod.module_seuil_repetition }}
+            </div>
+            <div class="p-2">
                 {{ partial "module/module_evaluation.html" . }}
             </div>
             {{ end }}

@@ -99,9 +99,9 @@ function msToHMS(milliseconds) {
 }
 
 /* PDF parallel Scrapping settings */
-const maxParallelBookletGeneration = 3
-const maxParallelDescriptionGeneration = 6
-const maxParallelSheetGeneration = 7
+const maxParallelBookletGeneration = 4
+const maxParallelDescriptionGeneration = 8
+const maxParallelSheetGeneration = 10
 
 /* Delays to wait fo asynchronous tasks (Img writing, saving documents, opening/closing browser contexts) */
 const saveTime = 300
@@ -436,8 +436,31 @@ class PDFGenerator {
 
                 splitContent() {
                     this._splitContent(this.contentRoot)
+                    function roundBottomBorders(children) {
+                        if (children.length === 0) return
+                        let lastChild = children[children.length - 1]
+                        if (lastChild.classList === undefined) return
+                        lastChild.classList.remove("border-bottom-0")
+                        lastChild.classList.remove("rounded-bottom-0")
+                        lastChild.classList.add("border-bottom-1")
+                        lastChild.classList.add("rounded-bottom-1")
+                        roundBottomBorders(Array.prototype.slice.call(lastChild.children))
+                    }
+                    function roundTopBorders(children) {
+                        if (children.length === 0) return
+                        let firstChild = children[0]
+                        if (firstChild.classList === undefined) return
+                        firstChild.classList.remove("border-top-0")
+                        firstChild.classList.remove("rounded-top-0")
+                        firstChild.classList.add("border-top-1")
+                        firstChild.classList.add("rounded-top-1")
+                        roundTopBorders(Array.prototype.slice.call(firstChild.children))
+                    }
                     for (let child of Array.prototype.slice.call(this.splitContentDiv.children)) {
                         child.classList.add("border-1")
+                        child.classList.add("rounded-1")
+                        roundTopBorders(Array.prototype.slice.call(child.children))
+                        roundBottomBorders(Array.prototype.slice.call(child.children))
                     }
                 }
 
@@ -895,7 +918,7 @@ class PDFGenerator {
                                 modulePage = modulePage.page !== -1 ? modulePage.page : this.doc.internal.getNumberOfPages()
                                 const x = (header.x + header.w) * this.scale + marginLeft + pageAnchorShiftX
                                 const y = (header.yBot) * this.scale + marginTop + pageAnchorShiftY
-                                this.doc.setFont(undefined, 'normal').setFontSize(4).textWithLink("§", x - 1, y + 1, {pageNumber: modulePage})
+                                this.doc.setFont(undefined, 'normal').setFontSize(6).textWithLink("§", x, y, {pageNumber: modulePage})
                             }
                             page++
                         }
@@ -992,7 +1015,7 @@ function generatePDF() {
     let [modes, modules, unites] = getPagesPath()
     setTimeout(() => {
         puppeteer.launch({ headless: "new" }).then(browser => {
-            const pdfGenerator = new PDFGenerator(browser, {width: 1920, height: 1080}, maxParallelBookletGeneration, maxParallelDescriptionGeneration, maxParallelSheetGeneration)
+            const pdfGenerator = new PDFGenerator(browser, {width: 1366, height: 768 }, maxParallelBookletGeneration, maxParallelDescriptionGeneration, maxParallelSheetGeneration)
             pdfGenerator.run(modes, modules, unites, maxParallelBookletGeneration, maxParallelDescriptionGeneration, maxParallelSheetGeneration).then(_ => {
                 browser.close().then()
             })
