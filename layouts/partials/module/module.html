@@ -8,7 +8,7 @@
 {{ $pdf_link := printf "%s/pdf%s%s.pdf" .Site.BaseURL .RelPermalink ($mod.module_code | urlize) }}
 <div class="pdf-content">
     <div class="d-flex flex-column" data-html2canvas-ignore="true">
-        <div class="p-2 mb-2 align-self-center">
+        <div class="mb-2 align-self-center">
             <h3> <b>{{ i18n "module_description" }}</b> </h3>
         </div>
         <div class="d-flex justify-content-between">
@@ -24,8 +24,8 @@
     </div>
     <div class="card border-bottom-0 rounded-bottom-0">
         <div class="card-header d-flex align-center flex-row module-titre">
-            <div class="p-2 d-flex flex-wrap flex-column flex-grow-1">
-                <div class="p-2"><b>{{ $mod.module_nom}} <br> {{ $mod.module_code }} - {{ index $upper_infos "mode" }} </b></div>
+            <div class="d-flex flex-wrap flex-column flex-grow-1">
+                <b>{{ $mod.module_nom}} <br> {{ $mod.module_code }} - {{ index $upper_infos "mode" }} </b>
             </div>
             <div class="d-flex align-items-center" data-html2canvas-ignore="true">
                 <button type="button" class="btn btn-primary" data-html2canvas-ignore="true" onclick="openAndDownloadPDF('{{ $pdf_link }}')">
@@ -35,47 +35,35 @@
         </div>
         <div class="card-body">
             <div class="module-titre-infos">
-                <div class="d-flex flex-row p-2">
-                    <div class="p-2 w-25">
-                        <b> {{ i18n "domains" }} </b>
+                <div class="d-flex flex-row">
+                    <div class="w-25">
+                        <b> {{ i18n "domains" }} </b> :
                     </div>
-                    <div class="p-2">
-                        :
-                    </div>
-                    <div class="p-2">
+                    <div>
                         {{ $upper_infos.domaine }}
                     </div>
                 </div>
-                <div class="d-flex flex-row p-2">
-                    <div class="p-2 w-25">
-                        <b> {{ i18n "branch" }} </b>
+                <div class="d-flex flex-row">
+                    <div class="w-25">
+                        <b> {{ i18n "branch" }} </b> :
                     </div>
-                    <div class="p-2">
-                        :
-                    </div>
-                    <div class="p-2">
+                    <div>
                         {{ $upper_infos.filiere }}
                     </div>
                 </div>
-                <div class="d-flex flex-row p-2">
-                    <div class="p-2 w-25">
-                        <b> {{ i18n "orientation" }} </b>
+                <div class="d-flex flex-row">
+                    <div class="w-25">
+                        <b> {{ i18n "orientation" }} </b> :
                     </div>
-                    <div class="p-2">
-                        :
-                    </div>
-                    <div class="p-2">
+                    <div>
                         {{ $upper_infos.orientation }}
                     </div>
                 </div>
-                <div class="d-flex flex-row p-2 mb-3">
-                    <div class="p-2 w-25">
-                        <b> {{ i18n "mode" }} </b>
+                <div class="d-flex flex-row">
+                    <div class="w-25">
+                        <b> {{ i18n "mode" }} </b> :
                     </div>
-                    <div class="p-2">
-                        :
-                    </div>
-                    <div class="p-2">
+                    <div>
                         {{ $upper_infos.mode }}
                     </div>
                 </div>
@@ -84,25 +72,25 @@
     </div>
     <div class="card module-intitule rounded-0 border-bottom-0">
         <div class="card-header d-flex align-center border-0 rounded-0">
-            <div class="p-2">
+            <div>
                 <b> 1. {{ i18n "module_title" }} </b>
             </div>
         </div>
         <div class="card-body d-flex flex-column">
             <div class="d-flex flex-column">
-                <div class="p-2">
+                <div>
                     <b> {{ i18n "name" }} </b> : {{ $mod.module_nom }}
                 </div>
-                <div class="p-2">
+                <div>
                     <b> {{ i18n "code" }} </b> : {{ $mod.module_code }}
                 </div>
-                <div class="p-2">
+                <div>
                     <b> {{ i18n "academic_years" }} </b> :
                     {{ if not (eq $mod.module_validite nil)}}
                     {{ partial "list_as_str" $mod.module_validite }}
                     {{ end }}
                 </div>
-                <div class="p-2">
+                <div>
                     <b> {{ i18n "formation_type" }} </b> :
                     {{ range site.Data.bachelor.niveaux_formation }}
                     {{ if eq .id $mod.module_niveau_formation_id }}
@@ -110,8 +98,8 @@
                     {{ end }}
                     {{ end }}
                 </div>
-                <div class="p-2 mb-2 d-flex flex-column">
-                    <div class="p-2 d-flex flex-row">
+                <div class="mb-2 d-flex flex-column">
+                    <div class="d-flex flex-row">
                         <div class="d-flex flex-column w-50">
                             {{ partial "module/module_level.html" $mod }}
                             {{ partial "module/module_type.html" $mod }}
@@ -121,11 +109,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="p-2 d-flex flex-column">
+                <div class="d-flex flex-column">
                     <div>
                         <b> {{ i18n "time_organization" }} </b>
                     </div>
-                    <div class="p-2">
+                    <div>
                         <p> {{ i18n "time_organization_table_description" }} </p>
                         {{ partial "module/module_units_schedule.html" . }}
                     </div>
@@ -135,16 +123,14 @@
     </div>
     <div class="card module-organisation rounded-0 border-bottom-0">
         <div class="card-header dflex align-center border-0 rounded-0">
-            <div class="p-2">
-                <b> 2. {{ i18n "organization" }} </b>
-            </div>
+            <b> 2. {{ i18n "organization" }} </b>
         </div>
         <div class="card-body">
             <div class="d-flex flex-column">
-                <div class="p-2">
+                <div>
                     <b> {{ i18n "ects_credits" }} </b> : {{ $mod.module_credits }}
                 </div>
-                <div class="p-2">
+                <div>
                     <b> {{ i18n "instruction_main_languages" }} </b> :
                     {{ if $mod.module_a_options }}
                     {{ i18n "options_module_depending" | strings.FirstUpper }}
@@ -157,7 +143,7 @@
     </div>
     <div class="card module-prerequis rounded-0 border-bottom-0">
         <div class="card-header dflex align-center border-0 rounded-0">
-            <div class="p-2">
+            <div>
                 <b> 3. {{ i18n "prerequisites" }} </b>
             </div>
         </div>
@@ -167,25 +153,25 @@
     </div>
     <div class="card module-objectifs rounded-0 border-bottom-0">
         <div class="card-header dflex align-center border-0 rounded-0">
-            <div class="p-2">
+            <div>
                 <b> 4. {{ i18n "learning_objectives" }} </b>
             </div>
         </div>
         <div class="card-body d-flex flex-column">
-            <div class="p-2">
+            <div>
                 {{ $mod.module_objectifs | safeHTML }}
             </div>
         </div>
     </div>
     <div class="card module-enseignements rounded-0 border-bottom-0">
         <div class="card-header dflex align-center border-0 rounded-0">
-            <div class="p-2">
+            <div>
                 <b> 5. {{ i18n "content_teaching_methods" }} </b>
             </div>
         </div>
         <div class="card-body d-flex flex-column">
             {{ if $mod.module_a_options }}
-            <div class="p-2">
+            <div>
                 <div>
                     <b>{{ i18n "options_module" }}</b>
                 </div>
@@ -194,14 +180,14 @@
                 </div>
             </div>
             {{ else }}
-            <div class="p-2">
+            <div>
                 {{ $formes_enseignement := slice }}
                 {{ range .Pages }}
                 {{ $unit := .Params.json_content }}
-                <div class="p-2">
+                <div>
                     <b> {{ $unit.unite_nom }} (<a href="{{ .Permalink }}" class="pdf-link"> {{ $unit.unite_abreviation }}
                     </a>) </b>
-                    <div class="p-2">
+                    <div class="m-2">
                         {{ $unit.unite_resume | safeHTML }}
                         <b> {{ i18n "teaching_methods" }} </b> :
                         {{ $types := partial "get_teaching_methods" $unit }}
@@ -209,17 +195,17 @@
                         {{ range $types }}
                         {{ $types_nom = $types_nom | append .type_enseignement_nom }}
                         {{ end }}
-                        {{ $formes_enseignement = $formes_enseignement | append $types_nom }}
+                        {{ range $types_nom }}
+                        {{ $formes_enseignement = $formes_enseignement | append . }}
+                        {{ end }}
                         {{ partial "list_as_str" $types_nom }}
                     </div>
                 </div>
                 {{ end }}
             </div>
-            <div class="p-2">
-                <div class="p-2">
-                    <div>
-                        <b> {{ i18n "teaching_methods" }} </b> : {{ partial "list_as_str" ($formes_enseignement | uniq) }}
-                    </div>
+            <div>
+                <div>
+                    <b> {{ i18n "teaching_methods" }} </b> : {{ partial "list_as_str" ($formes_enseignement | uniq) }}
                 </div>
             </div>
             {{ end }}
@@ -227,36 +213,34 @@
     </div>
     <div class="card module-evaluation rounded-0 border-bottom-0">
         <div class="card-header dflex align-center border-0 rounded-0">
-            <div class="p-2">
-                <b> 6. {{ i18n "evaluation" }} </b>
-            </div>
+            <b> 6. {{ i18n "evaluation" }} </b>
         </div>
         <div class="card-body d-flex flex-column">
-            <div class="p-2">
+            <div>
                 {{ i18n "compensation_threshold" }} : {{ $mod.module_seuil_compensation }}
             </div>
             {{ if $mod.module_a_options }}
-            <div class="p-2">
+            <div>
                 {{ i18n "options_module_min_fundamental_credits" | strings.FirstUpper }} :
                 {{ $mod.module_credits_fondamentaux_min }}
             </div>
-            <div class="p-2">
+            <div>
                 {{ i18n "options_module_final_grade_computation" | strings.FirstUpper }}
             </div>
-            <div class="p-2">
+            <div>
                 <b>{{ i18n "final_module_grade" }}</b>
             </div>
-            <div class="p-2">
+            <div>
                 {{ i18n "options_module_final_grade_description" | strings.FirstUpper }}
-                <div class="p-2">
+                <div>
                     {{ i18n "final_grade" }} = {{ i18n "options_module_depending" }}
                 </div>
             </div>
             {{ else }}
-            <div class="p-2">
+            <div>
                 {{ i18n "repetition_threshold" }} : {{ $mod.module_seuil_repetition }}
             </div>
-            <div class="p-2">
+            <div>
                 {{ partial "module/module_evaluation.html" . }}
             </div>
             {{ end }}
@@ -264,47 +248,35 @@
     </div>
     <div class="card module-remediation rounded-0 border-bottom-0">
         <div class="card-header dflex align-center border-0 rounded-0">
-            <div class="p-2">
-                <b> 7. {{ i18n "remediation" }} </b>
-            </div>
+            <b> 7. {{ i18n "remediation" }} </b>
         </div>
         <div class="card-body d-flex flex-column">
-            <div class="p-2">
-                {{ partial "module/module_type_remediation.html" $mod }}
-            </div>
+            {{ partial "module/module_type_remediation.html" $mod }}
         </div>
     </div>
     <div class="card module-remarques rounded-0 border-bottom-0">
         <div class="card-header dflex align-center border-0 rounded-0">
-            <div class="p-2">
-                <b> 8. {{ i18n "remarks" }} </b>
-            </div>
+            <b> 8. {{ i18n "remarks" }} </b>
         </div>
         <div class="card-body">
-            <div class="p-2">
-                {{ if eq $mod.remarques nil }}
-                {{ i18n "no_remark" }}.
-                {{ else }}
-                {{ $mod.module_remarques | safeHTML }}
-                {{ end }}
-            </div>
+            {{ if eq $mod.remarques nil }}
+            {{ i18n "no_remark" }}.
+            {{ else }}
+            {{ $mod.module_remarques | safeHTML }}
+            {{ end }}
         </div>
     </div>
     <div class="card module-bibliographie rounded-top-0">
         <div class="card-header dflex align-center border-0 rounded-0">
-            <div class="p-2">
-                <b> 9. {{ i18n "bibliography" }} </b>
-            </div>
+            <b> 9. {{ i18n "bibliography" }} </b>
         </div>
         <div class="card-body d-flex flex-column">
             {{ if $mod.module_a_options }}
-            <div class="p-2">
-                {{ i18n "options_module_depending" | strings.FirstUpper }}.
-            </div>
+            {{ i18n "options_module_depending" | strings.FirstUpper }}.
             {{ else }}
             {{ range .Pages }}
             {{ $unite := .Params.json_content }}
-            <div class="p-2">
+            <div>
                 <b> {{ $unite.unite_nom }} (<a href="{{ .Permalink }}" class="pdf-link"> {{ $unite.unite_abreviation }} </a>)
                 </b>
                 <div>
@@ -320,7 +292,7 @@
                     {{ i18n "back_to_list" }}
                 </a>
             </div>
-            <div class="p-2  flex-fill d-flex align-content-center justify-content-end flex-wrap">
+            <div class="flex-fill d-flex align-content-center justify-content-end flex-wrap">
                 {{ i18n "version_of" | strings.FirstUpper }}
                 {{ $mod.module_validation | time.Format ":date_long" }}
             </div>

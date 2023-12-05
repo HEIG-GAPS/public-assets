@@ -433,34 +433,37 @@ class PDFGenerator {
                 fitsInPage() {
                     return this.currentHeight <= this.height
                 }
+                roundBottomBorders(children) {
+                    if (children.length === 0) return
+                    let lastChild = children[children.length - 1]
+                    if (lastChild.classList === undefined) return
+                    lastChild.classList.remove("border-bottom-0")
+                    lastChild.classList.remove("rounded-bottom-0")
+                    lastChild.classList.add("border-bottom-1")
+                    lastChild.classList.add("rounded-bottom-1")
+                    this.roundBottomBorders(Array.prototype.slice.call(lastChild.children))
+                }
+
+                roundTopBorders(children) {
+                    if (children.length === 0) return
+                    let firstChild = children[0]
+                    if (firstChild.classList === undefined) return
+                    firstChild.classList.remove("border-top-0")
+                    firstChild.classList.remove("rounded-top-0")
+                    firstChild.classList.add("border-top-1")
+                    firstChild.classList.add("rounded-top-1")
+                    this.roundTopBorders(Array.prototype.slice.call(firstChild.children))
+                }
 
                 splitContent() {
                     this._splitContent(this.contentRoot)
-                    function roundBottomBorders(children) {
-                        if (children.length === 0) return
-                        let lastChild = children[children.length - 1]
-                        if (lastChild.classList === undefined) return
-                        lastChild.classList.remove("border-bottom-0")
-                        lastChild.classList.remove("rounded-bottom-0")
-                        lastChild.classList.add("border-bottom-1")
-                        lastChild.classList.add("rounded-bottom-1")
-                        roundBottomBorders(Array.prototype.slice.call(lastChild.children))
-                    }
-                    function roundTopBorders(children) {
-                        if (children.length === 0) return
-                        let firstChild = children[0]
-                        if (firstChild.classList === undefined) return
-                        firstChild.classList.remove("border-top-0")
-                        firstChild.classList.remove("rounded-top-0")
-                        firstChild.classList.add("border-top-1")
-                        firstChild.classList.add("rounded-top-1")
-                        roundTopBorders(Array.prototype.slice.call(firstChild.children))
-                    }
+
+
                     for (let child of Array.prototype.slice.call(this.splitContentDiv.children)) {
                         child.classList.add("border-1")
                         child.classList.add("rounded-1")
-                        roundTopBorders(Array.prototype.slice.call(child.children))
-                        roundBottomBorders(Array.prototype.slice.call(child.children))
+                        this.roundTopBorders(Array.prototype.slice.call(child.children))
+                        this.roundBottomBorders(Array.prototype.slice.call(child.children))
                     }
                 }
 
@@ -829,6 +832,24 @@ class PDFGenerator {
                     return Promise.all(tasks)
                 }
 
+                tableTopBorders(children) {
+                    if (children.length === 0) return
+                    let firstChild = children[0]
+                    if (firstChild.classList === undefined || firstChild.nodeName !== "TR") return
+                    firstChild.classList.remove("border-top-0")
+                    firstChild.classList.add("border-top-1")
+                    this.tableTopBorders(Array.prototype.slice.call(firstChild.children))
+                }
+
+                tableBottomBorders(children) {
+                    if (children.length === 0) return
+                    let lastChild = children[children.length - 1]
+                    if (lastChild.classList === undefined || lastChild.nodeName !== "TR") return
+                    lastChild.classList.remove("border-bottom-0")
+                    lastChild.classList.add("border-bottom-1")
+                    this.tableBottomBorders(Array.prototype.slice.call(lastChild.children))
+                }
+
                 splitContent() {
                     /* Extracting original planning */
                     const planning = this.contentRoot.querySelector(".modules-planning")
@@ -871,6 +892,8 @@ class PDFGenerator {
                             }
                         }
                     }
+                    this.tableTopBorders(Array.prototype.slice.call(this.splitContentDiv.children))
+                    this.tableBottomBorders(Array.prototype.slice.call(this.splitContentDiv.children))
                     /* Adding caption */
                     this.currentDiv = this.currentDiv.parentNode
                     const caption = this.contentRoot.querySelector(".caption")

@@ -27,10 +27,6 @@ $main-min-height: 50rem!important;
 
 /* Modules planning */
 
-.modules-planning {
-    border-collapse: collapse;
-}
-
 .modules-planning tbody:last-of-type {
     border-bottom: $border-custom-line;
 }
@@ -147,10 +143,6 @@ $main-min-height: 50rem!important;
 
 .module-planning tbody {
     border-bottom: $border-custom-line;
-}
-
-.week-cell {
-    border-bottom: $border-custom-line!important;
 }
 
 .week-cell:first-child {

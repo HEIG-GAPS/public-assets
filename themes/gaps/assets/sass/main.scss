@@ -57,11 +57,11 @@ a {
 }
 
 .card {
-  @include font-size(0.8rem !important);
+  @include font-size(1rem !important);
 }
 
 .card-header {
-  @include font-size(1rem !important);
+  @include font-size(1.2rem !important);
 }
 
 .card-body table {
