@@ -140,6 +140,12 @@
     "unvalidated_module_body": {
         "other": "Les informations contenues dans les descriptif de module n'ont pas encore été validées. Il n'est pas possible d'afficher ce descriptif pour le moment."
     },
+    "unvalidated_unit_header": {
+        "other": "Impossible d'afficher la fiche d'unité"
+    },
+    "unvalidated_unit_body": {
+        "other": "Les informations contenues dans la fiche d'unité n'ont pas encore été validées. Il n'est pas possible d'afficher ce descriptif pour le moment."
+    },
     "caracteristic": {
         "other": "Caractéristique"
     },
@@ -297,5 +303,8 @@
     },
     "version_of": {
         "other": "version du"
+    },
+    "formation_booklet_pdf": {
+        "other": "Brochure au format PDF"
     }
 }

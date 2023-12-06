@@ -6,31 +6,11 @@
 {{ $eacademique := index .Ancestors 2 }}
 {{ $autres_programmes := partial "module/get_other_programs_module" . }}
 {{ $pdf_link := printf "%s/pdf%s%s.pdf" .Site.BaseURL .RelPermalink ($mod.module_code | urlize) }}
-<div class="pdf-content">
-    <div class="d-flex flex-column" data-html2canvas-ignore="true">
-        <div class="mb-2 align-self-center">
-            <h3> <b>{{ i18n "module_description" }}</b> </h3>
-        </div>
-        <div class="d-flex justify-content-between">
-            <div>
-                <a class="btn btn-primary" href="{{ (index .Ancestors 0).Permalink }}">
-                    {{ i18n "back_to_list" }}
-                </a>
-            </div>
-            <div>
-                {{ partial "other_programs_dropdown" $autres_programmes }}
-            </div>
-        </div>
-    </div>
+<div class="pdf-content m-0 p-0">
     <div class="card border-bottom-0 rounded-bottom-0">
         <div class="card-header d-flex align-center flex-row module-titre">
             <div class="d-flex flex-wrap flex-column flex-grow-1">
                 <b>{{ $mod.module_nom}} <br> {{ $mod.module_code }} - {{ index $upper_infos "mode" }} </b>
-            </div>
-            <div class="d-flex align-items-center" data-html2canvas-ignore="true">
-                <button type="button" class="btn btn-primary" data-html2canvas-ignore="true" onclick="openAndDownloadPDF('{{ $pdf_link }}')">
-                    PDF
-                </button>
             </div>
         </div>
         <div class="card-body">
@@ -287,11 +267,6 @@
             {{ end }}
         </div>
         <div class="card-footer border-0 d-flex align-items-center" data-html2canvas-ignore="true">
-            <div class="flex-fill d-flex align-content-center">
-                <a class="btn btn-primary" href="{{ (index .Ancestors 0).Permalink }}">
-                    {{ i18n "back_to_list" }}
-                </a>
-            </div>
             <div class="flex-fill d-flex align-content-center justify-content-end flex-wrap">
                 {{ i18n "version_of" | strings.FirstUpper }}
                 {{ $mod.module_validation | time.Format ":date_long" }}

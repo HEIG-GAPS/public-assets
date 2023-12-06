@@ -6,7 +6,7 @@ $headings-font-family: Arial, Helvetica, sans-serif;
 
 $form-check-input-disabled-opacity: 1;
 
-$breadcrumb-font-size: 0.9rem;
+$breadcrumb-font-size: 1rem;
 
 @import "node_modules/@fortawesome/fontawesome-free/scss/fontawesome.scss";
 @import "styles.scss";
@@ -22,6 +22,10 @@ $card-cap-bg: #939090;
 @import "node_modules/bootstrap/scss/root";
 
 $modules-planning-padding: 0.2em !important;
+
+body {
+  min-width: 300px;
+}
 
 a {
   text-decoration: none !important;
@@ -124,6 +128,10 @@ $utilities: map-merge(
                                 map-get($utilities, "rounded-end"),
                                 ( responsive: true ),
                 ),
+                "rounded-start": map-merge(
+                                map-get($utilities, "rounded-start"),
+                                ( responsive: true ),
+                ),
                 "rounded-top-left": (
                         property: border-top-left-radius,
                         class: rounded-top-left,
@@ -155,8 +163,44 @@ $utilities: map-merge(
                                 circle: 50%,
                                 pill: var(--#{$prefix}border-radius-pill)
                         )
+                ),
+                "rounded-bottom-left": (
+                        property: border-bottom-left-radius,
+                        class: rounded-bottom-left,
+                        responsive: true,
+                        values: (
+                                null: var(--#{$prefix}border-radius),
+                                0: 0,
+                                1: var(--#{$prefix}border-radius-sm),
+                                2: var(--#{$prefix}border-radius),
+                                3: var(--#{$prefix}border-radius-lg),
+                                4: var(--#{$prefix}border-radius-xl),
+                                5: var(--#{$prefix}border-radius-xxl),
+                                circle: 50%,
+                                pill: var(--#{$prefix}border-radius-pill)
+                        )
+                ),
+                "rounded-bottom-right": (
+                        property: border-bottom-right-radius,
+                        class: rounded-bottom-right,
+                        responsive: true,
+                        values: (
+                                null: var(--#{$prefix}border-radius),
+                                0: 0,
+                                1: var(--#{$prefix}border-radius-sm),
+                                2: var(--#{$prefix}border-radius),
+                                3: var(--#{$prefix}border-radius-lg),
+                                4: var(--#{$prefix}border-radius-xl),
+                                5: var(--#{$prefix}border-radius-xxl),
+                                circle: 50%,
+                                pill: var(--#{$prefix}border-radius-pill)
+                        )
                 )
         )
 );
+
+.logo-footer {
+    max-height: 50px;
+}
 
 @import "node_modules/bootstrap/scss/utilities/api";

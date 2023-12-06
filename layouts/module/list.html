@@ -1,9 +1,5 @@
 {{ define "main" }}
-<nav class="container-sm">
-    <div class="display-4"> {{ .Content }} </div>
-    <br>
-    <div class="container">
-        {{ partial "module/module.html" . }}
-    </div>
-</nav>
+<div class="container">
+    {{ partial "module/module.html" . }}
+</div>
 {{ end }}

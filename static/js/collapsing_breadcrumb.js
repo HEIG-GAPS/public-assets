@@ -2,7 +2,7 @@ jQuery(function () {
     jQuery(".breadcrumb:not(.no-collapse-breadcrumb)").map(function (idx, breadcrumb) {
       var breadcrumb = jQuery(breadcrumb);
       
-      if (breadcrumb.children().length >= 3) {
+      if (breadcrumb.children().length > 4) {
         var detached_children = breadcrumb.children().slice(1, -1).detach();
         
         var expand_breadcrumb = jQuery('<li class="breadcrumb-item"><a href="" title="Show all breadcrumbs"><strong>...</strong></a></li>');

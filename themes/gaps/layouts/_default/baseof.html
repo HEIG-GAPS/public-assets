@@ -5,6 +5,7 @@
         <div id="breadcrumb">
             {{- partial "breadcrumb.html" . -}}
         </div>
+        {{- partial "header.html" . -}}
         <div class="d-flex flex-column flex-fill m-0 p-1 m-md-2 p-md-2 overflow-y-auto">
         {{- block "main" . }}{{- end }}
         </div>

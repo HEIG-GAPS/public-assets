@@ -1,7 +1,7 @@
-<footer>
-
+<footer class="footer bg-body-tertiary">
+    {{ partial "content_footer.html" . }}
     <!-- JavaScript and dependencies -->
-
+    <!-- Dependencies -->
     {{ $bootstrap := resources.Get "js/bootstrap.bundle.min.js" }}
     {{ $bootstrap_js := slice $bootstrap | resources.Concat "js/bootsrap_bundle.js" | resources.Minify }}
 
@@ -31,9 +31,9 @@
     <script src="{{$dompurify_js.RelPermalink}}" defer></script>
     <script src="{{$canvg_js.RelPermalink}}" type="module" defer></script>
 
-
     <!-- Auto collapsing breadcrumb -->
     <script src="/js/collapsing_breadcrumb.js"></script>
+    <!-- PDF downloading -->
     <script src="/js/pdf.js"></script>
     
 </footer>

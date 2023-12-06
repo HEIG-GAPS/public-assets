@@ -1,173 +1,164 @@
-{{ $modes_formation := slice }}
-{{ $modes := index .Ancestors 2 }}
-{{ range $modes.Pages }}
-{{ $modes_formation = $modes_formation | append . }}
-{{ end }}
-{{ $mode_formation := index .Ancestors 1 }}
-{{ $module := index .Ancestors 0 }}
-{{ $orientation := index .Ancestors 2 }}
 {{ $unit := .Params.json_content }}
-{{ $autres_programmes := partial "unit/get_other_programs_unit" . }}
-{{ $pdf_link := printf "%s/pdf%s%s.pdf" .Site.BaseURL .RelPermalink ($unit.unite_abreviation | urlize) }}
-<div class="pdf-content">
-    <div class="d-flex flex-column align-items-center mb-1" data-html2canvas-ignore="true">
-        <div class="p-2">
-            <h3> <b>{{ i18n "unit_sheet" }}</b> </h3>
-        </div>
-        <div class="w-100 d-flex justify-content-between">
-            <div>
-                {{ partial "other_programs_dropdown" $autres_programmes }}
+{{ if $unit.unite_validation }}
+    {{ $modes_formation := slice }}
+    {{ $modes := index .Ancestors 2 }}
+    {{ range $modes.Pages }}
+    {{ $modes_formation = $modes_formation | append . }}
+    {{ end }}
+    {{ $mode_formation := index .Ancestors 1 }}
+    {{ $module := index .Ancestors 0 }}
+    {{ $orientation := index .Ancestors 2 }}
+    {{ $autres_programmes := partial "unit/get_other_programs_unit" . }}
+    {{ $pdf_link := printf "%s/pdf%s%s.pdf" .Site.BaseURL .RelPermalink ($unit.unite_abreviation | urlize) }}
+    <div class="pdf-content">
+        <div class="card">
+            <div class="card-header border-bottom-0 d-flex flex-column align-items-start">
+                <h5 class="fw-bold"> {{ $unit.unite_nom }} </h5>
+                <h6 class="ps-1">
+                    {{ $unit.unite_abreviation }} {{ $unit.unite_annee }}
+                    {{ range $i, $mf := $modes_formation }}
+                    {{ $mode_formation := $mf.Params.json_content }}
+                    {{ if eq $i 0 }}
+                    {{ $mode_formation.mode_formation_abreviation }}
+                    {{ else }}
+                    - {{ $mode_formation.mode_formation_abreviation }}
+                    {{ end }}
+                    {{ end }}
+                </h6>
+                <h6 class="ps-1">
+                    ({{ i18n "belongs_to_module" }} : <a href="{{ $module.Permalink }}"> {{ $module.Params.json_content.module_nom }} </a>)
+                </h6>
             </div>
-            <div>
-                <button class="btn btn-primary" onclick="openAndDownloadPDF('{{ $pdf_link }}')">
-                    PDF
-                </button>
-            </div>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-header border-bottom-0 d-flex flex-column align-items-center unit-title">
-            <div class="d-flex w-100 justify-content-between flex-fill">
-                <div class="flex-fill"> <b> {{ $unit.unite_nom }} </b> </div>
-            </div>
-            <div class="d-flex w-100 justify-content-between">
-                <div class="p-2 d-flex flex-column align-content-center flex-grow-1 bd-highlight">
-                    <div class="flex-wrap">
-                        {{ $unit.unite_abreviation }} {{ $unit.unite_annee }}
-                        {{ range $i, $mf := $modes_formation }}
-                        {{ $mode_formation := $mf.Params.json_content }}
-                        {{ if eq $i 0 }}
-                        {{ $mode_formation.mode_formation_abreviation }}
-                        {{ else }}
-                        - {{ $mode_formation.mode_formation_abreviation }}
-                        {{ end }}
-                        {{ end }}
-                    </div>
-                    <div data-html2canvas-ignore="true">
-                        ({{ i18n "belongs_to_module" }} : <a href="{{ $module.Permalink }}"> {{ $module.Params.json_content.module_nom }} </a>)
-                    </div>
+            <div class="card-body d-flex flex-column">
+                <div class="d-flex flex-column">
+                    {{ partial "unit/unit_general_information_row" (dict "name" "code" "content" $unit.unite_abreviation) }}
+                    {{ partial "unit/unit_general_information_row" (dict "name" "orientation" "content" $orientation.Params.json_content.formation_nom) }}
+                    {{ partial "unit/unit_general_information_row" (dict "name" "academic_years" "content" (partial "list_as_str" $unit.unite_validite)) }}
+                    {{ partial "unit/unit_general_information_row" (dict "name" "formation_mode" "content" $mode_formation.Params.json_content.mode_formation_nom) }}
+                    {{ partial "unit/unit_general_information_row" (dict "name" "workload" "content" (printf "%d %s" (int $unit.unite_charge) (i18n "study_hours"))) }}
+                    {{ partial "unit/unit_general_information_row" (dict "name" "instruction_main_languages" "content" $unit.unite_langue) }}
                 </div>
-            </div>
-        </div>
-        <div class="card-body d-flex flex-column">
-            <div class="d-flex flex-column unit-general-infos">
-                {{ partial "unit/unit_general_information_row" (dict "name" "code" "content" $unit.unite_abreviation) }}
-                {{ partial "unit/unit_general_information_row" (dict "name" "orientation" "content" $orientation.Params.json_content.formation_nom) }}
-                {{ partial "unit/unit_general_information_row" (dict "name" "academic_years" "content" (partial "list_as_str" $unit.unite_validite)) }}
-                {{ partial "unit/unit_general_information_row" (dict "name" "formation_mode" "content" $mode_formation.Params.json_content.mode_formation_nom) }}
-                {{ partial "unit/unit_general_information_row" (dict "name" "workload" "content" (printf "%d %s" (int $unit.unite_charge) (i18n "study_hours"))) }}
-                {{ partial "unit/unit_general_information_row" (dict "name" "instruction_main_languages" "content" $unit.unite_langue) }}
-            </div>
-            <div class="d-flex flex-column">
-                <div class="p-2 unit-periods">
-                    <b> {{ i18n "supervised_periods" | strings.FirstUpper}} </b>
-                    <div class="p-2">
-                        <div class="p-2">
-                            {{ $periodes := (partial "get_unit_total_periods" $unit) }}
-                            <b> {{ $periodes }} </b>   {{ i18n "periods" }}
+                <div class="d-flex flex-column">
+                    <div>
+                        <h6 class="fw-bold"> {{ i18n "supervised_periods" | strings.FirstUpper}} </h6>
+                        <div class="d-flex">
+                            <h6 class="p-1">{{ $periodes := (partial "get_unit_total_periods" $unit) }}</h6>
+                            <h6 class="m-0 p-1 fw-bold"> {{ $periodes }} </h6>
+                            <h6 class="p-1">{{ i18n "periods" }}</h6>
+                            <h6 class="m-0 p-1 ">{{ i18n "corresponding_to" }}</h6>
+                            <h6 class="m-0 p-1 fw-bold">{{int (mul $periodes 0.75)}} </h6>
+                            <h6 class="p-1">{{ i18n "hours" }}</h6>
+                        </div>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold"> {{ i18n "position_of" | strings.FirstUpper }} {{ i18n "supervised_periods" }} </h6>
+                        <div>
+                            {{ $cols := partial "get_semesters" ($mode_formation.Params.json_content.formation_duree_semestres) }}
+                            {{ $types := partial "get_teaching_methods" $unit }}
+                            {{ $unit_ctx := dict
+                            "unite" $unit
+                            "cols" $cols
+                            "types" $types
+                            }}
+                            {{ partial "unit/unit_schedule_table.html" $unit_ctx }}
+                        </div>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold"> {{ i18n "objectives" }} </h6>
+                        <div>
+                            {{ $unit.unite_objectifs | safeHTML }}
+                        </div>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold"> {{ i18n "recommended_prior_knowledge" | strings.FirstUpper}} </h6>
+                        <div>
+                            {{ $unit.unite_connaissances_prealables | safeHTML }}
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <h6 class="fw-bold"> {{ i18n "content_teaching_methods" }} </h6>
                         </div>
                         <div>
-                            {{ i18n "corresponding_to" }}
+                            <h6 class="fst-italic"> {{ i18n "informative_periods_repartition" }} </h6>
                         </div>
-                        <div class="p-2">
-                            <b>{{int (mul $periodes 0.75)}} </b> {{ i18n "hours" }}
-                        </div>
-                    </div>
-                </div>
-                <div class="p-2 unit-periods-table">
-                    <b> {{ i18n "position_of" | strings.FirstUpper }} {{ i18n "supervised_periods" }} </b>
-                    <div class="p-2">
-                        {{ $cols := partial "get_semesters" ($mode_formation.Params.json_content.formation_duree_semestres) }}
-                        {{ $types := partial "get_teaching_methods" $unit }}
-                        {{ $unit_ctx := dict
-                        "unite" $unit
-                        "cols" $cols
-                        "types" $types
-                        }}
-                        {{ partial "unit/unit_schedule_table.html" $unit_ctx }}
-                    </div>
-                </div>
-                <div class="p-2 unit-objectives">
-                    <b> {{ i18n "objectives" }} </b>
-                    <div class="p-2">
-                        {{ $unit.unite_objectifs | safeHTML }}
-                    </div>
-                </div>
-                <div class="p-2 unit-prior-knowledge">
-                    <b> {{ i18n "recommended_prior_knowledge" | strings.FirstUpper}} </b>
-                    <div class="p-2">
-                        {{ $unit.unite_connaissances_prealables | safeHTML }}
-                    </div>
-                </div>
-                <div class="p-2 unit-content">
-                    <div>
-                        <b> {{ i18n "content_teaching_methods" }} </b>
-                    </div>
-                    <div>
-                        <i> {{ i18n "informative_periods_repartition" }} </i>
-                    </div>
-                    <div class="p-2">
-                        {{ range $unit.contenu_et_formes }}
-                        {{ partial "unit/unit_content" . }}
-                        {{ end }}
-                    </div>
-                </div>
-                <div class="p-2 unit-bibliography">
-                    <b> {{ i18n "bibliography" }} </b>
-                    <div class="p-2">
-                        {{ $unit.unite_bibliographie | safeHTML }}
-                    </div>
-                </div>
-                <div class="p-2 unit-controls">
-                    <div class="d-flex flex-row">
-                        <div class="p-2 d-flex flex-column w-75">
-                            <b> {{ i18n "knowledge_control" | strings.FirstUpper }} </b>
-                            {{ range $unit.ponderations }}
-                            <div class="p-2">
-                                <div>
-                                    <b> {{ .type_enseignement_nom }} : </b>
-                                </div>
-                                <div class="w-100">
-                                    {{ .controle_connaissances }}
-                                </div>
-                            </div>
+                        <div>
+                            {{ range $unit.contenu_et_formes }}
+                            {{ partial "unit/unit_content" . }}
                             {{ end }}
                         </div>
-                        <div class="p-2 d-flex flex-column">
-                            <div>
-                                <b> {{ i18n "final_grade" }} </b>
-                            </div>
-                            <div>
-                                {{ $ponderation_tot := 0 }}
+                    </div>
+                    <div>
+                        <h6 class="fw-bold"> {{ i18n "bibliography" }} </h6>
+                        <div>
+                            {{ $unit.unite_bibliographie | safeHTML }}
+                        </div>
+                    </div>
+                    <div class="unit-controls">
+                        <div class="d-flex flex-row">
+                            <div class="d-flex flex-column w-75">
+                                <h6 class="fw-bold"> {{ i18n "knowledge_control" | strings.FirstUpper }} </h6>
                                 {{ range $unit.ponderations }}
-                                {{ $ponderation_tot = add $ponderation_tot .ponderation }}
-                                {{ end }}
-                                {{ range $unit.ponderations }}
-                                <div class="d-flex flex-row">
-                                    <div class="p-2 w-75">
-                                        {{ .type_enseignement_nom }}
-                                    </div>
-                                    <div class="p-2">
-                                        {{ if eq $ponderation_tot 0 }}
-                                        {{ $ponderation_tot = 100 }}
-                                        {{ end }}
-                                        {{ mul (div .ponderation $ponderation_tot) 100 }}%
-                                    </div>
+                                <div>
+                                    <h6 class="fw-bold"> {{ .type_enseignement_nom }} : </h6>
+                                </div>
+                                <div class="w-100 mb-1">
+                                    {{ if .controle_connaissances }}
+                                        {{ .controle_connaissances }}
+                                    {{ else }}
+                                        -
+                                    {{ end }}
+
                                 </div>
                                 {{ end }}
+                            </div>
+                            <div class="w-25 d-flex flex-column">
+                                <div>
+                                    <h6 class="fw-bold"> {{ i18n "final_grade" }} </h6>
+                                </div>
+                                <div>
+                                    {{ $ponderation_tot := 0 }}
+                                    {{ range $unit.ponderations }}
+                                    {{ $ponderation_tot = add $ponderation_tot .ponderation }}
+                                    {{ end }}
+                                    {{ range $unit.ponderations }}
+                                    <div class="d-flex flex-row">
+                                        <div class="w-75">
+                                            <h6 class="m-0 p-0">{{ .type_enseignement_nom }}</h6>
+                                        </div>
+                                        <div class="w-25 d-flex justify-content-end">
+                                            {{ if eq $ponderation_tot 0 }}
+                                                {{ $ponderation_tot = 100 }}
+                                            {{ end }}
+                                            <h6 class="m-0 p-0">{{ mul (div .ponderation $ponderation_tot) 100 }}%</h6>
+                                        </div>
+                                    </div>
+                                    {{ end }}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        {{ if $unit.unite_validation }}
-        <div class="card-footer border-0 d-flex align-items-center" data-html2canvas-ignore="true">
-            <div class="p-2  flex-fill d-flex align-content-center justify-content-end flex-wrap">
-                {{ i18n "version_of" | strings.FirstUpper }}
-                {{ $unit.unite_validation | time.Format ":date_long" }}
+            <div class="card-footer border-0 d-flex align-items-center" data-html2canvas-ignore="true">
+                <div class="p-2  flex-fill d-flex align-content-center justify-content-end flex-wrap">
+                    {{ i18n "version_of" | strings.FirstUpper }}
+                    {{ $unit.unite_validation | time.Format ":date_long" }}
+                </div>
             </div>
         </div>
-        {{ end }}
     </div>
-</div>
+{{ else }}
+    <div class="card">
+        <div class="p-2 card-header d-flex align-center">
+            <b> {{ i18n "unvalidated_unit_header" }} </b>
+        </div>
+        <div class="p-2 card-body d-flex align-items-center">
+            <div>
+                <p class="m-0">
+                    {{ i18n "unvalidated_unit_body" }}
+                </p>
+            </div>
+        </div>
+    </div>
+{{ end }}

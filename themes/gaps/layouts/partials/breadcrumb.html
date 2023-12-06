@@ -1,11 +1,14 @@
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb p-3 d-flex align-items-center">
+<nav aria-label="breadcrumb bg-body-tertiary">
+    <ol class="breadcrumb m-0 p-3 d-flex align-middle">
         {{ define "breadcrumb" }}
+        {{ $unwanted_breadcrumbs := slice "entite_academique" "filiere" }} {{/* A modifier en fonction des besoins */}}
         {{ $ctx := dict "Page" . "Level" (len .Ancestors) }}
         {{ with .Parent }}
         {{ template "breadcrumb" . }}
+        {{ if not (in $unwanted_breadcrumbs .Params.type) }}
         <li class="breadcrumb-item"><a href="{{ .Permalink }}">{{ if .IsHome }}Home{{ else }}{{ .Title }}{{ end }}</a>
         </li>
+        {{ end }}
         {{ end }}
         {{ end }}
         {{ if not .IsHome }}
