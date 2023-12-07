@@ -15,38 +15,10 @@
         </div>
         <div class="card-body">
             <div class="module-titre-infos">
-                <div class="d-flex flex-row">
-                    <div class="w-25">
-                        <b> {{ i18n "domains" }} </b> :
-                    </div>
-                    <div>
-                        {{ $upper_infos.domaine }}
-                    </div>
-                </div>
-                <div class="d-flex flex-row">
-                    <div class="w-25">
-                        <b> {{ i18n "branch" }} </b> :
-                    </div>
-                    <div>
-                        {{ $upper_infos.filiere }}
-                    </div>
-                </div>
-                <div class="d-flex flex-row">
-                    <div class="w-25">
-                        <b> {{ i18n "orientation" }} </b> :
-                    </div>
-                    <div>
-                        {{ $upper_infos.orientation }}
-                    </div>
-                </div>
-                <div class="d-flex flex-row">
-                    <div class="w-25">
-                        <b> {{ i18n "mode" }} </b> :
-                    </div>
-                    <div>
-                        {{ $upper_infos.mode }}
-                    </div>
-                </div>
+                {{ partial "general_information_row" (dict "name" "domains" "content" $upper_infos.domaine) }}
+                {{ partial "general_information_row" (dict "name" "branch" "content" $upper_infos.filiere) }}
+                {{ partial "general_information_row" (dict "name" "orientation" "content" $upper_infos.orientation) }}
+                {{ partial "general_information_row" (dict "name" "mode" "content" $upper_infos.mode) }}
             </div>
         </div>
     </div>
@@ -58,26 +30,16 @@
         </div>
         <div class="card-body d-flex flex-column">
             <div class="d-flex flex-column">
-                <div>
-                    <b> {{ i18n "name" }} </b> : {{ $mod.module_nom }}
-                </div>
-                <div>
-                    <b> {{ i18n "code" }} </b> : {{ $mod.module_code }}
-                </div>
-                <div>
-                    <b> {{ i18n "academic_years" }} </b> :
-                    {{ if not (eq $mod.module_validite nil)}}
-                    {{ partial "list_as_str" $mod.module_validite }}
-                    {{ end }}
-                </div>
-                <div>
-                    <b> {{ i18n "formation_type" }} </b> :
-                    {{ range site.Data.bachelor.niveaux_formation }}
+                {{ partial "general_information_row" (dict "name" "name" "content" $mod.module_nom) }}
+                {{ partial "general_information_row" (dict "name" "code" "content" $mod.module_code) }}
+                {{ partial "general_information_row" (dict "name" "academic_years" "content" (partial "list_as_str" $mod.module_validite)) }}
+                {{ $formation_type := "-" }}
+                {{ range site.Data.bachelor.niveaux_formation }}
                     {{ if eq .id $mod.module_niveau_formation_id }}
-                    {{ .nom }}
+                        {{ $formation_type = .nom }}
                     {{ end }}
-                    {{ end }}
-                </div>
+                {{ end }}
+                {{ partial "general_information_row" (dict "name" "formation_type" "content" $formation_type) }}
                 <div class="mb-2 d-flex flex-column">
                     <div class="d-flex flex-row">
                         <div class="d-flex flex-column w-50">

@@ -1,6 +1,5 @@
 <div class="flex-fill">
-    <b> {{ i18n "caracteristic" }} </b>
-    <br>
+    <h6 class="fw-bold m-0 p-0"> {{ i18n "caracteristic" }} </h6>
     <div class="form-check">
         <input class="form-check-input" type="checkbox" value="" id="flexCheckDisabled-caracs-{{.module_code}}" {{ if .module_obligatoire }} checked
             {{ end }}disabled>
@@ -8,6 +7,5 @@
             {{ i18n "mandatory_module" }}
         </label>
     </div>
-    <br>
     <p> {{ i18n "mandatory_module_failure" }} </p>
 </div>

@@ -2,11 +2,23 @@
 <html class="h-100 w-100" lang="{{ $.Site.LanguageCode }}">
     {{- partial "head.html" . -}}
     <body class="h-100 d-flex flex-column justify-content-center align-middle">
-        <div id="breadcrumb">
+        <div id="breadcrumb" class="d-flex align-items-center">
+            {{ $ancestors := slice . | append .Ancestors }}
+            {{ $type := (index (last 2 $ancestors) 0).Params.type }}
+            {{ $image := "gaps-logo-only.svg" }}
+            {{ $height := 50 }}
+            {{ if eq $type "bachelor" }}
+                {{ $image = "logo-heig-21-square-red.svg" }}
+            {{ end }}
+            {{ if eq $type "master" }}
+                {{ $height = 20 }}
+                {{ $image = "logo_mse.svg" }}
+            {{ end }}
+            <img src="/images/{{ $image }}" alt="gaps-logo-only" height="{{ $height }}" class="m-0 ms-md-1">
             {{- partial "breadcrumb.html" . -}}
         </div>
         {{- partial "header.html" . -}}
-        <div class="d-flex flex-column flex-fill m-0 p-1 m-md-2 p-md-2 overflow-y-auto">
+        <div class="d-flex flex-column flex-fill m-0 p-0 m-md-1 overflow-y-auto">
         {{- block "main" . }}{{- end }}
         </div>
         {{- partial "footer.html" . -}}

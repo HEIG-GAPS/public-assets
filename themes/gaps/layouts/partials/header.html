@@ -3,24 +3,24 @@
     {{ $autres_programmes := partial "module/get_other_programs_module" . }}
     {{ $mod := .Params.json_content }}
     {{ $pdf_link := printf "%s/pdf%s%s.pdf" .Site.BaseURL .RelPermalink ($mod.module_code | urlize) }}
-    <nav class="p-3 navbar navbar-expand-lg bg-body-tertiary d-flex justify-content-between align-items-center border">
-        <div class="m-1">
-            <a class="btn btn-secondary" href="{{ (index .Ancestors 0).Permalink }}">
-                {{ i18n "back_to_list" }}
-            </a>
-        </div>
-        <div class="m-1 p-0 d-flex flex-column align-items-center justify-content-center text-center">
+    <nav class="p-3 navbar navbar-expand bg-body-tertiary d-flex flex-column flex-md-row justify-content-between align-items-center border">
+        <div class="m-1 p-0 d-flex flex-column align-items-center align-items-md-start">
             <h5 class="m-1 p-0 fw-bold"> {{ i18n "module_description" }} </h5>
-            <h5 class="m-1 p-0 fw-bold"> {{ $mod.module_nom }} </h5>
+            <h5 class="m-1 ps-1 fw-bold"> {{ $mod.module_nom }} </h5>
         </div>
-        <div class="d-flex">
+        <div class="d-flex align-items-center">
+            <div class="m-1">
+                <a class="btn btn-secondary" href="{{ (index .Ancestors 0).Permalink }}">
+                    {{ i18n "back_to_list" }}
+                </a>
+            </div>
+            <div class="m-1">
+                {{ partial "other_programs_dropdown" $autres_programmes }}
+            </div>
             <div class="m-1">
                 <button type="button" class="btn btn-secondary" data-html2canvas-ignore="true" onclick="openAndDownloadPDF('{{ $pdf_link }}')">
                     PDF
                 </button>
-            </div>
-            <div class="m-1">
-                {{ partial "other_programs_dropdown" $autres_programmes }}
             </div>
         </div>
     </nav>
@@ -47,7 +47,7 @@
 {{ if eq $type "mode_formation" }}
     {{ $pdf := (lower (replace (printf "%s-%s.pdf" (index .Ancestors 0).Params.json_content.formation_abreviation .Params.json_content.mode_formation_abreviation) "/" "-")) }}
     {{ $pdf_link := printf "%s/pdf%s%s" .Site.BaseURL .RelPermalink $pdf }}
-    <nav class="p-3 navbar navbar-expand-lg bg-body-tertiary d-flex justify-content-center border">
+    <nav class="p-3 navbar navbar-expand-lg bg-body-tertiary align-items-center d-flex border justify-content-center">
         <button type="button" class="btn btn-secondary" data-html2canvas-ignore="true" onclick="openAndDownloadPDF('{{ $pdf_link }}')">
             {{ i18n "formation_booklet_pdf" }}
         </button>

@@ -2,8 +2,7 @@
 {{ $type := .module_type_module_id }}
 {{ $mod := . }}
 <div class="flex-fill">
-    <b> {{ i18n "type" }} </b>
-    <br>
+    <h6 class="fw-bold m-0 p-0"> {{ i18n "type" }} </h6>
     {{ range $i, $typ := $types }}
     <div class="form-check">
         <input class="form-check-input"
