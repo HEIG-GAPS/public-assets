@@ -915,7 +915,7 @@ class PDFGenerator {
                         moduleIndex++
                         this.scale = this.width / module.offsetWidth
                         this.splitContentDiv = this.contentRoot.parentNode.cloneNode(false)
-                        this.addContentToBody()
+                        this.addContentToBody() // TODO call another method specially for remote content
                         this.currentDiv = this.splitContentDiv
                         this.contentRoot = module
                         super.splitContent()
