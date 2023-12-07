@@ -3,9 +3,9 @@
 <table class="table">
     <thead>
         <tr>
-            <th scope="col">Type</th>
+            <th scope="col" class="fs-6">Type</th>
             {{ range .cols }}
-            <th class="text-center" scope="col">{{ . }}</th>
+            <th class="text-center fs-6" scope="col">{{ . }}</th>
             {{ end }}
         </tr>
     </thead>
@@ -16,9 +16,9 @@
             "decoupages" $unit.decoupages
             )}}
         <tr>
-            <th scope="row"> {{ .type_enseignement_nom }} </th>
+            <th scope="row" class="fs-6"> {{ .type_enseignement_nom }} </th>
             {{ range $cols }}
-            <td class="text-center" >
+            <td class="text-center fs-6" >
                 {{ if eq . $decoupage.type }}
                     {{ $decoupage.periodes }} 
                 {{ end }}

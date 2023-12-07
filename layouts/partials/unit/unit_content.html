@@ -1,10 +1,10 @@
 <table class="table">
     <thead>
         <tr class="contenu-en-tete">
-            <td class="contenu-type align-middle">
+            <td class="contenu-type align-middle fs-6 fw-bold">
                 {{ .type_enseignement_nom }}
             </td>
-            <td class="text-center align-middle">
+            <td class="text-center fs-6 align-middle">
                 {{ .contenu_nombre_periodes }}
             </td>
         </tr>
@@ -12,12 +12,10 @@
     <tbody>
         {{ range .elements }}
             <tr>
-                <td class="contenu-type contenu-sous-texte align-middle">
-                    <div class="p-2">
-                        {{ .element_contenu_et_formes_texte }}
-                    </div>
+                <td class="contenu-type contenu-sous-texte align-middle fs-6">
+                    {{ .element_contenu_et_formes_texte }}
                 </td>
-                <td class="contenu-sous-texte text-center align-middle">
+                <td class="contenu-sous-texte text-center align-middle fs-6">
                     {{ .element_contenu_et_formes_nombre_periodes }}
                 </td>
             </tr>

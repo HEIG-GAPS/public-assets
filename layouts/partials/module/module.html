@@ -10,7 +10,8 @@
     <div class="card border-bottom-0 rounded-bottom-0">
         <div class="card-header d-flex align-center flex-row module-titre">
             <div class="d-flex flex-wrap flex-column flex-grow-1">
-                <b>{{ $mod.module_nom}} <br> {{ $mod.module_code }} - {{ index $upper_infos "mode" }} </b>
+                <h5 class="fw-bold m-0 p-0"> {{ $mod.module_nom}} </h5>
+                <h6 class="m-0 ms-2 p-0"> {{ $mod.module_code }} - {{ index $upper_infos "mode" }} </h6>
             </div>
         </div>
         <div class="card-body">
@@ -25,7 +26,7 @@
     <div class="card module-intitule rounded-0 border-bottom-0">
         <div class="card-header d-flex align-center border-0 rounded-0">
             <div>
-                <b> 1. {{ i18n "module_title" }} </b>
+                <h5 class="fw-bold m-0 p-0"> 1. {{ i18n "module_title" }} </h5>
             </div>
         </div>
         <div class="card-body d-flex flex-column">
@@ -53,10 +54,10 @@
                 </div>
                 <div class="d-flex flex-column">
                     <div>
-                        <b> {{ i18n "time_organization" }} </b>
+                        <h5 class="fw-bold m-0 p-0"> {{ i18n "time_organization" }} </h5>
                     </div>
                     <div>
-                        <p> {{ i18n "time_organization_table_description" }} </p>
+                        <p class="fs-6"> {{ i18n "time_organization_table_description" }} </p>
                         {{ partial "module/module_units_schedule.html" . }}
                     </div>
                 </div>
@@ -65,28 +66,23 @@
     </div>
     <div class="card module-organisation rounded-0 border-bottom-0">
         <div class="card-header dflex align-center border-0 rounded-0">
-            <b> 2. {{ i18n "organization" }} </b>
+            <h5 class="fw-bold m-0 p-0"> 2. {{ i18n "organization" }} </h5>
         </div>
         <div class="card-body">
             <div class="d-flex flex-column">
-                <div>
-                    <b> {{ i18n "ects_credits" }} </b> : {{ $mod.module_credits }}
-                </div>
-                <div>
-                    <b> {{ i18n "instruction_main_languages" }} </b> :
-                    {{ if $mod.module_a_options }}
-                    {{ i18n "options_module_depending" | strings.FirstUpper }}
-                    {{ else}}
-                    {{ partial "list_as_str" $mod.langues }}
-                    {{ end }}
-                </div>
+                {{ partial "general_information_row" (dict "name" "ects_credits" "content" $mod.module_credits) }}
+                {{ $langues := partial "list_as_str" $mod.langues }}
+                {{ if $mod.module_a_options }}
+                    {{ $langues = i18n "options_module_depending" | strings.FirstUpper }}
+                {{ end }}
+                {{ partial "general_information_row" (dict "name" "instruction_main_languages" "content" ($langues)) }}
             </div>
         </div>
     </div>
     <div class="card module-prerequis rounded-0 border-bottom-0">
         <div class="card-header dflex align-center border-0 rounded-0">
             <div>
-                <b> 3. {{ i18n "prerequisites" }} </b>
+                <h5 class="fw-bold m-0 p-0"> 3. {{ i18n "prerequisites" }} </h5>
             </div>
         </div>
         <div class="card-body d-flex flex-column">
@@ -96,7 +92,7 @@
     <div class="card module-objectifs rounded-0 border-bottom-0">
         <div class="card-header dflex align-center border-0 rounded-0">
             <div>
-                <b> 4. {{ i18n "learning_objectives" }} </b>
+                <h5 class="fw-bold m-0 p-0"> 4. {{ i18n "learning_objectives" }} </h5>
             </div>
         </div>
         <div class="card-body d-flex flex-column">
@@ -108,14 +104,14 @@
     <div class="card module-enseignements rounded-0 border-bottom-0">
         <div class="card-header dflex align-center border-0 rounded-0">
             <div>
-                <b> 5. {{ i18n "content_teaching_methods" }} </b>
+                <h5 class="fw-bold m-0 p-0"> 5. {{ i18n "content_teaching_methods" }} </h5>
             </div>
         </div>
         <div class="card-body d-flex flex-column">
             {{ if $mod.module_a_options }}
             <div>
                 <div>
-                    <b>{{ i18n "options_module" }}</b>
+                    <h6 class="fw-bold m-0 p-0">{{ i18n "options_module" }}</h6>
                 </div>
                 <div>
                     {{ i18n "options_module_teaching_methods" }}
@@ -126,28 +122,31 @@
                 {{ $formes_enseignement := slice }}
                 {{ range .Pages }}
                 {{ $unit := .Params.json_content }}
-                <div>
-                    <b> {{ $unit.unite_nom }} (<a href="{{ .Permalink }}" class="pdf-link"> {{ $unit.unite_abreviation }}
-                    </a>) </b>
+                <div class="mb-3">
+                    <h6 class="fw-bold m-0 p-0"> {{ $unit.unite_nom }} (<a href="{{ .Permalink }}" class="pdf-link"> {{ $unit.unite_abreviation }}
+                    </a>) </h6>
                     <div class="m-2">
                         {{ $unit.unite_resume | safeHTML }}
-                        <b> {{ i18n "teaching_methods" }} </b> :
-                        {{ $types := partial "get_teaching_methods" $unit }}
-                        {{ $types_nom := slice }}
-                        {{ range $types }}
-                        {{ $types_nom = $types_nom | append .type_enseignement_nom }}
-                        {{ end }}
-                        {{ range $types_nom }}
-                        {{ $formes_enseignement = $formes_enseignement | append . }}
-                        {{ end }}
-                        {{ partial "list_as_str" $types_nom }}
+                        <div class="d-flex">
+                            <h6 class="fw-bold m-0 p-0"> {{ i18n "teaching_methods" }} : </h6>
+                            {{ $types := partial "get_teaching_methods" $unit }}
+                            {{ $types_nom := slice }}
+                            {{ range $types }}
+                            {{ $types_nom = $types_nom | append .type_enseignement_nom }}
+                            {{ end }}
+                            {{ range $types_nom }}
+                            {{ $formes_enseignement = $formes_enseignement | append . }}
+                            {{ end }}
+                            <h6 class="m-0 ms-1 p-0"> {{ partial "list_as_str" $types_nom }} </h6>
+                        </div>
                     </div>
                 </div>
                 {{ end }}
             </div>
             <div>
-                <div>
-                    <b> {{ i18n "teaching_methods" }} </b> : {{ partial "list_as_str" ($formes_enseignement | uniq) }}
+                <div class="d-flex">
+                    <h6 class="fw-bold m-0 p-0"> {{ i18n "teaching_methods" }} : </h6>
+                    <h6 class="m-0 ms-1 p-0"> {{ partial "list_as_str" ($formes_enseignement | uniq) }} </h6>
                 </div>
             </div>
             {{ end }}
@@ -155,11 +154,11 @@
     </div>
     <div class="card module-evaluation rounded-0 border-bottom-0">
         <div class="card-header dflex align-center border-0 rounded-0">
-            <b> 6. {{ i18n "evaluation" }} </b>
+            <h5 class="fw-bold m-0 p-0"> 6. {{ i18n "evaluation" }} </h5>
         </div>
         <div class="card-body d-flex flex-column">
-            <div>
-                {{ i18n "compensation_threshold" }} : {{ $mod.module_seuil_compensation }}
+            <div class="d-flex align-items-center">
+                <h6 class="p-0 m-0">{{ i18n "compensation_threshold" }} : </h6> <p class="fs-6 p-0 m-0 ms-1">{{ $mod.module_seuil_compensation }}</p>
             </div>
             {{ if $mod.module_a_options }}
             <div>
@@ -170,17 +169,19 @@
                 {{ i18n "options_module_final_grade_computation" | strings.FirstUpper }}
             </div>
             <div>
-                <b>{{ i18n "final_module_grade" }}</b>
+                <h6 class="fw-bold m-0 p-0">{{ i18n "final_module_grade" }}</h6>
             </div>
             <div>
-                {{ i18n "options_module_final_grade_description" | strings.FirstUpper }}
-                <div>
+                <p class="m-0 p-0 fs-6">
+                    {{ i18n "options_module_final_grade_description" | strings.FirstUpper }}
+                </p>
+                <p class="m-0 p-0 fs-6">
                     {{ i18n "final_grade" }} = {{ i18n "options_module_depending" }}
-                </div>
+                </p>
             </div>
             {{ else }}
-            <div>
-                {{ i18n "repetition_threshold" }} : {{ $mod.module_seuil_repetition }}
+            <div class="d-flex align-items-center mb-2">
+                <h6 class="p-0 m-0">{{ i18n "repetition_threshold" }} : </h6> <p class="fs-6 p-0 m-0 ms-1">{{ $mod.module_seuil_repetition }}</p>
             </div>
             <div>
                 {{ partial "module/module_evaluation.html" . }}
@@ -190,7 +191,7 @@
     </div>
     <div class="card module-remediation rounded-0 border-bottom-0">
         <div class="card-header dflex align-center border-0 rounded-0">
-            <b> 7. {{ i18n "remediation" }} </b>
+            <h5 class="fw-bold m-0 p-0"> 7. {{ i18n "remediation" }} </h5>
         </div>
         <div class="card-body d-flex flex-column">
             {{ partial "module/module_type_remediation.html" $mod }}
@@ -198,19 +199,21 @@
     </div>
     <div class="card module-remarques rounded-0 border-bottom-0">
         <div class="card-header dflex align-center border-0 rounded-0">
-            <b> 8. {{ i18n "remarks" }} </b>
+            <h5 class="fw-bold m-0 p-0"> 8. {{ i18n "remarks" }} </h5>
         </div>
-        <div class="card-body">
-            {{ if eq $mod.remarques nil }}
-            {{ i18n "no_remark" }}.
-            {{ else }}
-            {{ $mod.module_remarques | safeHTML }}
-            {{ end }}
+        <div class="card-body m-0 p-2 ps-3">
+            <p class="m-0 p-0 fs-6">
+                {{ if eq $mod.remarques nil }}
+                {{ i18n "no_remark" }}.
+                {{ else }}
+                {{ $mod.module_remarques | safeHTML }}
+                {{ end }}
+            </p>
         </div>
     </div>
     <div class="card module-bibliographie rounded-top-0">
         <div class="card-header dflex align-center border-0 rounded-0">
-            <b> 9. {{ i18n "bibliography" }} </b>
+            <h5 class="fw-bold m-0 p-0"> 9. {{ i18n "bibliography" }} </h5>
         </div>
         <div class="card-body d-flex flex-column">
             {{ if $mod.module_a_options }}
@@ -219,9 +222,9 @@
             {{ range .Pages }}
             {{ $unite := .Params.json_content }}
             <div>
-                <b> {{ $unite.unite_nom }} (<a href="{{ .Permalink }}" class="pdf-link"> {{ $unite.unite_abreviation }} </a>)
-                </b>
-                <div>
+                <h6 class="fw-bold m-0 p-0"> {{ $unite.unite_nom }} (<a href="{{ .Permalink }}" class="pdf-link"> {{ $unite.unite_abreviation }} </a>)
+                </h6>
+                <div class="ms-1">
                     {{ $unite.unite_bibliographie | safeHTML }}
                 </div>
             </div>
@@ -229,9 +232,11 @@
             {{ end }}
         </div>
         <div class="card-footer border-0 d-flex align-items-center" data-html2canvas-ignore="true">
-            <div class="flex-fill d-flex align-content-center justify-content-end flex-wrap">
-                {{ i18n "version_of" | strings.FirstUpper }}
-                {{ $mod.module_validation | time.Format ":date_long" }}
+            <div class="flex-fill d-flex align-content-center justify-content-start flex-wrap">
+                <h6 class="fw-bold p-0 m-0">
+                    {{ i18n "version_of" | strings.FirstUpper }}
+                    {{ $mod.module_validation | time.Format ":date_long" }}
+                </h6>
             </div>
         </div>
     </div>
@@ -239,7 +244,7 @@
 {{ else }}
 <div class="card">
     <div class="p-2 card-header d-flex align-center">
-        <b> {{ i18n "unvalidated_module_header" }} </b>
+        <h4 class="fw-bold m-0 p-0"> {{ i18n "unvalidated_module_header" }} </h4>
     </div>
     <div class="p-2 card-body d-flex align-items-center">
         <div>

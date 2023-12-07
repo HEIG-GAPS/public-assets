@@ -5,18 +5,18 @@
     <table class="table table-borderless">
         <thead>
         <tr>
-            <th class="text-centered"> <b> {{ i18n "abbreviation" }} </b> </th>
-            <th class="text-centered"> <b> {{ i18n "volume" }} </b> </th>
-            <th class="text-centered"> <b> {{ i18n "unit" }} </b> </th>
+            <th class="text-centered fs-6"> {{ i18n "abbreviation" }} </th>
+            <th class="text-centered fs-6"> {{ i18n "volume" }} </th>
+            <th class="text-centered fs-6"> {{ i18n "unit" }} </th>
         </tr>
         </thead>
         <tbody>
         {{ range .unites }}
         {{ $unit := .Params.json_content }}
         <tr>
-            <td class="text-centered"> {{ $unit.unite_abreviation }} </td>
-            <td class="text-centered"> {{ $unit.unite_charge }} </td>
-            <td class="text-centered"> {{ $unit.unite_nom }} </td>
+            <td class="text-centered fs-6"> {{ $unit.unite_abreviation }} </td>
+            <td class="text-centered fs-6"> {{ $unit.unite_charge }} </td>
+            <td class="text-centered fs-6"> {{ $unit.unite_nom }} </td>
         </tr>
         {{ end }}
         </tbody>
@@ -25,9 +25,9 @@
 <table class="table table-bordered units-schedule">
     <thead>
     <tr>
-        <th scope="col"> {{ i18n "type" }} </th>
+        <th scope="col" class="fs-6"> {{ i18n "type" }} </th>
         {{ range $cols }}
-        <th class="text-center align-middle p-1 p-md-2" scope="col">{{ . }}</th>
+        <th class="text-center fs-6 align-middle p-1 p-md-2" scope="col">{{ . }}</th>
         {{ end }}
     </tr>
     </thead>
@@ -41,9 +41,9 @@
     "decoupages" $unit.decoupages
     )}}
     <tr>
-        <th scope="row"> {{ $unit.unite_abreviation }} {{ .type_enseignement_nom }} </th>
+        <th scope="row" class="fs-6"> {{ $unit.unite_abreviation }} {{ .type_enseignement_nom }} </th>
         {{ range $cols }}
-        <td class="text-center align-middle p-1 p-md-2">
+        <td class="text-center fs-6 align-middle p-1 p-md-2">
             {{ if eq . $decoupage.type }}
             {{ $decoupage.periodes }}
             {{ end }}

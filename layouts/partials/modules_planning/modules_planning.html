@@ -20,14 +20,14 @@
         "n_semaines_hes_ete" $n_semaines_hes_ete
         }}
         {{ if $module_semestriel }}
-        {{ partial "module/semestrial_module_planning" (merge $mod_ctx (dict "n_semaines" $n_semaines_semestre)) }}
+        {{ partial "modules_planning/semestrial_module_planning" (merge $mod_ctx (dict "n_semaines" $n_semaines_semestre)) }}
         {{ else }}
         {{ if $module_trimestriel }}
-        {{ partial "module/trimestrial_module_planning" (merge $mod_ctx (dict "n_semaines" $n_semaines_trimestre)) }}
+        {{ partial "modules_planning/trimestrial_module_planning" (merge $mod_ctx (dict "n_semaines" $n_semaines_trimestre)) }}
         {{ else }}
         {{ $semesters := partial "get_semesters" $formation_duree }}
         {{ $trimesters := partial "get_only_trimesters" $formation_duree }}
-        {{ partial "module/hybrid_type_module_planning" (merge $mod_ctx (dict "semestres" $semesters "trimestres" $trimesters))}}
+        {{ partial "modules_planning/hybrid_type_module_planning" (merge $mod_ctx (dict "semestres" $semesters "trimestres" $trimesters))}}
         {{ end }}
         {{ end }}
         {{ end }}
@@ -49,8 +49,8 @@
         {{ $periods_tot := partial "get_module_total_periods" $periodes_tot_ctx }}
         <tbody>
         <tr>
-            <td class="week-cell">
-                <b> {{ i18n "per_week_periods" }} </b>
+            <td class="week-cell fw-bold">
+                {{ i18n "per_week_periods" }}
             </td>
             <td class="week-cell"></td>
             <td rowspan="2" class="week-cell">
@@ -64,9 +64,9 @@
     </table>
     <div class="d-flex flex-column caption">
         <div>
-            <b> {{ i18n "caption" }} </b> :
+            <h6 class="fw-bold"> {{ i18n "caption" }} : </h6>
         </div>
-        <div>
+        <div class="fs-6">
             {{ (i18n "module_planning_caption") | safeHTML }}
         </div>
     </div>

@@ -24,7 +24,8 @@ $card-cap-bg: #939090;
 $modules-planning-padding: 0.2em !important;
 
 body {
-  min-width: 300px;
+  min-width: 450px;
+  scroll-behavior: smooth !important;
 }
 
 a {
@@ -32,7 +33,7 @@ a {
 }
 
 .modules-planning {
-  @include font-size(0.7em);
+  @include font-size(0.8em);
 }
 
 .module-cell {

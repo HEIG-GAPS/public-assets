@@ -5,8 +5,8 @@
 <div class="form-check">
     <input class="form-check-input" type="checkbox" value="" id="flexCheckCheckedDisabled-module-{{ $mod.module_code }}-remediation{{$i}}" {{ if eq $type_remediation
         $type_rem.id }} checked {{ end }} disabled>
-    <label class="form-check-label" for="flexCheckCheckedDisabled-module-{{ $mod.module_code }}-remediation{{$i}}">
-        <b> {{ $type_rem.texte }} </b>
+    <label class="form-check-label fs-6" for="flexCheckCheckedDisabled-module-{{ $mod.module_code }}-remediation{{$i}}">
+        {{ $type_rem.texte }}
     </label>
 </div>
 {{ end }}

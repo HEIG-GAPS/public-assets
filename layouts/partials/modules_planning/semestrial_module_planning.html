@@ -1,4 +1,4 @@
 {{ $semesters := partial "get_semesters" .formation_duree }}
 {{ $page := .module }}
 {{ $module := .page.Params.json_content }}
-{{ partial "module/single_type_module_planning" (merge . (dict "cols" $semesters "semestrial" true))}}
+{{ partial "modules_planning/single_type_module_planning" (merge . (dict "cols" $semesters "semestrial" true))}}

@@ -4,10 +4,10 @@
 <div class="flex-fill">
     <h6 class="fw-bold m-0 p-0"> {{ i18n "level" }} </h6>
     {{ range $i, $niv := $niveaux }}
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="module-{{ $mod.module_code }}-flexCheckCheckedDisabled-level{{$i}}" {{ if eq $niveau
+    <div class="form-check  d-flex align-items-center ms-2 mt-1 p-0">
+        <input class="form-check-input m-0 p-0" type="checkbox" value="" id="module-{{ $mod.module_code }}-flexCheckCheckedDisabled-level{{$i}}" {{ if eq $niveau
             $niv.id }} checked {{ end }} disabled>
-        <label class="form-check-label" for="module-{{ $mod.module_code }}-flexCheckCheckedDisabled-level{{$i}}">
+        <label class="form-check-label fs-6 p-0 m-0 ms-1" for="module-{{ $mod.module_code }}-flexCheckCheckedDisabled-level{{$i}}">
             {{ $niv.nom }}
         </label>
     </div>

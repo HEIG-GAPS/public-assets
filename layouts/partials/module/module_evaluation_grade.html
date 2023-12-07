@@ -1,16 +1,16 @@
 <div class="d-flex justify-content-end align-items-center mt-2 mb-2">
     <div class="d-flex align-middle">
-        <h6 class="fw-bold m-0 p-0"> {{ i18n "final_grade" }} </h6>
-        <h6 class="fw-bold m-0 ms-5 p-0"> = </h6>
+        <p class="fw-bold m-0 p-0"> {{ i18n "final_grade" }} </p>
+        <p class="fw-bold m-0 ms-5 p-0"> = </p>
     </div>
     <div class="w-50 d-flex justify-content-center">
         <div class="grade-container">
             <div class="text-center">
-                {{ .num }}
+                <p class="p-0 m-0 fs-6"> {{ .num }} </p>
             </div>
             {{ if ne .denom "None" }}
             <div class="fraction-denominator text-center">
-                {{ .denom }}
+                <p class="p-0 m-0 fs-6"> {{ .denom }} </p>
             </div>
             {{ end }}
         </div>

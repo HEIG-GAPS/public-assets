@@ -4,7 +4,7 @@
 {{ $module := $page.Params.json_content }}
 <thead class="table-primary">
     <tr class="header-row">
-        <th scope="col" class="module-cell align-middle">
+        <th scope="col" class="module-cell align-middle" id="{{ $module.module_code | anchorize }}">
             <a href="{{ $page.Permalink }}" class="pdf-link module-header">{{$module.module_nom}} ({{ $module.module_code }})</a>
         </th>
         <th scope="col" class="top-alternative group-alternative-cell"></th>
@@ -48,6 +48,6 @@
             {{ end }}
         </tr>
     {{ else }}
-        {{ partial "module/module_units_planning" $ctx }}
+        {{ partial "modules_planning/module_units_planning" $ctx }}
     {{ end }}
 </tbody>

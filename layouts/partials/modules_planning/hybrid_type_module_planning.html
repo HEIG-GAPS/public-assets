@@ -7,7 +7,7 @@
     <tr>
         <th scope="col" class="module-cell">
             <div>
-                <a href="{{ $page.Permalink }}" class="pdf-link module-header">{{$module.module_nom}} ({{ $module.module_code }})</a>
+                <a href="{{ $page.Permalink }}" class="pdf-link module-header" id="{{ $module.module_code | anchorize }}">{{$module.module_nom}} ({{ $module.module_code }})</a>
             </div>
         </th>
         <th scope="col" class="top-alternative group-alternative-cell"></th>
@@ -49,6 +49,6 @@
             {{ end }}
         </tr>
     {{ else }}
-        {{ partial "module/hybrid_module_units_planning" $ctx }}
+        {{ partial "modules_planning/hybrid_module_units_planning" $ctx }}
     {{ end }}
 </tbody>

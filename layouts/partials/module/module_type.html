@@ -4,12 +4,12 @@
 <div class="flex-fill">
     <h6 class="fw-bold m-0 p-0"> {{ i18n "type" }} </h6>
     {{ range $i, $typ := $types }}
-    <div class="form-check">
-        <input class="form-check-input"
+    <div class="form-check d-flex align-items-center ms-2 mt-1 p-0">
+        <input class="form-check-input m-0 p-0"
                type="checkbox"
                id="flexCheckCheckedDisabled-module-{{ $mod.module_code }}-type{{$i}}"
                {{ if eq $type $typ.id }} checked {{ end }} disabled>
-        <label class="form-check-label"
+        <label class="form-check-label m-0 p-0 ms-1"
                for="flexCheckCheckedDisabled-module-{{ $mod.module_code }}-type{{$i}}">
             {{ $typ.texte }}
         </label>

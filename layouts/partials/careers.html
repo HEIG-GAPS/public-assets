@@ -1,8 +1,8 @@
 
   {{ range .Pages }}
-      <div class="card formation-card border-0">
-          <div class="p-2 card-header">
-                  <strong> {{ .Title }} ({{ .Params.json_content.filiere_abreviation }}) </strong>
+      <div class="card formation-card border-0 rounded-0" id="{{ .Params.json_content.filiere_abreviation | anchorize }}">
+          <div class="p-2 card-header rounded-0">
+                  <h6 class="fw-bold p-0 m-0"> {{ .Title }} ({{ .Params.json_content.filiere_abreviation }}) </h6>
           </div>
           <div class="card-body">
             {{ partial "programs.html" .}}

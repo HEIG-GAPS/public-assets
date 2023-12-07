@@ -48,10 +48,10 @@
         {{ $unite := .Params.json_content }}
         {{ $eval := partial "unit/get_unite_evaluation.html" . }}
         <div class="d-flex flex-column">
-            <b> {{ $unite.unite_nom }}
+            <h6 class="fw-bold m-0 p-0"> {{ $unite.unite_nom }}
                 (<a href="{{ .Permalink }}" class="pdf-link"> {{ $unite.unite_abreviation }} </a>)
                 [{{ i18n "weight" }}: {{ $unite.unite_coefficient }}] [{{ i18n "group" }}: {{ $groupe_lettre }}]
-            </b>
+            </h6>
         </div>
         <div>
             {{ partial "module/module_evaluation_grade" (dict "num" $eval.num "denom" $eval.denom)  }}
@@ -59,6 +59,6 @@
     {{ end }}
 {{ end }}
 <div>
-    <b> {{ i18n "final_module_grade" }} </b>
+    <h6 class="fw-bold m-0 p-0"> {{ i18n "final_module_grade" }} </h6>
 </div>
 {{ partial "module/module_evaluation_grade" (dict "num" $mod_num "denom" $mod_denom)  }}
