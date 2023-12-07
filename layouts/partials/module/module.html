@@ -7,7 +7,7 @@
 {{ $autres_programmes := partial "module/get_other_programs_module" . }}
 {{ $pdf_link := printf "%s/pdf%s%s.pdf" .Site.BaseURL .RelPermalink ($mod.module_code | urlize) }}
 <div class="pdf-content m-0 p-0">
-    <div class="card border-bottom-0 rounded-bottom-0">
+    <div class="card border-black border-bottom-0 rounded-bottom-0">
         <div class="card-header d-flex align-center flex-row module-titre">
             <div class="d-flex flex-wrap flex-column flex-grow-1">
                 <h5 class="fw-bold m-0 p-0"> {{ $mod.module_nom}} </h5>
@@ -23,7 +23,7 @@
             </div>
         </div>
     </div>
-    <div class="card module-intitule rounded-0 border-bottom-0">
+    <div class="card border-black module-intitule rounded-0 border-top-0 border-bottom-0">
         <div class="card-header d-flex align-center border-0 rounded-0">
             <div>
                 <h5 class="fw-bold m-0 p-0"> 1. {{ i18n "module_title" }} </h5>
@@ -64,7 +64,7 @@
             </div>
         </div>
     </div>
-    <div class="card module-organisation rounded-0 border-bottom-0">
+    <div class="card border-black module-organisation rounded-0 border-top-0 border-bottom-0">
         <div class="card-header dflex align-center border-0 rounded-0">
             <h5 class="fw-bold m-0 p-0"> 2. {{ i18n "organization" }} </h5>
         </div>
@@ -79,7 +79,7 @@
             </div>
         </div>
     </div>
-    <div class="card module-prerequis rounded-0 border-bottom-0">
+    <div class="card border-black module-prerequis rounded-0 border-top-0 border-bottom-0">
         <div class="card-header dflex align-center border-0 rounded-0">
             <div>
                 <h5 class="fw-bold m-0 p-0"> 3. {{ i18n "prerequisites" }} </h5>
@@ -89,7 +89,7 @@
             {{ partial "module/module_prerequis" $mod }}
         </div>
     </div>
-    <div class="card module-objectifs rounded-0 border-bottom-0">
+    <div class="card border-black module-objectifs rounded-0 border-top-0 border-bottom-0">
         <div class="card-header dflex align-center border-0 rounded-0">
             <div>
                 <h5 class="fw-bold m-0 p-0"> 4. {{ i18n "learning_objectives" }} </h5>
@@ -101,7 +101,7 @@
             </div>
         </div>
     </div>
-    <div class="card module-enseignements rounded-0 border-bottom-0">
+    <div class="card border-black module-enseignements rounded-0 border-top-0 border-bottom-0">
         <div class="card-header dflex align-center border-0 rounded-0">
             <div>
                 <h5 class="fw-bold m-0 p-0"> 5. {{ i18n "content_teaching_methods" }} </h5>
@@ -152,7 +152,7 @@
             {{ end }}
         </div>
     </div>
-    <div class="card module-evaluation rounded-0 border-bottom-0">
+    <div class="card border-black module-evaluation rounded-0 border-top-0 border-bottom-0">
         <div class="card-header dflex align-center border-0 rounded-0">
             <h5 class="fw-bold m-0 p-0"> 6. {{ i18n "evaluation" }} </h5>
         </div>
@@ -189,7 +189,7 @@
             {{ end }}
         </div>
     </div>
-    <div class="card module-remediation rounded-0 border-bottom-0">
+    <div class="card border-black module-remediation rounded-0 border-top-0 border-bottom-0">
         <div class="card-header dflex align-center border-0 rounded-0">
             <h5 class="fw-bold m-0 p-0"> 7. {{ i18n "remediation" }} </h5>
         </div>
@@ -197,7 +197,7 @@
             {{ partial "module/module_type_remediation.html" $mod }}
         </div>
     </div>
-    <div class="card module-remarques rounded-0 border-bottom-0">
+    <div class="card border-black module-remarques rounded-0 border-top-0 border-bottom-0">
         <div class="card-header dflex align-center border-0 rounded-0">
             <h5 class="fw-bold m-0 p-0"> 8. {{ i18n "remarks" }} </h5>
         </div>
@@ -211,7 +211,7 @@
             </p>
         </div>
     </div>
-    <div class="card module-bibliographie rounded-top-0">
+    <div class="card border-black module-bibliographie border-top-0 rounded-top-0">
         <div class="card-header dflex align-center border-0 rounded-0">
             <h5 class="fw-bold m-0 p-0"> 9. {{ i18n "bibliography" }} </h5>
         </div>

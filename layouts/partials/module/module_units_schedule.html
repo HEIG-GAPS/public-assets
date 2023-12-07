@@ -3,7 +3,7 @@
 {{ $cols := partial "get_semesters" (index .Ancestors 0).Params.json_content.formation_duree_semestres }}
 {{ if $mod.module_a_options }}
 {{ $mode := (index .Ancestors 0).Params.json_content.mode_formation_abreviation }}
-<table class="table table-bordered">
+<table class="table border-black table-bordered">
     <thead>
     <tr>
         <th scope="col"> {{ i18n "type" }} </th>

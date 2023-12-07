@@ -3,7 +3,7 @@
 {{ $page := .module }}
 {{ $module := $page.Params.json_content }}
 <thead class="table-primary">
-    <tr class="header-row">
+    <tr class="header-row border-black border-start border-end border-top">
         <th scope="col" class="module-cell align-middle" id="{{ $module.module_code | anchorize }}">
             <a href="{{ $page.Permalink }}" class="pdf-link module-header">{{$module.module_nom}} ({{ $module.module_code }})</a>
         </th>
@@ -19,12 +19,12 @@
             scope="col"
             class="align-middle text-center only-semester-cell period-cell"
             rowspan="2"
-            {{ if or (hasPrefix $col "S") }}colspan="2"{{ end }}> 
+            {{ if or (hasPrefix $col "S") }}colspan="2"{{ end }}>
             {{ . }} 
             </th>
         {{ end }}
     </tr>
-    <tr>
+    <tr class="border-black border-start border-end">
         <th scope="col" class="module-info-cell">
             <span>
                 {{$module.module_credits}} ECTS | {{ i18n "compensation_threshold_table" }} 
@@ -37,12 +37,13 @@
 </thead>
 <tbody>
     {{ if eq (len $page.Pages) 0 }}
-        <tr class="selectable-units">
+        <tr class="selectable-units border-black border-start border-end">
             <th scope="col" class="table-primary unit-cell align-middle"> <b> {{ i18n "selectable_units" }} </b> </th>
             <th scope="col" class="group-alternative-cell table-primary"></th>
-            <th scope="col" class="table-primary coef-value-cell text-center align-middle"> ... </th>
+            <th scope="col" class="table-primary coef-value-cell text-center align-middle border-black border-end"> ... </th>
             {{ range $col := $cols }}
                 <td class="period-cell
+                border-black border
                 {{ if $ctx.semestrial }}semestrial-cell{{ else }}trimestrial-cell{{ end }}"
                     {{ if or (hasPrefix $col "S") }}colspan="2"{{ end }}></td>
             {{ end }}

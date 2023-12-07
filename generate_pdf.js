@@ -831,7 +831,6 @@ class PDFGenerator {
                     }
                     return Promise.all(tasks)
                 }
-
                 tableTopBorders(children) {
                     if (children.length === 0) return
                     let firstChild = children[0]
@@ -1037,8 +1036,13 @@ class PDFGenerator {
 function generatePDF() {
     let [modes, modules, unites] = getPagesPath()
     setTimeout(() => {
-        puppeteer.launch({ headless: "new" }).then(browser => {
-            const pdfGenerator = new PDFGenerator(browser, {width: 1366, height: 768 }, maxParallelBookletGeneration, maxParallelDescriptionGeneration, maxParallelSheetGeneration)
+        puppeteer.launch({
+            headless: "new",
+            args:[
+                '--start-maximized' // or '--start-fullscreen'
+            ]
+        }).then(browser => {
+            const pdfGenerator = new PDFGenerator(browser, { width: 1366, height: 768 }, maxParallelBookletGeneration, maxParallelDescriptionGeneration, maxParallelSheetGeneration)
             pdfGenerator.run(modes, modules, unites, maxParallelBookletGeneration, maxParallelDescriptionGeneration, maxParallelSheetGeneration).then(_ => {
                 browser.close().then()
             })

@@ -4,7 +4,7 @@
 {{ $n_semaines := int .n_semaines }}
 {{ $ctx := . }}
 {{ $unit := .unite }}
-<th scope="row" class="align-middle text-center coef-value-cell fw-normal">
+<th scope="row" class="align-middle text-center coef-value-cell fw-normal border-black border-end">
     {{ if lt $unit.unite_coefficient 1 }} {{ i18n "optional_abbreviation" }} {{ else }} {{ $unit.unite_coefficient }} {{ end }}
 </th>
 {{ range $col := $cols }}
@@ -24,10 +24,10 @@
     text-center
     period-cell
     {{ if $ctx.semestrial }}semestrial-cell{{ else }}trimestrial-cell{{ end }}
-    {{ if and $examen (not (lt $decoupage.periodes 1)) $last }} examen{{ end }}"
+    {{ if and $examen (not (lt $decoupage.periodes 1)) $last }} examen{{ else }}border-black border{{ end }}"
     {{ if hasPrefix $col "S"}} colspan="2" {{ end }}
     >
-        {{ if not (lt $decoupage.periodes 1) }}
+        {{ if gt $decoupage.periodes 0 }}
             {{ $periodes }}
         {{ end }}
     </td>

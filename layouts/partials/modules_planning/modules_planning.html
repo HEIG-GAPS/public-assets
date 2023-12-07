@@ -6,7 +6,7 @@
 {{ $pdf := (lower (replace (printf "%s-%s.pdf" (index .Ancestors 0).Params.json_content.formation_abreviation .Params.json_content.mode_formation_abreviation) "/" "-")) }}
 {{ $pdf_link := printf "%s/pdf%s%s" .Site.BaseURL .RelPermalink $pdf }}
 <div class="pdf-content">
-    <table class="table modules-planning border-0">
+    <table class="table table-borderless modules-planning">
         {{ range .Pages }}
         {{ $module_trimestriel := partial "module_trimestriel" . }}
         {{ $module_semestriel := partial "module_semestriel" . }}
@@ -48,16 +48,16 @@
         {{ end }}
         {{ $periods_tot := partial "get_module_total_periods" $periodes_tot_ctx }}
         <tbody>
-        <tr>
+        <tr class="border-black border-start border-bottom border-end">
             <td class="week-cell fw-bold">
                 {{ i18n "per_week_periods" }}
             </td>
-            <td class="week-cell"></td>
-            <td rowspan="2" class="week-cell">
+            <td></td>
+            <td rowspan="2" class="border-black border-end">
             </td>
             {{ range $col := $cols }}
             {{ $periodes := $periods_tot.Get $col }}
-            <td class="text-center align-middle period-cell total-periods-cell" {{ if hasPrefix $col "S" }} colspan="2" {{ end }}> {{ if gt $periodes 0 }} {{ $periodes }} {{ end }} </td>
+            <td class="text-center align-middle period-cell total-periods-cell border-black border" {{ if hasPrefix $col "S" }} colspan="2" {{ end }}> {{ if gt $periodes 0 }} {{ $periodes }} {{ end }} </td>
             {{ end }}
         </tr>
         </tbody>

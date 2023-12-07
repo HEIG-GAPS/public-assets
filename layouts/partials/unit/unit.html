@@ -11,7 +11,7 @@
     {{ $autres_programmes := partial "unit/get_other_programs_unit" . }}
     {{ $pdf_link := printf "%s/pdf%s%s.pdf" .Site.BaseURL .RelPermalink ($unit.unite_abreviation | urlize) }}
     <div class="pdf-content">
-        <div class="card">
+        <div class="card border-black">
             <div class="card-header border-bottom-0 d-flex flex-column align-items-start">
                 <h5 class="fw-bold"> {{ $unit.unite_nom }} </h5>
                 <h6 class="ps-1">
@@ -122,16 +122,12 @@
                                     {{ $ponderation_tot = add $ponderation_tot .ponderation }}
                                     {{ end }}
                                     {{ range $unit.ponderations }}
-                                    <div class="d-flex flex-row">
-                                        <div class="w-75">
-                                            <h6 class="m-0 p-0">{{ .type_enseignement_nom }}</h6>
-                                        </div>
-                                        <div class="w-25 d-flex justify-content-end">
-                                            {{ if eq $ponderation_tot 0 }}
-                                                {{ $ponderation_tot = 100 }}
-                                            {{ end }}
-                                            <h6 class="m-0 p-0">{{ mul (div .ponderation $ponderation_tot) 100 }}%</h6>
-                                        </div>
+                                    <div class="d-flex justify-content-between">
+                                        <h6 class="m-0 p-0">{{ .type_enseignement_nom }}</h6>
+                                        {{ if eq $ponderation_tot 0 }}
+                                        {{ $ponderation_tot = 100 }}
+                                        {{ end }}
+                                        <h6 class="m-0 ms-1 p-0">{{ mul (div .ponderation $ponderation_tot) 100 }}%</h6>
                                     </div>
                                     {{ end }}
                                 </div>

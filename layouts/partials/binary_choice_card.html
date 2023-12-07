@@ -6,7 +6,7 @@
             <div class="shadow-lg blurred-container p-2 m-0 {{ if .first.logo }}h-50 h-md-25{{ end }} w-md-50 d-flex justify-content-around">
                 <a class="h-100 d-flex flex-column justify-content-around align-middle" href="{{ .first.Permalink }}">
                     <div class="mw-100 mh-50 p-2 text-center text-black">
-                        <h4 class="m-0"> <strong> {{ .first.Title }} </strong> </h4>
+                        <h4 class="m-0 fw-bold"> {{ .first.Title }} </h4>
                     </div>
                     {{ if .first.logo }}
                     <img class="img-fluid float-end" src="{{ .first.logo.link }}" alt="{{ .first.logo.alt }}">
@@ -19,7 +19,7 @@
             <div class="shadow-lg blurred-container p-2 m-0 {{ if .first.logo }}h-50 h-md-25{{ end }} w-md-50">
                 <a class="h-100 d-flex flex-column justify-content-around align-middle" href="{{ .second.Permalink }}">
                     <div class="mw-100 mh-50 p-2 text-center text-black">
-                        <h4 class="m-0"> <strong> {{ .second.Title }} </strong> </h4>
+                        <h4 class="m-0 fw-bold"> {{ .second.Title }} </h4>
                     </div>
                     {{ if .second.logo }}
                     <img class="img-fluid float-end" src="{{ .second.logo.link }}" alt="{{ .second.logo.alt }}">

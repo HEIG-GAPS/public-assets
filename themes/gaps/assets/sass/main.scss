@@ -15,13 +15,11 @@ $breadcrumb-font-size: 1rem;
 @import "node_modules/bootstrap/scss/variables-dark";
 
 // Include any default map overrides here
-$card-cap-bg: #939090;
+$card-cap-bg: #ababab;
 
 @import "node_modules/bootstrap/scss/maps";
 @import "node_modules/bootstrap/scss/mixins";
 @import "node_modules/bootstrap/scss/root";
-
-$modules-planning-padding: 0.2em !important;
 
 body {
   min-width: 450px;
@@ -36,25 +34,17 @@ a {
   @include font-size(0.8em);
 }
 
-.module-cell {
-  @include padding($modules-planning-padding);
+.modules-planning * {
+  @include padding(0.3em !important);
 }
 
-.unit-cell {
-  @include padding($modules-planning-padding);
+.pdf-content .card table * {
+  @include padding(0.35em !important);
 }
 
 .coef-cell {
-  @include padding($modules-planning-padding);
-}
-
-.module-info-cell {
-  @include padding($modules-planning-padding);
-}
-
-.group-alternative-cell {
-  @include padding(0 !important);
-  @include margin(0 !important);
+  border-right: 1px dotted black !important;
+  border-collapse: collapse !important;
 }
 
 .caption {
@@ -63,15 +53,6 @@ a {
 
 .card {
   @include font-size(1rem !important);
-}
-
-.card-header {
-  @include font-size(1.2rem !important);
-}
-
-.card-body table {
-  @include font-size(0.8rem !important);
-  @include padding(0 !important);
 }
 
 @import "node_modules/bootstrap/scss/utilities";

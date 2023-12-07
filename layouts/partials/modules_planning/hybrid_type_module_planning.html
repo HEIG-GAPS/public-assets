@@ -4,7 +4,7 @@
 {{ $semesters := .semestres }}
 {{ $trimesters := .trimestres }}
 <thead class="table-primary">
-    <tr>
+    <tr class="border-black border-start border-end border-top">
         <th scope="col" class="module-cell">
             <div>
                 <a href="{{ $page.Permalink }}" class="pdf-link module-header" id="{{ $module.module_code | anchorize }}">{{$module.module_nom}} ({{ $module.module_code }})</a>
@@ -22,7 +22,7 @@
                 class="align-middle text-center semester-cell {{ if (hasPrefix . "E") }} under-semester-cell{{ end }}"> {{ . }} </th>
         {{ end }}
     </tr>
-    <tr>
+    <tr class="border-black border-start border-end">
         <th scope="col" class="module-info-cell">
             <span>
                 {{$module.module_credits}} ECTS | {{ i18n "compensation_threshold_table" }} 
